@@ -37,3 +37,23 @@ The backend is `CONFIG_TLSR_SETTINGS_LOG`, not NVS. It uses two journal areas in
 Power settings use a new `edge_power/config` namespace (schema 1), so upgrading from alpha.2 uses defaults without resetting saved mappings or bonds. Alpha.2 ignores this namespace. Future stored power schemas are read-only on schema-1 firmware. The UI and CLI use the canonical alpha.3 version; no release is published by this branch.
 
 The current compiled image also passed encrypted connected wake with modeled radio-register loss, a key injected exactly at sleep entry, three actual pad wakes with first press/release reports, mode/legacy-output regressions, USB host suspend/core resume, and both BT/OFF deep-entry GPIO masks. These assertions do not simulate deep wake. The smallest reported connected-suspend stack margin was 148 bytes in idle; full regression requires at least 128 bytes spare in every observed stack.
+
+## Known cold-wake limitation
+
+On the tested alpha.3, Fn+F12 after connected sleep can miss its first action or
+wake with a delay, including the Caps indicator in one trial. Ordinary battery
+wake across all six rows was fast. This remains unresolved in [issue #13](https://github.com/jc-tanedo/lofree-edge-zmk/issues/13),
+with refinement lower priority per the owner. Do not describe all Fn wake
+behavior as validated. Existing modeled A latency coverage does not exercise
+the entire physical Fn-plus-consumer sequence.
+
+## Deep row-pull correction (not hardware-certified yet)
+
+The scan driver chooses10k pull-ups for GPIO_PULL_UP. Preserving them with
+deep-sleep100k column pull-downs leaves a closed key near91% VDD, so the row
+may not reach LOW. Retained sleep drives columns low and did not have that
+weak-pull problem. The corrected deep-only setup selects1M row pull-ups
+(near9% VDD pressed); normal reboot restores the DTS scanning configuration.
+The compiled-entry regression fails on the initial binary and passes with the
+correction. No actual current or electrical wake is inferred from that model.
+OFF selector wake and Never reconnect controls worked on the initial image.

@@ -36,6 +36,12 @@ static void wake(const struct gpio_dt_spec *p,bool on)
     uint8_t bit=BIT(p->pin);
     tlsr8278_pad_wakeup(port_index(p),bit,gpio_pin_get_raw(p->port,p->pin)>0 ? bit : 0,on);
 }
+static void pull(const struct gpio_dt_spec *p,uint8_t selection)
+{
+    uint8_t port=port_index(p),reg=0x0e + port*2+p->pin/4;
+    uint8_t shift=2*(p->pin%4);
+    tlsr_analog_write(reg,(tlsr_analog_read(reg)&~(3U<<shift))|(selection<<shift));
+}
 void key_matrix_sleep(bool sleep)
 {
     if (asleep==sleep) { return; }
@@ -71,18 +77,20 @@ void key_matrix_sleep(bool sleep)
 }
 /* Called with interrupts locked just before a reboot-on-wake deep sleep.
  * Digital outputs are not retained there: use the stock columns' pulldowns.
- * Rows retain the board's existing pulls; hardware validation is required.
+ * The scan driver's 10k row pull-ups overpower those 100k column pull-downs:
+ * a closed key would leave the row at about91% VDD. Use 1M row pull-ups here
+ * (about9% VDD pressed). A deep wake reboots and restores the DTS scan pulls.
  */
 void board_deep_sleep_pads(void)
 {
     (void)kscan_disable_callback(scanner);
     edge_power_scan_sleep(true);
     edge_caps_scan_begin();
+    for (size_t i=0;i<ARRAY_SIZE(rows);i++) { pull(&rows[i],1U); } /* 1M up */
     for (size_t i=0;i<ARRAY_SIZE(cols);i++) {
         const struct gpio_dt_spec *p=&cols[i];
-        uint8_t port=port_index(p),reg=0x0e + port*2+p->pin/4;
-        uint8_t shift=2*(p->pin%4);
-        tlsr_analog_write(reg,(tlsr_analog_read(reg)&~(3U<<shift))|(2U<<shift));
+        uint8_t port=port_index(p);
+        pull(p,2U); /* 100k down */
         gpio_pin_set_dt(p,1);
         uint32_t base=0x00800580U+8U*port;
         sys_write8(sys_read8(base+2)|BIT(p->pin),base+2);

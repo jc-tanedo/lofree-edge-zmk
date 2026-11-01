@@ -1,9 +1,32 @@
-# Power management — in progress
+# Corrected deep-key wake candidate — preflight
+
+The initial alpha.3 image remains installed/accepted with Bluetooth sleep set to
+Never. Its [hardware record](validation/v0.1.0-alpha.3-initial.md) is archived.
+Never reconnect and OFF→BT/OFF→ON controls passed, narrowing the failed key wake
+to the deep-entry path. A compiled regression found10k row pull-ups overpowering
+100k column pull-downs (pressed row approximately91% VDD). The new source uses1M
+row pull-ups only for deep entry (approximately9% VDD). The regression passes;
+full clean preflight and fresh exact-SHA hardware tests are pending. The model
+still does not emulate electrical deep wake.
+
+[Fn+F12 cold wake](https://github.com/jc-tanedo/lofree-edge-zmk/issues/13) remains
+an open, lower-priority limitation. No fix or passing media-wake claim is made.
+No publication/deployment is authorized by these test results.
+
+## Initial-candidate investigation
+
+### Initial alpha.3 state
 
 Branch `firmware/power-management`, draft [PR #12](https://github.com/jc-tanedo/lofree-edge-zmk/pull/12).
 Version `0.1.0-alpha.3` is unreleased. Firmware candidate SHA-256
 `3b233eba7abec417b946df30cb474f34de15d3ff82c2b9eb3a48a36a868062fd`
-was installed by the owner and remains an unconfirmed trial.
+was installed by the owner and explicitly accepted for continued hardware testing.
+Flash self-test and separate readback passed: confirmed/count 0, retained stock
+integrity valid. Acceptance is not release approval.
+
+**Deep-wake blocker:** after host Bluetooth was off for90s, re-enabling it and
+pressing multiple keys did not reconnect. USB recovery via ON is being checked.
+Do not publish this candidate or mark deep wake passed.
 
 **Hardware validation is incomplete:** the owner reports about one second of
 Bluetooth wake delay. A first-key loss was initially reported, but a later
@@ -11,9 +34,13 @@ single-tap capture produced one letter and two notifications, consistent with
 press/release. That sample does not reproduce first-key loss. Its filter omitted
 timing headers, so it cannot establish latency or link state. A timed warm/idle comparison delivered both taps; its cue-to-report delays
 include human reaction and do not measure firmware latency. Retained sleep is
-expected to keep Bluetooth connected. Caps-indicator sleep/wake observation is
-the next physical check. Do not accept
-or publish before the remaining physical gates are resolved. Agent-side
+expected to keep Bluetooth connected. The subsequent owner check passed:
+Caps ON became dark after idle, and one A promptly restored the indicator and
+one uppercase letter. This supports the scan-sleep/wake path, not measured
+current draw. Earlier first-key loss was not reproduced in these later checks.
+Manual retained-stock return was verified by stock USB identity; the owner
+reinstalled the same candidate and authorized its self-test/acceptance.
+Do not publish before the remaining physical gates are resolved. Agent-side
 Bluetooth queries expose no named Edge and cannot establish host connection state.
 
 Owner-confirmed ON checks pass: ordinary typing, media, Caps indicator,

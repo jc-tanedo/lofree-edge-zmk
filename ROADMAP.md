@@ -18,11 +18,21 @@ The first prerelease now has clean builds, package/license audits, hosted-path v
 
 **in progress** · Power and mode handling
 
-Runtime dim/off/sleep settings and Edge wake integration are under development; physical sleep/wake and measured power remain unvalidated.
+Unreleased alpha.3 has device Power settings and owner-tested ON lighting and ordinary battery wake; deep/OFF/host-suspend, final persistence and current validation remain incomplete.
 
 **Acceptance:** Measure wired/BLE idle current, validate wake keys and reconnect, and demonstrate no lost saved mappings across repeated sleep/wake cycles.
 
 [Tracking issue](https://github.com/jc-tanedo/lofree-edge-zmk/issues/2)
+
+## Fn/media after connected sleep
+
+**needs investigation** · Power and mode handling
+
+Fn+F12 can miss its first volume action or wake with a delay in the unreleased alpha.3; ordinary row wake was fast. Lower priority per owner; not resolved.
+
+**Acceptance:** Locate wake/layer/consumer-report timing and validate repeated full-idle Fn/media press and release on hardware with regression coverage; document host conditions.
+
+[Tracking issue](https://github.com/jc-tanedo/lofree-edge-zmk/issues/13)
 
 ## Physical mode switch
 

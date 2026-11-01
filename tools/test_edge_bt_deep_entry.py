@@ -38,7 +38,19 @@ for port,bit in s['columns']:
     reg=0x0e+port*2+bit//4
     assert (m.analog[reg]>>(2*(bit%4)))&3==2
     assert m.regs_mem[0x580+8*port+2]&(1<<bit)
+# A closed key joins its row pull-up to its column pull-down. Unlike the
+# driven-low scan model, deep sleep must overcome that pull-up electrically.
+# Require a conservative LOW below20% VDD (1M up /100k down gives9.1%).
+for port,bit in s['rows']:
+    reg=0x0e+port*2+bit//4
+    pull=(m.analog[reg]>>(2*(bit%4)))&3
+    up={1:1000000,3:10000}.get(pull)
+    assert up is not None,('Deep row missing pull-up',port,bit,pull)
+    fraction=100000/(up+100000)
+    assert fraction<0.2,('Deep key cannot pull row LOW',port,bit,pull,fraction)
 assert not u.dp_pullup() and not m.regs_mem[0x780]&0x10
 assert bytes(m.flash.mem[0x68000:0x6b000])==guard,'Deep entry changed trial guard flash'
+from edge_stack_checks import check
+print('DEEP STACK MARGINS:',check(m,ROOT/'firmware/build'/os.environ['EDGE_TEST_BUILD']/'zephyr/zmk.elf'),flush=True)
 print('PASS: actual BT advertising policy reaches pad-only deep entry; all six rows/selector wake, column pulls and data/lighting inhibition checked',flush=True)
 print('LIMIT: deep wake itself is not modeled; no automatic acceptance or physical wake claim',flush=True)

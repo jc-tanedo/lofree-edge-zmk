@@ -43,5 +43,7 @@ for port,bit in s['state']['columns']:
     assert (m.analog[reg]>>(2*(bit%4)))&3==2
     assert m.regs_mem[0x580+8*port+2]&(1<<bit)
 assert not u.dp_pullup() and not m.regs_mem[0x780]&0x10
+from edge_stack_checks import check
+print('OFF DEEP STACK MARGINS:',check(m,ROOT/'firmware/build'/os.environ['EDGE_TEST_BUILD']/'zephyr/zmk.elf'),flush=True)
 print('PASS: compiled OFF deep-entry mode, selector-only wake mask, column pulls/output inhibition and lighting/data off',flush=True)
 print('LIMIT: emulator stops at deep entry; physical deep wake, current and cable detection remain hardware gates',flush=True)

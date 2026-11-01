@@ -217,6 +217,15 @@ export function EdgePower({ ready, busy }: { ready: boolean; busy: boolean }) {
             deep sleep reconnects on wake. The deep-sleep wake key may be
             consumed.
           </p>
+          <p>
+            Known limitation: Fn+F12 can miss or delay its first action after
+            Bluetooth sleep. {" "}
+            <a
+              href="https://github.com/jc-tanedo/lofree-edge-zmk/issues/13"
+              target="_blank"
+              rel="noreferrer"
+            >Track wake issue</a>.
+          </p>
           {dirty && !validPower(draft) && (
             <p role="alert">
               Use whole seconds up to 86400 (24 hours), in order, and a
