@@ -9,8 +9,9 @@ and reboot persistence; encrypted BLE suspend/pad wake x3 and all mode/legacy-ou
 regressions passed with stack margins >=128 bytes. Additional checks passed for
 RF-register loss on suspend, a key racing with entry, USB-host suspend and BT/OFF deep
 entry. Storage fault-injection validation and full CI remain in progress. Deep wake/current are not modeled; physical hardware tests remain mandatory.
-The first trimmed Studio and OTA stacks failed tests and were restored. Current
-build uses 22388/22528 static RAM and a 32-entry behavior queue, three profiles/layers.
+The first trimmed stacks failed tests. An additional pre-reset peak check found
+Studio1712/1800 (84 spare); its allocation is now2048 with a16-entry behavior queue.
+Current build uses22316/22528 static RAM, with three profiles/layers.
 See [power management](power-management.md). No hardware writes performed.
 
 # Current status

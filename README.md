@@ -50,6 +50,18 @@ Use a desktop browser exposing WebHID for the stock tools and Web Serial for Stu
 ![Studio connection screen](docs/images/studio-connect.png)
 
 <details>
+<summary>Power management preview — unreleased alpha.3</summary>
+
+Studio can edit idle dim/off/Bluetooth sleep timers and relative dim brightness, with settings stored on the keyboard. Each timer supports Never. This work is under validation; use published artifacts until its [exact-image hardware checklist](docs/validation/v0.1.0-alpha.3.md) passes. No battery-life improvement is claimed without measurements.
+
+![Studio Power settings: idle timers and relative backlight brightness, with the persistent risk warning](docs/images/power-settings.png)
+
+*Interface preview using a simulated connection; this screenshot is not evidence of hardware sleep or current draw.*
+
+See [implementation and validation notes](docs/power-management.md).
+</details>
+
+<details>
 <summary>Build and run locally</summary>
 
 See [development](docs/development.md), [release procedure](docs/releasing.md) and [licensing](LICENSING.md).
