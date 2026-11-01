@@ -9,7 +9,7 @@ Independent, experimental firmware and browser tools for the Lofree Edge 84-key 
 
 ![Firmware installer with a persistent experimental-use warning](docs/images/firmware.png)
 
-> The hosted UI becomes available after the first reviewed prerelease is published. Draft artifacts have not been certified by prior-build hardware tests.
+> Use published prerelease artifacts only. [The alpha validation record](docs/validation/v0.1.0-alpha.1.md) covers one Edge and CachyOS host; prior-build tests do not validate a newly built image.
 
 ## Why this exists
 
@@ -55,7 +55,8 @@ See [development](docs/development.md), [release procedure](docs/releasing.md) a
 
 ```sh
 python3 tools/bootstrap.py
-sh tools/build_edge_zmk.sh --ble-studio
+.venv/bin/python tools/install_toolchain.py
+LLVM_TOOLCHAIN_PATH="$PWD/build/toolchain23" sh tools/build_edge_zmk.sh --ble-studio
 EDGE_SITE_BASE=/lofree-edge-zmk sh tools/build_edge_studio_ui.sh
 .venv/bin/python tools/package_release.py --site-base /lofree-edge-zmk
 ```
