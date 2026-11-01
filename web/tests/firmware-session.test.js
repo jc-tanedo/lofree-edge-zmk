@@ -5,7 +5,10 @@ import { protectFirmwareTransfer, readFirmwareAttempt, saveFirmwareAttempt } fro
 test('an active transfer asks before unloading, and cleanup removes the warning', () => {
   const target = new EventTarget();
   const cleanup = protectFirmwareTransfer(target);
+  // A browser BeforeUnloadEvent has a writable string returnValue. Node 22's
+  // generic Event exposes only a getter, so model the browser-specific field.
   const active = new Event('beforeunload', { cancelable: true });
+  Object.defineProperty(active, 'returnValue', { value: '', writable: true });
   target.dispatchEvent(active);
   assert.equal(active.defaultPrevented, true);
   cleanup();
