@@ -1,0 +1,865 @@
+{
+  "layers": [
+    {
+      "id": 0,
+      "name": "Base",
+      "bindings": [
+        {
+          "behaviorId": 50397,
+          "param1": 458793,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458810,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458811,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458812,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458813,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458814,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458815,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458816,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458817,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458818,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458819,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458820,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458821,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458822,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458825,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458805,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458782,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458783,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458784,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458785,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458786,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458787,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458788,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458789,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458790,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458791,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458797,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458798,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458794,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458826,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458795,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458772,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458778,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458760,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458773,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458775,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458780,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458776,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458764,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458770,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458771,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458799,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458800,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458801,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458828,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458809,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458756,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458774,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458759,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458761,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458762,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458763,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458765,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458766,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458767,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458803,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458804,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458829,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458792,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458827,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458977,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458781,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458779,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458758,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458777,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458757,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458769,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458768,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458806,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458807,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458808,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458981,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458834,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458976,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458979,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458978,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458796,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458831,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458982,
+          "param2": 0
+        },
+        {
+          "behaviorId": 54567,
+          "param1": 1,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458830,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458980,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458832,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 458833,
+          "param2": 0
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "name": "Fn",
+      "bindings": [
+        {
+          "behaviorId": 35471,
+          "param1": 2,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 786544,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 786543,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 134676523,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 786977,
+          "param2": 0
+        },
+        {
+          "behaviorId": 35471,
+          "param1": 4,
+          "param2": 0
+        },
+        {
+          "behaviorId": 35471,
+          "param1": 3,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 786614,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 786637,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 786613,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 786658,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 786666,
+          "param2": 0
+        },
+        {
+          "behaviorId": 50397,
+          "param1": 786665,
+          "param2": 0
+        },
+        {
+          "behaviorId": 56811,
+          "param1": 0,
+          "param2": 0
+        },
+        {
+          "behaviorId": 56811,
+          "param1": 0,
+          "param2": 0
+        },
+        {
+          "behaviorId": 56811,
+          "param1": 0,
+          "param2": 0
+        },
+        {
+          "behaviorId": 56811,
+          "param1": 0,
+          "param2": 0
+        },
+        {
+          "behaviorId": 56811,
+          "param1": 0,
+          "param2": 0
+        },
+        {
+          "behaviorId": 56811,
+          "param1": 0,
+          "param2": 0
+        },
+        {
+          "behaviorId": 56811,
+          "param1": 0,
+          "param2": 0
+        },
+        {
+          "behaviorId": 56811,
+          "param1": 0,
+          "param2": 0
+        },
+        {
+          "behaviorId": 56811,
+          "param1": 0,
+          "param2": 0
+        },
+        {
+          "behaviorId": 56811,
+          "param1": 0,
+          "param2": 0
+        },
+        {
+          "behaviorId": 56811,
+          "param1": 0,
+          "param2": 0
+        },
+        {
+          "behaviorId": 56811,
+          "param1": 0,
+          "param2": 0
+        },
+        {
+          "behaviorId": 56811,
+          "param1": 0,
+          "param2": 0
+        },
+        {
+          "behaviorId": 56811,
+          "param1": 0,
+          "param2": 0
+        },
+        {
+          "behaviorId": 56811,
+          "param1": 0,
+          "param2": 0
+        },
+        {
+          "behaviorId": 56811,
+          "param1": 0,
+          "param2": 0
+        },
+        {
+          "behaviorId": 56811,
+          "param1": 0,
+          "param2": 0
+        },
+        {
+          "behaviorId": 56811,
+          "param1": 0,
+          "param2": 0
+        },
+        {
+          "behaviorId": 56811,
+          "param1": 0,
+          "param2": 0
+        },
+        {
+          "behaviorId": 56811,
+          "param1": 0,
+          "param2": 0
+        },
+        {
+          "behaviorId": 56811,
+          "param1": 0,
+          "param2": 0
+        },
+        {
+          "behaviorId": 56811,
+          "param1": 0,
+          "param2": 0
+        },
+        {
+          "behaviorId": 56811,
+          "param1": 0,
+          "param2": 0
+        },
+        {
+          "behaviorId": 56811,
+          "param1": 0,
+          "param2": 0
+        },
+        {
+          "behaviorId": 3965,
+          "param1": 0,
+          "param2": 0
+        },
+        {
+          "behaviorId": 56811,
+          "param1": 0,
+          "param2": 0
+        },
+        {
+          "behaviorId": 56811,
+          "param1": 0,
+          "param2": 0
+        },
+        {
+          "behaviorId": 56811,
+          "param1": 0,
+          "param2": 0
+        },
+        {
+          "behaviorId": 56811,
+          "param1": 0,
+          "param2": 0
+        },
+        {
+          "behaviorId": 56811,
+          "param1": 0,
+          "param2": 0
+        },
+        {
+          "behaviorId": 56811,
+          "param1": 0,
+          "param2": 0
+        },
+        {
+          "behaviorId": 56811,
+          "param1": 0,
+          "param2": 0
+        },
+        {
+          "behaviorId": 56811,
+          "param1": 0,
+          "param2": 0
+        },
+        {
+          "behaviorId": 56811,
+          "param1": 0,
+          "param2": 0
+        },
+        {
+          "behaviorId": 56811,
+          "param1": 0,
+          "param2": 0
+        },
+        {
+          "behaviorId": 56811,
+          "param1": 0,
+          "param2": 0
+        },
+        {
+          "behaviorId": 56811,
+          "param1": 0,
+          "param2": 0
+        },
+        {
+          "behaviorId": 56811,
+          "param1": 0,
+          "param2": 0
+        },
+        {
+          "behaviorId": 56811,
+          "param1": 0,
+          "param2": 0
+        },
+        {
+          "behaviorId": 56811,
+          "param1": 0,
+          "param2": 0
+        },
+        {
+          "behaviorId": 56811,
+          "param1": 0,
+          "param2": 0
+        },
+        {
+          "behaviorId": 56811,
+          "param1": 0,
+          "param2": 0
+        },
+        {
+          "behaviorId": 56811,
+          "param1": 0,
+          "param2": 0
+        },
+        {
+          "behaviorId": 56811,
+          "param1": 0,
+          "param2": 0
+        },
+        {
+          "behaviorId": 56811,
+          "param1": 0,
+          "param2": 0
+        },
+        {
+          "behaviorId": 56811,
+          "param1": 0,
+          "param2": 0
+        },
+        {
+          "behaviorId": 56811,
+          "param1": 0,
+          "param2": 0
+        },
+        {
+          "behaviorId": 56811,
+          "param1": 0,
+          "param2": 0
+        },
+        {
+          "behaviorId": 56811,
+          "param1": 0,
+          "param2": 0
+        },
+        {
+          "behaviorId": 56811,
+          "param1": 0,
+          "param2": 0
+        },
+        {
+          "behaviorId": 56811,
+          "param1": 0,
+          "param2": 0
+        },
+        {
+          "behaviorId": 56811,
+          "param1": 0,
+          "param2": 0
+        },
+        {
+          "behaviorId": 56811,
+          "param1": 0,
+          "param2": 0
+        },
+        {
+          "behaviorId": 56811,
+          "param1": 0,
+          "param2": 0
+        },
+        {
+          "behaviorId": 56811,
+          "param1": 0,
+          "param2": 0
+        },
+        {
+          "behaviorId": 56811,
+          "param1": 0,
+          "param2": 0
+        },
+        {
+          "behaviorId": 56811,
+          "param1": 0,
+          "param2": 0
+        },
+        {
+          "behaviorId": 56811,
+          "param1": 0,
+          "param2": 0
+        },
+        {
+          "behaviorId": 56811,
+          "param1": 0,
+          "param2": 0
+        },
+        {
+          "behaviorId": 35471,
+          "param1": 3,
+          "param2": 0
+        },
+        {
+          "behaviorId": 56811,
+          "param1": 0,
+          "param2": 0
+        },
+        {
+          "behaviorId": 56811,
+          "param1": 0,
+          "param2": 0
+        },
+        {
+          "behaviorId": 56811,
+          "param1": 0,
+          "param2": 0
+        },
+        {
+          "behaviorId": 38850,
+          "param1": 0,
+          "param2": 0
+        },
+        {
+          "behaviorId": 56811,
+          "param1": 0,
+          "param2": 0
+        },
+        {
+          "behaviorId": 56811,
+          "param1": 0,
+          "param2": 0
+        },
+        {
+          "behaviorId": 56811,
+          "param1": 0,
+          "param2": 0
+        },
+        {
+          "behaviorId": 56811,
+          "param1": 0,
+          "param2": 0
+        },
+        {
+          "behaviorId": 56811,
+          "param1": 0,
+          "param2": 0
+        },
+        {
+          "behaviorId": 56811,
+          "param1": 0,
+          "param2": 0
+        },
+        {
+          "behaviorId": 35471,
+          "param1": 4,
+          "param2": 0
+        }
+      ]
+    }
+  ],
+  "availableLayers": 1,
+  "behaviorNames": {
+    "50397": "key_press",
+    "54567": "momentary_layer",
+    "35471": "bcklight",
+    "56811": "transparent",
+    "3965": "studio_unlock",
+    "38850": "prev_firmware"
+  }
+}

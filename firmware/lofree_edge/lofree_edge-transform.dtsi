@@ -1,0 +1,92 @@
+/* Generated draft; see matrix-evidence.md. */
+#include <dt-bindings/zmk/matrix_transform.h>
+/ { edge_transform: edge_transform {
+ compatible = "zmk,matrix-transform";
+ rows = <6>; columns = <15>;
+ map = <
+  RC(0,0) /* slot 0: Esc */
+  RC(0,1) /* slot 1: F1 */
+  RC(0,2) /* slot 2: F2 */
+  RC(0,3) /* slot 3: F3 */
+  RC(0,4) /* slot 4: F4 */
+  RC(0,5) /* slot 5: F5 */
+  RC(0,6) /* slot 6: F6 */
+  RC(0,7) /* slot 7: F7 */
+  RC(0,8) /* slot 8: F8 */
+  RC(0,9) /* slot 9: F9 */
+  RC(0,10) /* slot 10: F10 */
+  RC(0,11) /* slot 11: F11 */
+  RC(0,12) /* slot 12: F12 */
+  RC(0,13) /* slot 13: PrintScreen */
+  RC(0,14) /* slot 14: Insert */
+  RC(1,0) /* slot 15: ` */
+  RC(1,1) /* slot 16: 1 */
+  RC(1,2) /* slot 17: 2 */
+  RC(1,3) /* slot 18: 3 */
+  RC(1,4) /* slot 19: 4 */
+  RC(1,5) /* slot 20: 5 */
+  RC(1,6) /* slot 21: 6 */
+  RC(1,7) /* slot 22: 7 */
+  RC(1,8) /* slot 23: 8 */
+  RC(1,9) /* slot 24: 9 */
+  RC(1,10) /* slot 25: 0 */
+  RC(1,11) /* slot 26: - */
+  RC(1,12) /* slot 27: + */
+  RC(1,13) /* slot 28: BackSpace */
+  RC(1,14) /* slot 29: Home */
+  RC(2,0) /* slot 30: Tab */
+  RC(2,1) /* slot 31: Q */
+  RC(2,2) /* slot 32: W */
+  RC(2,3) /* slot 33: E */
+  RC(2,4) /* slot 34: R */
+  RC(2,5) /* slot 35: T */
+  RC(2,6) /* slot 36: Y */
+  RC(2,7) /* slot 37: U */
+  RC(2,8) /* slot 38: I */
+  RC(2,9) /* slot 39: O */
+  RC(2,10) /* slot 40: P */
+  RC(2,11) /* slot 41: [ */
+  RC(2,12) /* slot 42: ] */
+  RC(2,13) /* slot 43: \\ */
+  RC(2,14) /* slot 44: Delete */
+  RC(3,0) /* slot 45: CapsLock */
+  RC(3,1) /* slot 46: A */
+  RC(3,2) /* slot 47: S */
+  RC(3,3) /* slot 48: D */
+  RC(3,4) /* slot 49: F */
+  RC(3,5) /* slot 50: G */
+  RC(3,6) /* slot 51: H */
+  RC(3,7) /* slot 52: J */
+  RC(3,8) /* slot 53: K */
+  RC(3,9) /* slot 54: L */
+  RC(3,10) /* slot 55: ; */
+  RC(3,11) /* slot 56: ' */
+  RC(3,12) /* slot 57: End */
+  RC(3,13) /* slot 58: Enter */
+  RC(3,14) /* slot 59: PageUp */
+  RC(4,0) /* slot 60: Shift */
+  RC(4,2) /* slot 62: Z */
+  RC(4,3) /* slot 63: X */
+  RC(4,4) /* slot 64: C */
+  RC(4,5) /* slot 65: V */
+  RC(4,6) /* slot 66: B */
+  RC(4,7) /* slot 67: N */
+  RC(4,8) /* slot 68: M */
+  RC(4,9) /* slot 69: , */
+  RC(4,10) /* slot 70: . */
+  RC(4,11) /* slot 71: / */
+  RC(4,13) /* slot 73: Rightshift */
+  RC(4,14) /* slot 74: Up */
+  RC(5,0) /* slot 75: Ctrl */
+  RC(5,1) /* slot 76: Win */
+  RC(5,2) /* slot 77: Alt */
+  RC(5,5) /* slot 80: Space */
+  RC(5,8) /* slot 83: Right */
+  RC(5,9) /* slot 84: Right Alt */
+  RC(5,10) /* slot 85: Fn */
+  RC(5,11) /* slot 86: PageDown */
+  RC(5,12) /* slot 87: Right Ctrl */
+  RC(5,13) /* slot 88: Left */
+  RC(5,14) /* slot 89: Down */
+ >;
+}; };

@@ -1,0 +1,29 @@
+if BOARD_LOFREE_EDGE
+config ZMK_KEYBOARD_NAME
+    default "Lofree Edge ZMK"
+config ZMK_KSCAN_MATRIX_POLLING
+    default y
+config ZMK_KSCAN_GPIO_MATRIX
+    default y
+config TLSR_USB_OTA
+    default y
+config TLSR_BOOT_GUARD
+    default y
+config BOARD_EARLY_INIT_HOOK
+    default y if TLSR_BOOT_GUARD_EARLY
+config USB_HID_DEVICE_COUNT
+    default 2 if TLSR_USB_OTA
+config HID_INTERRUPT_EP_MPS
+    default 64 if TLSR_USB_OTA
+DT_CHOSEN_Z_SRAM := zephyr,sram
+config SRAM_SIZE
+    default $(dt_chosen_reg_size_int,$(DT_CHOSEN_Z_SRAM),0,K)
+DT_CHOSEN_Z_FLASH := zephyr,flash
+config FLASH_SIZE
+    default $(dt_chosen_reg_size_int,$(DT_CHOSEN_Z_FLASH),0,K)
+DT_CHOSEN_Z_CODE_PARTITION := zephyr,code-partition
+config FLASH_LOAD_OFFSET
+    default $(dt_chosen_reg_addr_hex,$(DT_CHOSEN_Z_CODE_PARTITION)) if USE_DT_CODE_PARTITION
+config FLASH_LOAD_SIZE
+    default $(dt_chosen_reg_size_hex,$(DT_CHOSEN_Z_CODE_PARTITION)) if USE_DT_CODE_PARTITION
+endif

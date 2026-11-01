@@ -1,0 +1,25 @@
+name: Bug report
+description: A reproducible problem with the experimental firmware or tools
+title: "[Bug] "
+body:
+  - type: markdown
+    attributes:
+      value: "Experimental firmware, website, tools and instructions are used entirely at your own risk. Do not attach backups, bond keys, serial numbers or raw captures."
+  - type: input
+    id: version
+    attributes:
+      label: Release version and firmware SHA-256
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Hardware revision, OS, browser and USB/Bluetooth mode
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Reproduction steps, expected and actual behavior
+    validations:
+      required: true

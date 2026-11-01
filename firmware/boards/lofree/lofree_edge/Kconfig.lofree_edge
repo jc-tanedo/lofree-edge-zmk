@@ -1,0 +1,2 @@
+config BOARD_LOFREE_EDGE
+    select SOC_TLSR8278

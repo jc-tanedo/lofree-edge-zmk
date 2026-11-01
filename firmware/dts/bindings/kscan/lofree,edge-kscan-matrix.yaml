@@ -1,0 +1,16 @@
+description: Edge matrix with a shared Caps Lock indicator column
+compatible: "lofree,edge-kscan-matrix"
+include: "zmk,kscan-gpio-matrix.yaml"
+properties:
+  caps-source-gpios:
+    type: phandle-array
+    required: true
+    description: Stock PC1 high source for the shared-column Caps indicator
+  indicator-power-gpios:
+    type: phandle-array
+    required: true
+    description: Stock PD3 output-high enable
+  indicator-enable-gpios:
+    type: phandle-array
+    required: true
+    description: PA7 output-high in physically observed running stock firmware

@@ -1,0 +1,3 @@
+/* Native TLSR8278 radio; no unverified Edge GPIO assignments. */
+&radio { status = "okay"; };
+&pke { status = "okay"; };

@@ -1,0 +1,95 @@
+# Roadmap
+
+Experimental firmware and tools, used entirely at your own risk. [Risk notice](RISK.md).
+
+Statuses describe work, not promised delivery dates. The completed core-feature item records earlier evidence, not validation of a new release.
+
+## Release hardening
+
+**in progress** · First public prerelease
+
+Clean builds, packaging, licensing, hosted paths and exact-SHA hardware review are required.
+
+**Acceptance:** CI passes from a clean checkout; artifacts audited; exact OTA passes the hardware checklist before publication.
+
+Tracking issue will be linked after the public repository is created.
+
+## Sleep and power management
+
+**needs investigation** · Power and mode handling
+
+Deep/idle sleep and battery-life behavior are unfinished.
+
+**Acceptance:** Measure wired/BLE idle current, validate wake keys and reconnect, and demonstrate no lost saved mappings across repeated sleep/wake cycles.
+
+Tracking issue will be linked after the public repository is created.
+
+## Physical mode switch
+
+**needs investigation** · Power and mode handling
+
+Native stack does not yet follow the physical mode GPIO; shortcuts select output.
+
+**Acceptance:** Map switch positions electrically and verify correct USB/BLE/power behavior and reconnect across transitions.
+
+Tracking issue will be linked after the public repository is created.
+
+## Measured battery reporting
+
+**needs investigation** · Power and mode handling
+
+The current battery report is a placeholder, not a measurement.
+
+**Acceptance:** Identify sensing hardware, calibrate readings and validate charge/low-battery states against external measurements.
+
+Tracking issue will be linked after the public repository is created.
+
+## Hardware and host coverage
+
+**planned** · Compatibility
+
+Only one physical Edge and limited host configurations have been exercised.
+
+**Acceptance:** Publish a device revision and host/browser matrix with typing, Bluetooth, USB, indicators, persistence and recovery evidence.
+
+Tracking issue will be linked after the public repository is created.
+
+## Wireless keymap editing
+
+**needs investigation** · Future capabilities
+
+Studio currently edits over USB only.
+
+**Acceptance:** Establish browser/transport feasibility and secure unlock; demonstrate read, edit, save, disconnect and recovery without USB.
+
+Tracking issue will be linked after the public repository is created.
+
+## More than three layers
+
+**deferred** · Future capabilities
+
+Current firmware reserves three total layers; retain this limit for the first release.
+
+**Acceptance:** Measure RAM/flash/storage costs and test save/load/import and upgrade compatibility before raising the limit.
+
+Tracking issue will be linked after the public repository is created.
+
+## Broader behaviors and lighting
+
+**deferred** · Future capabilities
+
+The current UI supports advertised behaviors; custom shortcut presets are not a macro engine and lighting is limited.
+
+**Acceptance:** Select concrete behavior/effect additions, validate live metadata and runtime editing, and document memory/compatibility costs.
+
+Tracking issue will be linked after the public repository is created.
+
+## Core typing, layers and indicators
+
+**completed** · Existing evidence
+
+Earlier private builds were physically tested on one keyboard; this is not new-candidate certification.
+
+**Acceptance:** Typing, Fn/media, Caps fully on/off, backlight toggle/brightness and layer persistence demonstrated on the tested device.
+
+Tracking issue will be linked after the public repository is created.

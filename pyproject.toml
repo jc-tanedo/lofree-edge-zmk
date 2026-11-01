@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lofree-edge"
+version = "0.1.0a1"
+description = "Experimental Lofree Edge protocol tools; use entirely at your own risk"
+license = "GPL-3.0-or-later"
+requires-python = ">=3.10"
+dependencies = []
+
+[project.scripts]
+lofree-edge = "lofree_edge.__main__:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

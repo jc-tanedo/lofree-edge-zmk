@@ -1,0 +1,7 @@
+description: Lofree Edge white backlight on PB4 PWM4
+compatible: "lofree,edge-backlight"
+child-binding:
+  description: The single white key backlight
+  properties:
+    label:
+      type: string

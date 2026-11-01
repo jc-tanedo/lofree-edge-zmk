@@ -1,0 +1,71 @@
+/* Experimental build target. Partition allocation requires Edge validation. */
+/dts-v1/;
+#include <telink/tlsr8278.dtsi>
+#include <zephyr/dt-bindings/gpio/gpio.h>
+#include "../../../lofree_edge/lofree_edge-transform.dtsi"
+/ {
+ model = "Lofree Edge Experimental";
+ compatible = "lofree,edge";
+ behaviors {
+  prev_fw: prev_firmware {
+   compatible = "zmk,behavior-prev-firmware";
+   #binding-cells = <0>;
+   hold-ms = <3000>;
+  };
+ };
+ chosen {
+  zephyr,sram = &sram0;
+  zephyr,flash = &flash;
+  zephyr,code-partition = &code_partition;
+  zmk,kscan = &kscan0;
+  zmk,matrix-transform = &edge_transform;
+  zmk,backlight = &edge_backlight;
+ };
+ edge_backlight: backlight {
+  compatible = "lofree,edge-backlight";
+  led { label = "White key backlight"; };
+ };
+ kscan0: kscan {
+  compatible = "lofree,edge-kscan-matrix";
+  caps-source-gpios = <&gpioc 1 GPIO_ACTIVE_HIGH>;
+  indicator-power-gpios = <&gpiod 3 GPIO_ACTIVE_HIGH>;
+  indicator-enable-gpios = <&gpioa 7 GPIO_ACTIVE_HIGH>;
+  diode-direction = "col2row";
+  debounce-scan-period-ms = <3>;
+  poll-period-ms = <5>;
+  col-gpios = <&gpiob 5 GPIO_ACTIVE_LOW>, <&gpiob 2 GPIO_ACTIVE_LOW>,
+   <&gpiob 1 GPIO_ACTIVE_LOW>, <&gpiob 0 GPIO_ACTIVE_LOW>,
+   <&gpioa 4 GPIO_ACTIVE_LOW>, <&gpioa 3 GPIO_ACTIVE_LOW>,
+   <&gpioa 2 GPIO_ACTIVE_LOW>, <&gpioa 1 GPIO_ACTIVE_LOW>,
+   <&gpioa 0 GPIO_ACTIVE_LOW>, <&gpiod 4 GPIO_ACTIVE_LOW>,
+   <&gpiod 2 GPIO_ACTIVE_LOW>, <&gpiod 1 GPIO_ACTIVE_LOW>,
+   <&gpiod 0 GPIO_ACTIVE_LOW>, <&gpioc 7 GPIO_ACTIVE_LOW>,
+   <&gpioc 6 GPIO_ACTIVE_LOW>;
+  row-gpios = <&gpioc 5 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>,
+   <&gpioc 4 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>,
+   <&gpioc 3 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>,
+   <&gpioc 2 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>,
+   <&gpioc 0 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>,
+   <&gpiob 7 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
+ };
+};
+&gpioa { status = "okay"; };
+&gpiob { status = "okay"; };
+&gpioc { status = "okay"; };
+&gpiod { status = "okay"; };
+&sram0 { reg = <0x00840000 0x00008000>; };
+&flash {
+ compatible = "telink,tlsr-spi-flash";
+ reg = <0 0x80000>;
+ partitions {
+  compatible = "fixed-partitions";
+  #address-cells = <1>;
+  #size-cells = <1>;
+  code_partition: partition@0 { label = "slot-a"; reg = <0 0x20000>; };
+  slot_b_partition: partition@20000 { label = "slot-b"; reg = <0x20000 0x20000>; };
+  storage_partition: partition@60000 { label = "storage"; reg = <0x60000 0x8000>; };
+  guard_partition: partition@68000 { label = "tlsr-guard"; reg = <0x68000 0x3000>; };
+ };
+};
+&usbd { status = "okay"; };
+&flash_ctrl { status = "okay"; };

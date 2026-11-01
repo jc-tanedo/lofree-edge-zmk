@@ -1,0 +1,83 @@
+[
+  {
+    "id": "release-readiness",
+    "title": "Release hardening",
+    "status": "in progress",
+    "milestone": "First public prerelease",
+    "limitation": "Clean builds, packaging, licensing, hosted paths and exact-SHA hardware review are required.",
+    "acceptance": "CI passes from a clean checkout; artifacts audited; exact OTA passes the hardware checklist before publication.",
+    "issue": null
+  },
+  {
+    "id": "sleep",
+    "title": "Sleep and power management",
+    "status": "needs investigation",
+    "milestone": "Power and mode handling",
+    "limitation": "Deep/idle sleep and battery-life behavior are unfinished.",
+    "acceptance": "Measure wired/BLE idle current, validate wake keys and reconnect, and demonstrate no lost saved mappings across repeated sleep/wake cycles.",
+    "issue": null
+  },
+  {
+    "id": "switch",
+    "title": "Physical mode switch",
+    "status": "needs investigation",
+    "milestone": "Power and mode handling",
+    "limitation": "Native stack does not yet follow the physical mode GPIO; shortcuts select output.",
+    "acceptance": "Map switch positions electrically and verify correct USB/BLE/power behavior and reconnect across transitions.",
+    "issue": null
+  },
+  {
+    "id": "battery",
+    "title": "Measured battery reporting",
+    "status": "needs investigation",
+    "milestone": "Power and mode handling",
+    "limitation": "The current battery report is a placeholder, not a measurement.",
+    "acceptance": "Identify sensing hardware, calibrate readings and validate charge/low-battery states against external measurements.",
+    "issue": null
+  },
+  {
+    "id": "compatibility",
+    "title": "Hardware and host coverage",
+    "status": "planned",
+    "milestone": "Compatibility",
+    "limitation": "Only one physical Edge and limited host configurations have been exercised.",
+    "acceptance": "Publish a device revision and host/browser matrix with typing, Bluetooth, USB, indicators, persistence and recovery evidence.",
+    "issue": null
+  },
+  {
+    "id": "wireless-editing",
+    "title": "Wireless keymap editing",
+    "status": "needs investigation",
+    "milestone": "Future capabilities",
+    "limitation": "Studio currently edits over USB only.",
+    "acceptance": "Establish browser/transport feasibility and secure unlock; demonstrate read, edit, save, disconnect and recovery without USB.",
+    "issue": null
+  },
+  {
+    "id": "more-layers",
+    "title": "More than three layers",
+    "status": "deferred",
+    "milestone": "Future capabilities",
+    "limitation": "Current firmware reserves three total layers; retain this limit for the first release.",
+    "acceptance": "Measure RAM/flash/storage costs and test save/load/import and upgrade compatibility before raising the limit.",
+    "issue": null
+  },
+  {
+    "id": "behaviors",
+    "title": "Broader behaviors and lighting",
+    "status": "deferred",
+    "milestone": "Future capabilities",
+    "limitation": "The current UI supports advertised behaviors; custom shortcut presets are not a macro engine and lighting is limited.",
+    "acceptance": "Select concrete behavior/effect additions, validate live metadata and runtime editing, and document memory/compatibility costs.",
+    "issue": null
+  },
+  {
+    "id": "core-features",
+    "title": "Core typing, layers and indicators",
+    "status": "completed",
+    "milestone": "Existing evidence",
+    "limitation": "Earlier private builds were physically tested on one keyboard; this is not new-candidate certification.",
+    "acceptance": "Typing, Fn/media, Caps fully on/off, backlight toggle/brightness and layer persistence demonstrated on the tested device.",
+    "issue": null
+  }
+]

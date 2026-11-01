@@ -1,0 +1,30 @@
+{
+  "zmk-tc32": {
+    "url": "https://github.com/goyamamoto/zmk-tc32.git",
+    "revision": "8fc7fa0024de1178937dfcda48b032fd868d952e"
+  },
+  "zephyr-tc32": {
+    "url": "https://github.com/goyamamoto/zephyr-tc32.git",
+    "revision": "a7410dadb103cf00a9e78593a3abada3219257d3"
+  },
+  "tc32-devtools": {
+    "url": "https://github.com/goyamamoto/tc32-devtools.git",
+    "revision": "2e1bcaed762e3124b024047db981172d2b0395ba"
+  },
+  "tc32-keyboards": {
+    "url": "https://github.com/goyamamoto/tc32-keyboards.git",
+    "revision": "0a673c00cfd01e5b8ffaa483cccfcccedaeaee55"
+  },
+  "zmk-studio": {
+    "url": "https://github.com/zmkfirmware/zmk-studio.git",
+    "revision": "1bb6bb84a370c8917d8e4db15207087b26b3a844"
+  },
+  "nanopb": {
+    "url": "https://github.com/nanopb/nanopb.git",
+    "revision": "0f6d088e777a33dd7b54297f137ef10d745c5da8"
+  },
+  "zmk-studio-messages": {
+    "url": "https://github.com/zmkfirmware/zmk-studio-messages.git",
+    "revision": "6cb4c283e76209d59c45fbcb218800cd19e9339d"
+  }
+}

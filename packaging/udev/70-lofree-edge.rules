@@ -1,0 +1,8 @@
+# Lofree Edge wired vendor interface; grant access to the active local seat user.
+# USB identity attributes share one parent; interface number is supplied by usb_id.
+SUBSYSTEM=="hidraw", ATTRS{idVendor}=="05ac", ATTRS{idProduct}=="0256", ATTRS{manufacturer}=="Telink", ATTRS{product}=="EDGE84@Lofree", ENV{ID_USB_INTERFACE_NUM}=="01", TAG+="uaccess"
+
+# Official Studio uses CDC ACM/Web Serial. Studio adds interfaces before HID,
+# so match product and collection identity rather than a fixed HID interface.
+SUBSYSTEM=="tty", ATTRS{idVendor}=="1d50", ATTRS{idProduct}=="615e", ATTRS{product}=="Lofree Edge ZMK", TAG+="uaccess"
+SUBSYSTEM=="hidraw", ATTRS{idVendor}=="1d50", ATTRS{idProduct}=="615e", ATTRS{product}=="Lofree Edge ZMK", TAG+="uaccess"

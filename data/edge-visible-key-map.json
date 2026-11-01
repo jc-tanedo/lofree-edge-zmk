@@ -1,0 +1,1430 @@
+[
+  {
+    "name": "key_105",
+    "tooltip": "Ctrl",
+    "pos": "127,149,0,0",
+    "width": "33",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 105,
+    "default_triple": [
+      32,
+      1,
+      0
+    ],
+    "slots": [
+      75
+    ]
+  },
+  {
+    "name": "key_106",
+    "tooltip": "Win",
+    "pos": "160,149,0,0",
+    "width": "33",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 106,
+    "default_triple": [
+      32,
+      8,
+      0
+    ],
+    "slots": [
+      76
+    ]
+  },
+  {
+    "name": "key_107",
+    "tooltip": "Alt",
+    "pos": "193,149,0,0",
+    "width": "32",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 107,
+    "default_triple": [
+      32,
+      4,
+      0
+    ],
+    "slots": [
+      77
+    ]
+  },
+  {
+    "name": "key_112",
+    "tooltip": "Right Ctrl",
+    "pos": "441,149,0,0",
+    "width": "26",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 112,
+    "default_triple": [
+      32,
+      16,
+      0
+    ],
+    "slots": [
+      87
+    ]
+  },
+  {
+    "name": "key_110",
+    "tooltip": "Fn",
+    "pos": "415,149,0,0",
+    "width": "26",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 110,
+    "default_triple": [
+      160,
+      1,
+      0
+    ],
+    "slots": [
+      85
+    ]
+  },
+  {
+    "name": "key_109",
+    "tooltip": "Right Alt",
+    "pos": "388,149,0,0",
+    "width": "27",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 109,
+    "default_triple": [
+      32,
+      64,
+      0
+    ],
+    "slots": [
+      84
+    ]
+  },
+  {
+    "name": "key_108",
+    "tooltip": "Space",
+    "pos": "225,149,0,0",
+    "width": "163",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 108,
+    "default_triple": [
+      32,
+      0,
+      44
+    ],
+    "slots": [
+      80
+    ]
+  },
+  {
+    "name": "key_113",
+    "tooltip": "Left",
+    "pos": "467,149,0,0",
+    "width": "26",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 113,
+    "default_triple": [
+      32,
+      0,
+      80
+    ],
+    "slots": [
+      88
+    ]
+  },
+  {
+    "name": "key_114",
+    "tooltip": "Down",
+    "pos": "493,149,0,0",
+    "width": "26",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 114,
+    "default_triple": [
+      32,
+      0,
+      81
+    ],
+    "slots": [
+      89
+    ]
+  },
+  {
+    "name": "key_115",
+    "tooltip": "Right",
+    "pos": "519,149,0,0",
+    "width": "27",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 115,
+    "default_triple": [
+      32,
+      0,
+      79
+    ],
+    "slots": [
+      83
+    ]
+  },
+  {
+    "name": "key_84",
+    "tooltip": "Shift",
+    "pos": "127,123,0,0",
+    "width": "59",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 84,
+    "default_triple": [
+      32,
+      2,
+      0
+    ],
+    "slots": [
+      60
+    ]
+  },
+  {
+    "name": "key_85",
+    "tooltip": "Z",
+    "pos": "186,123,0,0",
+    "width": "26",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 85,
+    "default_triple": [
+      32,
+      0,
+      29
+    ],
+    "slots": [
+      62
+    ]
+  },
+  {
+    "name": "key_86",
+    "tooltip": "X",
+    "pos": "212,123,0,0",
+    "width": "26",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 86,
+    "default_triple": [
+      32,
+      0,
+      27
+    ],
+    "slots": [
+      63
+    ]
+  },
+  {
+    "name": "key_87",
+    "tooltip": "C",
+    "pos": "238,123,0,0",
+    "width": "26",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 87,
+    "default_triple": [
+      32,
+      0,
+      6
+    ],
+    "slots": [
+      64
+    ]
+  },
+  {
+    "name": "key_88",
+    "tooltip": "V",
+    "pos": "264,123,0,0",
+    "width": "26",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 88,
+    "default_triple": [
+      32,
+      0,
+      25
+    ],
+    "slots": [
+      65
+    ]
+  },
+  {
+    "name": "key_89",
+    "tooltip": "B",
+    "pos": "290,123,0,0",
+    "width": "26",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 89,
+    "default_triple": [
+      32,
+      0,
+      5
+    ],
+    "slots": [
+      66
+    ]
+  },
+  {
+    "name": "key_90",
+    "tooltip": "N",
+    "pos": "316,123,0,0",
+    "width": "27",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 90,
+    "default_triple": [
+      32,
+      0,
+      17
+    ],
+    "slots": [
+      67
+    ]
+  },
+  {
+    "name": "key_91",
+    "tooltip": "M",
+    "pos": "343,123,0,0",
+    "width": "26",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 91,
+    "default_triple": [
+      32,
+      0,
+      16
+    ],
+    "slots": [
+      68
+    ]
+  },
+  {
+    "name": "key_92",
+    "tooltip": ",",
+    "pos": "369,123,0,0",
+    "width": "26",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 92,
+    "default_triple": [
+      32,
+      0,
+      54
+    ],
+    "slots": [
+      69
+    ]
+  },
+  {
+    "name": "key_93",
+    "tooltip": ".",
+    "pos": "395,123,0,0",
+    "width": "26",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 93,
+    "default_triple": [
+      32,
+      0,
+      55
+    ],
+    "slots": [
+      70
+    ]
+  },
+  {
+    "name": "key_94",
+    "tooltip": "/",
+    "pos": "421,123,0,0",
+    "width": "26",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 94,
+    "default_triple": [
+      32,
+      0,
+      56
+    ],
+    "slots": [
+      71
+    ]
+  },
+  {
+    "name": "key_95",
+    "tooltip": "Rightshift",
+    "pos": "447,123,0,0",
+    "width": "46",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 95,
+    "default_triple": [
+      32,
+      32,
+      0
+    ],
+    "slots": [
+      73
+    ]
+  },
+  {
+    "name": "key_96",
+    "tooltip": "Up",
+    "pos": "493,123,0,0",
+    "width": "26",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 96,
+    "default_triple": [
+      32,
+      0,
+      82
+    ],
+    "slots": [
+      74
+    ]
+  },
+  {
+    "name": "key_63",
+    "tooltip": "CapsLock",
+    "pos": "127,97,0,0",
+    "width": "46",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 63,
+    "default_triple": [
+      32,
+      0,
+      57
+    ],
+    "slots": [
+      45
+    ]
+  },
+  {
+    "name": "key_64",
+    "tooltip": "A",
+    "pos": "173,97,0,0",
+    "width": "26",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 64,
+    "default_triple": [
+      32,
+      0,
+      4
+    ],
+    "slots": [
+      46
+    ]
+  },
+  {
+    "name": "key_65",
+    "tooltip": "S",
+    "pos": "199,97,0,0",
+    "width": "26",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 65,
+    "default_triple": [
+      32,
+      0,
+      22
+    ],
+    "slots": [
+      47
+    ]
+  },
+  {
+    "name": "key_66",
+    "tooltip": "D",
+    "pos": "225,97,0,0",
+    "width": "26",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 66,
+    "default_triple": [
+      32,
+      0,
+      7
+    ],
+    "slots": [
+      48
+    ]
+  },
+  {
+    "name": "key_67",
+    "tooltip": "F",
+    "pos": "251,97,0,0",
+    "width": "26",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 67,
+    "default_triple": [
+      32,
+      0,
+      9
+    ],
+    "slots": [
+      49
+    ]
+  },
+  {
+    "name": "key_68",
+    "tooltip": "G",
+    "pos": "277,97,0,0",
+    "width": "27",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 68,
+    "default_triple": [
+      32,
+      0,
+      10
+    ],
+    "slots": [
+      50
+    ]
+  },
+  {
+    "name": "key_69",
+    "tooltip": "H",
+    "pos": "304,97,0,0",
+    "width": "26",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 69,
+    "default_triple": [
+      32,
+      0,
+      11
+    ],
+    "slots": [
+      51
+    ]
+  },
+  {
+    "name": "key_70",
+    "tooltip": "J",
+    "pos": "330,97,0,0",
+    "width": "26",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 70,
+    "default_triple": [
+      32,
+      0,
+      13
+    ],
+    "slots": [
+      52
+    ]
+  },
+  {
+    "name": "key_71",
+    "tooltip": "K",
+    "pos": "356,97,0,0",
+    "width": "26",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 71,
+    "default_triple": [
+      32,
+      0,
+      14
+    ],
+    "slots": [
+      53
+    ]
+  },
+  {
+    "name": "key_72",
+    "tooltip": "L",
+    "pos": "382,97,0,0",
+    "width": "26",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 72,
+    "default_triple": [
+      32,
+      0,
+      15
+    ],
+    "slots": [
+      54
+    ]
+  },
+  {
+    "name": "key_73",
+    "tooltip": ";",
+    "pos": "408,97,0,0",
+    "width": "26",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 73,
+    "default_triple": [
+      32,
+      0,
+      51
+    ],
+    "slots": [
+      55
+    ]
+  },
+  {
+    "name": "key_74",
+    "tooltip": "'",
+    "pos": "434,97,0,0",
+    "width": "26",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 74,
+    "default_triple": [
+      32,
+      0,
+      52
+    ],
+    "slots": [
+      56
+    ]
+  },
+  {
+    "name": "key_75",
+    "tooltip": "Enter",
+    "pos": "460,97,0,0",
+    "width": "59",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 75,
+    "default_triple": [
+      32,
+      0,
+      40
+    ],
+    "slots": [
+      58
+    ]
+  },
+  {
+    "name": "key_42",
+    "tooltip": "Tab",
+    "pos": "127,71,0,0",
+    "width": "39",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 42,
+    "default_triple": [
+      32,
+      0,
+      43
+    ],
+    "slots": [
+      30
+    ]
+  },
+  {
+    "name": "key_43",
+    "tooltip": "Q",
+    "pos": "166,71,0,0",
+    "width": "26",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 43,
+    "default_triple": [
+      32,
+      0,
+      20
+    ],
+    "slots": [
+      31
+    ]
+  },
+  {
+    "name": "key_44",
+    "tooltip": "W",
+    "pos": "192,71,0,0",
+    "width": "27",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 44,
+    "default_triple": [
+      32,
+      0,
+      26
+    ],
+    "slots": [
+      32
+    ]
+  },
+  {
+    "name": "key_45",
+    "tooltip": "E",
+    "pos": "219,71,0,0",
+    "width": "26",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 45,
+    "default_triple": [
+      32,
+      0,
+      8
+    ],
+    "slots": [
+      33
+    ]
+  },
+  {
+    "name": "key_46",
+    "tooltip": "R",
+    "pos": "245,71,0,0",
+    "width": "26",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 46,
+    "default_triple": [
+      32,
+      0,
+      21
+    ],
+    "slots": [
+      34
+    ]
+  },
+  {
+    "name": "key_47",
+    "tooltip": "T",
+    "pos": "271,71,0,0",
+    "width": "26",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 47,
+    "default_triple": [
+      32,
+      0,
+      23
+    ],
+    "slots": [
+      35
+    ]
+  },
+  {
+    "name": "key_48",
+    "tooltip": "Y",
+    "pos": "297,71,0,0",
+    "width": "26",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 48,
+    "default_triple": [
+      32,
+      0,
+      28
+    ],
+    "slots": [
+      36
+    ]
+  },
+  {
+    "name": "key_49",
+    "tooltip": "U",
+    "pos": "323,71,0,0",
+    "width": "26",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 49,
+    "default_triple": [
+      32,
+      0,
+      24
+    ],
+    "slots": [
+      37
+    ]
+  },
+  {
+    "name": "key_50",
+    "tooltip": "I",
+    "pos": "349,71,0,0",
+    "width": "26",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 50,
+    "default_triple": [
+      32,
+      0,
+      12
+    ],
+    "slots": [
+      38
+    ]
+  },
+  {
+    "name": "key_51",
+    "tooltip": "O",
+    "pos": "375,71,0,0",
+    "width": "26",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 51,
+    "default_triple": [
+      32,
+      0,
+      18
+    ],
+    "slots": [
+      39
+    ]
+  },
+  {
+    "name": "key_52",
+    "tooltip": "P",
+    "pos": "401,71,0,0",
+    "width": "27",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 52,
+    "default_triple": [
+      32,
+      0,
+      19
+    ],
+    "slots": [
+      40
+    ]
+  },
+  {
+    "name": "key_53",
+    "tooltip": "[",
+    "pos": "428,71,0,0",
+    "width": "26",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 53,
+    "default_triple": [
+      32,
+      0,
+      47
+    ],
+    "slots": [
+      41
+    ]
+  },
+  {
+    "name": "key_54",
+    "tooltip": "]",
+    "pos": "454,71,0,0",
+    "width": "26",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 54,
+    "default_triple": [
+      32,
+      0,
+      48
+    ],
+    "slots": [
+      42
+    ]
+  },
+  {
+    "name": "key_55",
+    "tooltip": "\\\\",
+    "pos": "480,71,0,0",
+    "width": "39",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 55,
+    "default_triple": [
+      32,
+      0,
+      49
+    ],
+    "slots": [
+      43
+    ]
+  },
+  {
+    "name": "key_56",
+    "tooltip": "Delete",
+    "pos": "519,19,0,0",
+    "width": "27",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 56,
+    "default_triple": [
+      32,
+      0,
+      76
+    ],
+    "slots": [
+      44
+    ]
+  },
+  {
+    "name": "key_57",
+    "tooltip": "End",
+    "pos": "519,71,0,0",
+    "width": "27",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 57,
+    "default_triple": [
+      32,
+      0,
+      77
+    ],
+    "slots": [
+      57
+    ]
+  },
+  {
+    "name": "key_58",
+    "tooltip": "PageDown",
+    "pos": "519,123,0,0",
+    "width": "27",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 58,
+    "default_triple": [
+      32,
+      0,
+      78
+    ],
+    "slots": [
+      86
+    ]
+  },
+  {
+    "name": "key_21",
+    "tooltip": "`",
+    "pos": "127,45,0,0",
+    "width": "26",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 21,
+    "default_triple": [
+      32,
+      0,
+      53
+    ],
+    "slots": [
+      15
+    ]
+  },
+  {
+    "name": "key_22",
+    "tooltip": "1",
+    "pos": "153,45,0,0",
+    "width": "26",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 22,
+    "default_triple": [
+      32,
+      0,
+      30
+    ],
+    "slots": [
+      16
+    ]
+  },
+  {
+    "name": "key_23",
+    "tooltip": "2",
+    "pos": "179,45,0,0",
+    "width": "27",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 23,
+    "default_triple": [
+      32,
+      0,
+      31
+    ],
+    "slots": [
+      17
+    ]
+  },
+  {
+    "name": "key_24",
+    "tooltip": "3",
+    "pos": "206,45,0,0",
+    "width": "26",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 24,
+    "default_triple": [
+      32,
+      0,
+      32
+    ],
+    "slots": [
+      18
+    ]
+  },
+  {
+    "name": "key_25",
+    "tooltip": "4",
+    "pos": "232,45,0,0",
+    "width": "26",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 25,
+    "default_triple": [
+      32,
+      0,
+      33
+    ],
+    "slots": [
+      19
+    ]
+  },
+  {
+    "name": "key_26",
+    "tooltip": "5",
+    "pos": "258,45,0,0",
+    "width": "26",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 26,
+    "default_triple": [
+      32,
+      0,
+      34
+    ],
+    "slots": [
+      20
+    ]
+  },
+  {
+    "name": "key_27",
+    "tooltip": "6",
+    "pos": "284,45,0,0",
+    "width": "26",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 27,
+    "default_triple": [
+      32,
+      0,
+      35
+    ],
+    "slots": [
+      21
+    ]
+  },
+  {
+    "name": "key_28",
+    "tooltip": "7",
+    "pos": "310,45,0,0",
+    "width": "26",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 28,
+    "default_triple": [
+      32,
+      0,
+      36
+    ],
+    "slots": [
+      22
+    ]
+  },
+  {
+    "name": "key_29",
+    "tooltip": "8",
+    "pos": "336,45,0,0",
+    "width": "26",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 29,
+    "default_triple": [
+      32,
+      0,
+      37
+    ],
+    "slots": [
+      23
+    ]
+  },
+  {
+    "name": "key_30",
+    "tooltip": "9",
+    "pos": "362,45,0,0",
+    "width": "26",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 30,
+    "default_triple": [
+      32,
+      0,
+      38
+    ],
+    "slots": [
+      24
+    ]
+  },
+  {
+    "name": "key_31",
+    "tooltip": "0",
+    "pos": "388,45,0,0",
+    "width": "27",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 31,
+    "default_triple": [
+      32,
+      0,
+      39
+    ],
+    "slots": [
+      25
+    ]
+  },
+  {
+    "name": "key_32",
+    "tooltip": "-",
+    "pos": "415,45,0,0",
+    "width": "26",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 32,
+    "default_triple": [
+      32,
+      0,
+      45
+    ],
+    "slots": [
+      26
+    ]
+  },
+  {
+    "name": "key_33",
+    "tooltip": "+",
+    "pos": "441,45,0,0",
+    "width": "26",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 33,
+    "default_triple": [
+      32,
+      0,
+      46
+    ],
+    "slots": [
+      27
+    ]
+  },
+  {
+    "name": "key_34",
+    "tooltip": "BackSpace",
+    "pos": "467,45,0,0",
+    "width": "52",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 34,
+    "default_triple": [
+      32,
+      0,
+      42
+    ],
+    "slots": [
+      28
+    ]
+  },
+  {
+    "name": "key_35",
+    "tooltip": "Insert",
+    "pos": "493,19,0,0",
+    "width": "26",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 35,
+    "default_triple": [
+      32,
+      0,
+      73
+    ],
+    "slots": [
+      14
+    ]
+  },
+  {
+    "name": "key_36",
+    "tooltip": "Home",
+    "pos": "519,45,0,0",
+    "width": "27",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 36,
+    "default_triple": [
+      32,
+      0,
+      74
+    ],
+    "slots": [
+      29
+    ]
+  },
+  {
+    "name": "key_37",
+    "tooltip": "PageUp",
+    "pos": "519,97,0,0",
+    "width": "27",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 37,
+    "default_triple": [
+      32,
+      0,
+      75
+    ],
+    "slots": [
+      59
+    ]
+  },
+  {
+    "name": "key_0",
+    "tooltip": "Esc",
+    "pos": "127,19,0,0",
+    "width": "26",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 0,
+    "default_triple": [
+      32,
+      0,
+      41
+    ],
+    "slots": [
+      0
+    ]
+  },
+  {
+    "name": "key_1",
+    "tooltip": "F1",
+    "pos": "153,19,0,0",
+    "width": "26",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 1,
+    "default_triple": [
+      32,
+      0,
+      58
+    ],
+    "slots": [
+      1
+    ]
+  },
+  {
+    "name": "key_2",
+    "tooltip": "F2",
+    "pos": "179,19,0,0",
+    "width": "27",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 2,
+    "default_triple": [
+      32,
+      0,
+      59
+    ],
+    "slots": [
+      2
+    ]
+  },
+  {
+    "name": "key_3",
+    "tooltip": "F3",
+    "pos": "206,19,0,0",
+    "width": "26",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 3,
+    "default_triple": [
+      32,
+      0,
+      60
+    ],
+    "slots": [
+      3
+    ]
+  },
+  {
+    "name": "key_4",
+    "tooltip": "F4",
+    "pos": "232,19,0,0",
+    "width": "26",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 4,
+    "default_triple": [
+      32,
+      0,
+      61
+    ],
+    "slots": [
+      4
+    ]
+  },
+  {
+    "name": "key_5",
+    "tooltip": "F5",
+    "pos": "258,19,0,0",
+    "width": "26",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 5,
+    "default_triple": [
+      32,
+      0,
+      62
+    ],
+    "slots": [
+      5
+    ]
+  },
+  {
+    "name": "key_6",
+    "tooltip": "F6",
+    "pos": "284,19,0,0",
+    "width": "26",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 6,
+    "default_triple": [
+      32,
+      0,
+      63
+    ],
+    "slots": [
+      6
+    ]
+  },
+  {
+    "name": "key_7",
+    "tooltip": "F7",
+    "pos": "310,19,0,0",
+    "width": "26",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 7,
+    "default_triple": [
+      32,
+      0,
+      64
+    ],
+    "slots": [
+      7
+    ]
+  },
+  {
+    "name": "key_8",
+    "tooltip": "F8",
+    "pos": "336,19,0,0",
+    "width": "26",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 8,
+    "default_triple": [
+      32,
+      0,
+      65
+    ],
+    "slots": [
+      8
+    ]
+  },
+  {
+    "name": "key_9",
+    "tooltip": "F9",
+    "pos": "362,19,0,0",
+    "width": "26",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 9,
+    "default_triple": [
+      32,
+      0,
+      66
+    ],
+    "slots": [
+      9
+    ]
+  },
+  {
+    "name": "key_10",
+    "tooltip": "F10",
+    "pos": "388,19,0,0",
+    "width": "27",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 10,
+    "default_triple": [
+      32,
+      0,
+      67
+    ],
+    "slots": [
+      10
+    ]
+  },
+  {
+    "name": "key_11",
+    "tooltip": "F11",
+    "pos": "415,19,0,0",
+    "width": "26",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 11,
+    "default_triple": [
+      32,
+      0,
+      68
+    ],
+    "slots": [
+      11
+    ]
+  },
+  {
+    "name": "key_12",
+    "tooltip": "F12",
+    "pos": "441,19,0,0",
+    "width": "26",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 12,
+    "default_triple": [
+      32,
+      0,
+      69
+    ],
+    "slots": [
+      12
+    ]
+  },
+  {
+    "name": "key_13",
+    "tooltip": "PrintScreen",
+    "pos": "467,19,0,0",
+    "width": "26",
+    "height": "26",
+    "visible": "true",
+    "ui_index": 13,
+    "default_triple": [
+      32,
+      0,
+      70
+    ],
+    "slots": [
+      13
+    ]
+  }
+]

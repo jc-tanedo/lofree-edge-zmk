@@ -1,0 +1,6 @@
+board:
+  name: lofree_edge
+  full_name: Lofree Edge Experimental USB
+  vendor: lofree
+  socs:
+    - name: tlsr8278

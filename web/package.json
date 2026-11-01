@@ -1,0 +1,6 @@
+{
+  "name": "lofree-edge-web",
+  "private": true,
+  "type": "module",
+  "scripts": { "test": "node --test tests/*.test.js", "serve": "sh ../tools/serve_edge_web.sh" }
+}

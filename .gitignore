@@ -1,0 +1,16 @@
+private/
+.deps/
+.venv/
+build/
+firmware/build/
+web/dist/studio/
+web/dist/studio-qa/
+web/dist/firmware/*.bin
+web/dist/firmware/manifest.json
+__pycache__/
+*.pyc
+node_modules/
+*.egg-info/
+.env
+.env.*
+!*.example
