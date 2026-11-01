@@ -20,7 +20,7 @@ Existing instruction analysis of stock mode selection reads port D inputs, inclu
 
 The diagnostic candidate enables only PD5-PD7 inputs with their outputs disabled and preserves output latches and pull configuration. It retains the previous keyboard, USB, Bluetooth and recovery behavior. It must not be mistaken for the final switch-controlled build.
 
-Next: capture repeated samples in ON, BT and OFF with USB connected, and observe enumeration/radio/power behavior when the cable changes. Confirm which transitions are electrical power cuts. Do not enable automatic selection until the input table is reproducible. Keep raw private investigation artifacts outside the public repository.
+The USB-connected input table is now reproducible (below). Next: complete compiled transition tests, then validate enumeration/radio/power behavior with the exact controller image, including battery operation and cable changes. Keep raw private investigation artifacts outside the public repository.
 
 ## Diagnostic status interface
 
@@ -44,3 +44,55 @@ EDGE_TEST_BUILD=lofree_edge-ble-studio-switch-diagnostic .venv/bin/python tools/
 The diagnostic build goes into its own ignored firmware build directory. Install only after a separate exact-SHA hardware handoff. Before repeated position/power-cycle tests, observe the trial boot count and obtain explicit acceptance approval after baseline typing, retained-image checks and flash self-test. Do not disable or bypass rollback guards to run the investigation.
 
 Progress and physical evidence are tracked in [issue #3](https://github.com/jc-tanedo/lofree-edge-zmk/issues/3). Completion requires the final policy, compiled tests, physical acceptance and merged implementation; diagnostics alone are insufficient.
+
+## Physical observations in progress
+
+Frozen diagnostic SHA-256: `cd4a22d3fd5737eb2348ed7deacd29623e72b33d3b0a7621a57ca6689fcee74f`. The owner installed it from stock and verified typing, Fn/media, Caps/backlight, saved Studio mappings/layers and Bluetooth typing.
+
+| Position / cable | PD5 | PD6 | PD7 | Evidence |
+| --- | --- | --- | --- | --- |
+| ON / USB connected | High | High | High | Ten stable live snapshots; input-enable/output-disable mask 0xe0, function 0xff |
+| BT / USB connected | Low | High | High | Ten stable live snapshots, mask 0xc0; matches stock BLE branch |
+| OFF / USB connected | High | Low | High | Ten stable live snapshots; owner confirms USB remains powered |
+
+One position alone does not establish pin roles. The owner explicitly approved diagnostic acceptance after baseline checks. The flash self-test and retained-image integrity check passed; confirmation cleared count 1 to 0. Repeated position measurements can now proceed, with recovery still not guaranteed.
+
+### Repeated physical captures (2026-11-01)
+
+Ten samples per position gave ON=0xe0, BT=0xc0, OFF=0xa0 for masked PD inputs;
+ON and BT reproduced after moving away and back. These are actual device
+observations with USB connected, not emulator results. PD5 low takes Bluetooth
+precedence in the stock decoder; otherwise PD6 low selects OFF. PD7 remained
+high and its role is unverified; the new controller leaves PD7 untouched.
+
+The installed, accepted image is still the input-only diagnostic cd4a22d3.
+Automatic routing is being implemented offline and has not been flashed or
+hardware-validated. Battery/cable behavior remains a required candidate test.
+
+## Controller implementation under test
+
+The board-owned `edge_mode` module initializes only the PD5/PD6 inputs and
+fails closed if their input/output/function configuration is wrong. Staged,
+hash-checked native BLE hooks settle the selection at boot and restart through
+the existing trial guard after a stable movement. Pending output reports receive
+a best-effort release before quiescing. Endpoint routing never falls back onto
+the other transport, and legacy output bindings retain their IDs but do nothing.
+Factory Fn+4/Fn+5 are unassigned; saved maps are not reset. Fn+1/2/3 select the
+three profiles in BT mode. ON has no active Bluetooth stack.
+
+Unknown/OFF/transition states suppress matrix callbacks and lighting. OFF is a
+software inactive state while USB supplies power, not a deep-sleep implementation.
+Set the slider to ON for Studio, USB diagnostics, installation or Fn+Space stock
+return. Save edits before moving the switch; each movement may restart firmware.
+
+Validation commands (no physical keyboard access):
+
+```sh
+sh tools/build_edge_zmk.sh --ble-studio
+PYTHONPATH=src .venv/bin/python -m unittest discover -s tests
+EDGE_TEST_BUILD=lofree_edge-ble-studio .venv/bin/python tools/test_edge_ble_emulator.py
+```
+
+Compiled checks do not establish physical RF performance or battery behavior.
+The accepted observation-only diagnostic remains installed until a new exact-SHA
+candidate is separately handed off for hardware testing.

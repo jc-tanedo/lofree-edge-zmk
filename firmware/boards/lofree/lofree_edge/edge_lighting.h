@@ -4,3 +4,4 @@
 bool edge_caps_requested(void);
 void edge_caps_scan_begin(void);
 void edge_caps_scan_end(void);
+void edge_lighting_mode_changed(void);

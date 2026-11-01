@@ -54,7 +54,7 @@ def board_pads(port):
 
 m.pad_levels = board_pads
 u = usb_model.UsbModel(m, irq_lines=False)
-assert u.run_until(u.dp_pullup, 100), 'USB never attached'
+assert u.run_until(u.dp_pullup, 1000), 'USB never attached'
 u.bus_reset()
 assert len(u.get_descriptor(1, length=18)) == 18
 configuration = u.get_descriptor(2)

@@ -13,6 +13,7 @@
 #include <zmk/events/hid_indicators_changed.h>
 #include <zmk/hid_indicators.h>
 #include "edge_lighting.h"
+#include "edge_mode.h"
 
 BUILD_ASSERT(IS_ENABLED(CONFIG_ZMK_KSCAN_MATRIX_POLLING),
              "Shared Caps column needs polling and the scan-boundary hooks");
@@ -50,7 +51,7 @@ void edge_caps_scan_begin(void)
 }
 void edge_caps_scan_end(void)
 {
-    bool on = atomic_get(&caps_on) != 0;
+    bool on = edge_mode_allows_keys() && atomic_get(&caps_on) != 0;
     gpio_pin_set_dt(&caps, on);
     caps_gate(on);
 }
@@ -84,10 +85,8 @@ static void bits(uint32_t offset, uint8_t mask, uint8_t value)
     sys_write8((sys_read8(REG(offset)) & (uint8_t)~mask) | (value & mask), REG(offset));
 }
 
-static int set_brightness(const struct device *dev, uint32_t led, uint8_t value)
+static int apply_brightness(uint8_t value)
 {
-    ARG_UNUSED(dev);
-    if (led != 0 || value > 100) { return -EINVAL; }
     unsigned int key = irq_lock();
     bits(PWM_EN, LIGHT, 0);
     if (value == 0) {
@@ -108,6 +107,27 @@ static int set_brightness(const struct device *dev, uint32_t led, uint8_t value)
     }
     irq_unlock(key);
     return 0;
+}
+
+#if IS_ENABLED(CONFIG_LOFREE_EDGE_MODE_SWITCH)
+static uint8_t requested_brightness;
+#endif
+static int set_brightness(const struct device *dev, uint32_t led, uint8_t value)
+{
+    ARG_UNUSED(dev);
+    if (led != 0 || value > 100) { return -EINVAL; }
+#if IS_ENABLED(CONFIG_LOFREE_EDGE_MODE_SWITCH)
+    requested_brightness = value;
+#endif
+    return apply_brightness(edge_mode_allows_keys() ? value : 0);
+}
+
+void edge_lighting_mode_changed(void)
+{
+#if IS_ENABLED(CONFIG_LOFREE_EDGE_MODE_SWITCH)
+    apply_brightness(edge_mode_allows_keys() ? requested_brightness : 0);
+    if (!edge_mode_allows_keys()) { caps_gate(false); }
+#endif
 }
 
 static int light_on(const struct device *dev, uint32_t led) { return set_brightness(dev, led, 100); }

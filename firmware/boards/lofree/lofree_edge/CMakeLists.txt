@@ -2,6 +2,8 @@ zephyr_library()
 zephyr_library_sources(board.c)
 zephyr_library_sources(edge_lighting.c)
 zephyr_library_sources(edge_status.c)
+zephyr_library_sources_ifdef(CONFIG_LOFREE_EDGE_MODE_SWITCH edge_mode.c)
+target_include_directories(app PRIVATE "${CMAKE_CURRENT_LIST_DIR}")
 zephyr_ld_options(-Wl,--wrap=usb_hid_register_device)
 
 # Keep the physically tested upstream debouncer/scanner unchanged except for
@@ -25,6 +27,10 @@ string(REPLACE "        kscan_matrix_read_end(data->dev);\n        return;"
   KSCAN_CODE "${KSCAN_CODE}")
 string(REPLACE "    kscan_matrix_read(data->dev);\n}"
   "    kscan_matrix_read(data->dev);\n    edge_caps_scan_end();\n}"
+  KSCAN_CODE "${KSCAN_CODE}")
+string(REPLACE "#include \"edge_lighting.h\"" "#include \"edge_lighting.h\"\n#include \"edge_mode.h\"" KSCAN_CODE "${KSCAN_CODE}")
+string(REPLACE "                data->callback(dev, r, c, pressed);"
+  "                if (edge_mode_allows_keys()) { data->callback(dev, r, c, pressed); }"
   KSCAN_CODE "${KSCAN_CODE}")
 file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/edge_kscan.c" "${KSCAN_CODE}")
 zephyr_library_include_directories("${KSCAN_DIR}" "${CMAKE_CURRENT_LIST_DIR}")
@@ -79,4 +85,16 @@ if(CONFIG_TLSR_BLE)
     TARGET_DIRECTORY app PROPERTIES HEADER_FILE_ONLY TRUE)
   target_sources(app PRIVATE "${CMAKE_CURRENT_BINARY_DIR}/edge_ble.c"
     "${CMAKE_CURRENT_BINARY_DIR}/edge_ble_adv.c")
+endif()
+
+if(CONFIG_LOFREE_EDGE_MODE_SWITCH)
+  execute_process(COMMAND "${EDGE_ROOT}/.venv/bin/python"
+    "${EDGE_ROOT}/tools/stage_edge_mode.py" "${CMAKE_CURRENT_BINARY_DIR}"
+    RESULT_VARIABLE EDGE_MODE_STAGE_RESULT)
+  if(NOT EDGE_MODE_STAGE_RESULT EQUAL 0)
+    message(FATAL_ERROR "Review Edge physical-mode source hooks")
+  endif()
+  set_source_files_properties("${EDGE_ROOT}/.deps/zmk-tc32/app/src/endpoints.c"
+    TARGET_DIRECTORY app PROPERTIES HEADER_FILE_ONLY TRUE)
+  target_sources(app PRIVATE "${CMAKE_CURRENT_BINARY_DIR}/edge_endpoints.c")
 endif()

@@ -75,4 +75,5 @@ def relocate(text):
     return re.sub(r'#include "([^"]+)"', lambda m:
         '#include "' + str(base/m[1]) + '"' if (base/m[1]).exists() else m[0], text)
 (out/'edge_ble_adv.c').write_text(relocate(adv))
-(out/'edge_ble.c').write_text(relocate(ble))
+from stage_edge_mode import patch_ble
+(out/'edge_ble.c').write_text(relocate(patch_ble(ble)))

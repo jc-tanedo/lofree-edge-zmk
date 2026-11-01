@@ -31,7 +31,7 @@ This is an independent project, not affiliated with or endorsed by Lofree, Telin
 | Backlight | Stock implementation | Toggle and brightness implemented; not all stock effects |
 | Bluetooth input | Vendor functionality | Pairing, typing, media, Caps and reconnect physically tested |
 | Wireless editing / flashing | Not supported by these tools | Not supported; Studio and flashing require USB |
-| Sleep / power / physical switch | Vendor implementation, not independently characterized | Unfinished; radio mode selection uses shortcuts |
+| Sleep / power / physical switch | Vendor implementation, not independently characterized | Sleep/power unfinished; alpha.1 uses output shortcuts. [Alpha.2 switch controller is under validation](docs/physical-switch.md) |
 | Battery reporting | Not independently verified by this project | Placeholder; not a measured battery level |
 | Recovery | Vendor behavior | Retained-image return exists; **recovery is not guaranteed** |
 

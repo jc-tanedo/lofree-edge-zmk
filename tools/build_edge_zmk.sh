@@ -42,8 +42,14 @@ case "${1:-}" in
   CONFIGS="$CONFIGS;$ROOT/firmware/lofree_edge/ble.conf"
   if [ "$1" != --ble ]; then
    CONFIGS="$CONFIGS;$ROOT/firmware/lofree_edge/ble-studio.conf"
-   python "$ROOT/tools/generate_edge_studio.py" --ble
-   OVERLAYS="$ROOT/firmware/lofree_edge/studio-ble.keymap;$ROOT/firmware/lofree_edge/studio.overlay;$ROOT/firmware/lofree_edge/ble.overlay"
+   if [ "${EDGE_SWITCH_DIAGNOSTIC:-0}" = 1 ]; then
+    python "$ROOT/tools/generate_edge_studio.py" --ble --legacy-output
+    BLE_KEYMAP="$ROOT/build/generated/studio-ble-diagnostic.keymap"
+   else
+    python "$ROOT/tools/generate_edge_studio.py" --ble
+    BLE_KEYMAP="$ROOT/firmware/lofree_edge/studio-ble.keymap"
+   fi
+   OVERLAYS="$BLE_KEYMAP;$ROOT/firmware/lofree_edge/studio.overlay;$ROOT/firmware/lofree_edge/ble.overlay"
    if [ "$1" = --ble-studio-export ]; then
     test -n "${2:-}" && test -f "$2"
     BUILD="$ROOT/firmware/build/lofree_edge-ble-export-validation"

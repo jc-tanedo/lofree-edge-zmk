@@ -1,0 +1,13 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+description: |
+  Edge BT/ON/OFF selector, measured with the input-only diagnostic. PD5 low
+  selects Bluetooth; otherwise PD6 low selects OFF; both high select USB ON.
+  The controller preserves pulls and output latches and never drives contacts.
+compatible: "lofree,edge-mode-switch"
+properties:
+  bt-gpios:
+    type: phandle-array
+    required: true
+  off-gpios:
+    type: phandle-array
+    required: true

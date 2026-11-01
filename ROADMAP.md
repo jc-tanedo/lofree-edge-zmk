@@ -28,9 +28,9 @@ Deep/idle sleep and battery-life behavior are unfinished.
 
 **in progress** · Power and mode handling
 
-Native stack does not yet follow the physical mode GPIO; shortcuts select output.
+Released alpha.1 uses output shortcuts. PD5/PD6 are measured; the alpha.2 controller compiles and needs final transition, battery/cable and exact-image hardware validation.
 
-**Acceptance:** Map switch positions electrically and verify correct USB/BLE/power behavior and reconnect across transitions.
+**Acceptance:** ON enables USB/Studio only; BT enables Bluetooth with USB power only; OFF suppresses input/radio/lighting/data. Verify guarded transitions, legacy-binding immunity, saved maps/bonds and cable/battery behavior on the exact image.
 
 [Tracking issue](https://github.com/jc-tanedo/lofree-edge-zmk/issues/3)
 
