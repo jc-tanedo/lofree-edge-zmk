@@ -6,7 +6,7 @@
     "milestone": "First public prerelease",
     "limitation": "Clean builds, packaging, licensing, hosted paths and exact-SHA hardware review are required.",
     "acceptance": "CI passes from a clean checkout; artifacts audited; exact OTA passes the hardware checklist before publication.",
-    "issue": null
+    "issue": "https://github.com/jc-tanedo/lofree-edge-zmk/issues/1"
   },
   {
     "id": "sleep",
@@ -15,7 +15,7 @@
     "milestone": "Power and mode handling",
     "limitation": "Deep/idle sleep and battery-life behavior are unfinished.",
     "acceptance": "Measure wired/BLE idle current, validate wake keys and reconnect, and demonstrate no lost saved mappings across repeated sleep/wake cycles.",
-    "issue": null
+    "issue": "https://github.com/jc-tanedo/lofree-edge-zmk/issues/2"
   },
   {
     "id": "switch",
@@ -24,7 +24,7 @@
     "milestone": "Power and mode handling",
     "limitation": "Native stack does not yet follow the physical mode GPIO; shortcuts select output.",
     "acceptance": "Map switch positions electrically and verify correct USB/BLE/power behavior and reconnect across transitions.",
-    "issue": null
+    "issue": "https://github.com/jc-tanedo/lofree-edge-zmk/issues/3"
   },
   {
     "id": "battery",
@@ -33,7 +33,7 @@
     "milestone": "Power and mode handling",
     "limitation": "The current battery report is a placeholder, not a measurement.",
     "acceptance": "Identify sensing hardware, calibrate readings and validate charge/low-battery states against external measurements.",
-    "issue": null
+    "issue": "https://github.com/jc-tanedo/lofree-edge-zmk/issues/4"
   },
   {
     "id": "compatibility",
@@ -42,7 +42,7 @@
     "milestone": "Compatibility",
     "limitation": "Only one physical Edge and limited host configurations have been exercised.",
     "acceptance": "Publish a device revision and host/browser matrix with typing, Bluetooth, USB, indicators, persistence and recovery evidence.",
-    "issue": null
+    "issue": "https://github.com/jc-tanedo/lofree-edge-zmk/issues/5"
   },
   {
     "id": "wireless-editing",
@@ -51,7 +51,7 @@
     "milestone": "Future capabilities",
     "limitation": "Studio currently edits over USB only.",
     "acceptance": "Establish browser/transport feasibility and secure unlock; demonstrate read, edit, save, disconnect and recovery without USB.",
-    "issue": null
+    "issue": "https://github.com/jc-tanedo/lofree-edge-zmk/issues/6"
   },
   {
     "id": "more-layers",
@@ -60,7 +60,7 @@
     "milestone": "Future capabilities",
     "limitation": "Current firmware reserves three total layers; retain this limit for the first release.",
     "acceptance": "Measure RAM/flash/storage costs and test save/load/import and upgrade compatibility before raising the limit.",
-    "issue": null
+    "issue": "https://github.com/jc-tanedo/lofree-edge-zmk/issues/7"
   },
   {
     "id": "behaviors",
@@ -69,7 +69,7 @@
     "milestone": "Future capabilities",
     "limitation": "The current UI supports advertised behaviors; custom shortcut presets are not a macro engine and lighting is limited.",
     "acceptance": "Select concrete behavior/effect additions, validate live metadata and runtime editing, and document memory/compatibility costs.",
-    "issue": null
+    "issue": "https://github.com/jc-tanedo/lofree-edge-zmk/issues/8"
   },
   {
     "id": "core-features",

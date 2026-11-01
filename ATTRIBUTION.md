@@ -33,7 +33,7 @@ Thank you to the authors and maintainers below. Links identify the actual source
 - [OpenAI Codex](https://openai.com/codex/): substantial AI assistance; [disclosure](AI_DISCLOSURE.md).
 - [LLVM/Clang/LLD](https://github.com/llvm/llvm-project), [CMake](https://github.com/Kitware/CMake), [Ninja](https://github.com/ninja-build/ninja), [Devicetree compiler](https://git.kernel.org/pub/scm/utils/dtc/dtc.git/), [west](https://github.com/zephyrproject-rtos/west), [Python](https://www.python.org/), [Node.js](https://nodejs.org/), [npm](https://github.com/npm/cli) and [Git](https://git-scm.com/): compilation, dependency management, generators, tests and version control.
 - [pyelftools](https://github.com/eliben/pyelftools), [PyYAML](https://github.com/yaml/pyyaml) and the locked Python build dependencies support the build tools; exact versions are in requirements-build.lock.
-- [HIDAPI](https://github.com/libusb/hidapi) and [Python HIDAPI bindings](https://github.com/trezor/cython-hidapi): optional USB diagnostics and explicit trial acceptance.
+- [HIDAPI](https://github.com/libusb/hidapi) and [Python HIDAPI bindings](https://github.com/apmorton/pyhidapi): optional USB diagnostics and explicit trial acceptance.
 - [Python-Markdown](https://github.com/Python-Markdown/markdown): rendering local risk/roadmap pages.
 - [GitHub Actions and Pages](https://docs.github.com/en/actions): automation and hosting infrastructure.
 

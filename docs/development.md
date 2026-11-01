@@ -15,7 +15,7 @@ sh tools/build_edge_studio_ui.sh
 
 Bootstrap verifies detached public Git revisions and installs locked Python/npm dependencies. --cache accepts an optional local directory of Git repositories as a network accelerator; it is not a private build input. No vendor installer or stock image is required.
 
-Run `node --test --test-isolation=none web/tests/*.test.js`, `PYTHONPATH=src .venv/bin/python -m unittest discover -s tests`, and `.venv/bin/python tools/audit_publication.py`. With the BLE build present, run `EDGE_TEST_BUILD=lofree_edge-ble-studio .venv/bin/python tools/test_edge_ble_delayed_dma.py` and the boot/import emulator tests.
+Run `node --test web/tests/*.test.js`, `PYTHONPATH=src .venv/bin/python -m unittest discover -s tests`, and `.venv/bin/python tools/audit_publication.py`. With the BLE build present, run `EDGE_TEST_BUILD=lofree_edge-ble-studio .venv/bin/python tools/test_edge_ble_delayed_dma.py` and the boot/import emulator tests.
 
 Emulator retained slots use this project's own firmware as a synthetic fixture. They test compiled behavior and flag transitions, **not** real vendor-image recovery. Actual stock recovery remains a separate hardware observation, not a guarantee.
 

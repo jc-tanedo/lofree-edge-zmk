@@ -5,7 +5,7 @@ cd "$ROOT"
 mkdir -p build/reports build/tmp
 python3 tools/sync_version.py
 python3 tools/render_roadmap.py
-node --test --test-isolation=none web/tests/*.test.js
+node --test web/tests/*.test.js
 PYTHONPATH=src .venv/bin/python -m unittest discover -s tests
 sh tools/build_edge_zmk.sh --ble-studio
 EDGE_TEST_BUILD=lofree_edge-ble-studio .venv/bin/python tools/test_edge_ble_delayed_dma.py

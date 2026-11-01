@@ -12,7 +12,7 @@ Clean builds, packaging, licensing, hosted paths and exact-SHA hardware review a
 
 **Acceptance:** CI passes from a clean checkout; artifacts audited; exact OTA passes the hardware checklist before publication.
 
-Tracking issue will be linked after the public repository is created.
+[Tracking issue](https://github.com/jc-tanedo/lofree-edge-zmk/issues/1)
 
 ## Sleep and power management
 
@@ -22,7 +22,7 @@ Deep/idle sleep and battery-life behavior are unfinished.
 
 **Acceptance:** Measure wired/BLE idle current, validate wake keys and reconnect, and demonstrate no lost saved mappings across repeated sleep/wake cycles.
 
-Tracking issue will be linked after the public repository is created.
+[Tracking issue](https://github.com/jc-tanedo/lofree-edge-zmk/issues/2)
 
 ## Physical mode switch
 
@@ -32,7 +32,7 @@ Native stack does not yet follow the physical mode GPIO; shortcuts select output
 
 **Acceptance:** Map switch positions electrically and verify correct USB/BLE/power behavior and reconnect across transitions.
 
-Tracking issue will be linked after the public repository is created.
+[Tracking issue](https://github.com/jc-tanedo/lofree-edge-zmk/issues/3)
 
 ## Measured battery reporting
 
@@ -42,7 +42,7 @@ The current battery report is a placeholder, not a measurement.
 
 **Acceptance:** Identify sensing hardware, calibrate readings and validate charge/low-battery states against external measurements.
 
-Tracking issue will be linked after the public repository is created.
+[Tracking issue](https://github.com/jc-tanedo/lofree-edge-zmk/issues/4)
 
 ## Hardware and host coverage
 
@@ -52,7 +52,7 @@ Only one physical Edge and limited host configurations have been exercised.
 
 **Acceptance:** Publish a device revision and host/browser matrix with typing, Bluetooth, USB, indicators, persistence and recovery evidence.
 
-Tracking issue will be linked after the public repository is created.
+[Tracking issue](https://github.com/jc-tanedo/lofree-edge-zmk/issues/5)
 
 ## Wireless keymap editing
 
@@ -62,7 +62,7 @@ Studio currently edits over USB only.
 
 **Acceptance:** Establish browser/transport feasibility and secure unlock; demonstrate read, edit, save, disconnect and recovery without USB.
 
-Tracking issue will be linked after the public repository is created.
+[Tracking issue](https://github.com/jc-tanedo/lofree-edge-zmk/issues/6)
 
 ## More than three layers
 
@@ -72,7 +72,7 @@ Current firmware reserves three total layers; retain this limit for the first re
 
 **Acceptance:** Measure RAM/flash/storage costs and test save/load/import and upgrade compatibility before raising the limit.
 
-Tracking issue will be linked after the public repository is created.
+[Tracking issue](https://github.com/jc-tanedo/lofree-edge-zmk/issues/7)
 
 ## Broader behaviors and lighting
 
@@ -82,7 +82,7 @@ The current UI supports advertised behaviors; custom shortcut presets are not a 
 
 **Acceptance:** Select concrete behavior/effect additions, validate live metadata and runtime editing, and document memory/compatibility costs.
 
-Tracking issue will be linked after the public repository is created.
+[Tracking issue](https://github.com/jc-tanedo/lofree-edge-zmk/issues/8)
 
 ## Core typing, layers and indicators
 
