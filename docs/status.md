@@ -1,13 +1,37 @@
-# Publication status
+# Current status
 
-Canonical development is this repository on `main`. The first experimental prerelease is [v0.1.0-alpha.1](https://github.com/jc-tanedo/lofree-edge-zmk/releases/tag/v0.1.0-alpha.1); the matching browser tools are hosted on [GitHub Pages](https://jc-tanedo.github.io/lofree-edge-zmk/). Everything remains entirely at the user's own risk; see [RISK.md](../RISK.md).
+Physical-switch implementation is complete on `firmware/physical-mode-switch`,
+PR #10 / issue #3. Exact alpha.2 OTA SHA-256
+`ee74d5411891418eb6b08621c2fc21175bbecbe70c65511476aac11c5326297e`
+passed owner hardware validation on one Edge/CachyOS host and is installed and
+accepted (count 0). See [the validation record](validation/v0.1.0-alpha.2.md).
+ON enables USB/Studio only; BT enables BLE with USB power only; OFF suppresses
+input/radio/lighting/data. Three profiles remain. Mode movement briefly restarts
+firmware; saved maps/layers/bonds survive. Legacy output actions are ignored.
 
-The exact OTA SHA-256 c4df776d24cf11a4c0d9c4b1464486d663ff5ab1e4a93b877d593494749559b8 passed the owner's physical hardware checklist, explicit flash self-test/acceptance, retained-stock return/reinstall, and mapping/Bluetooth-bond persistence after a full power cycle. See [the validation record](validation/v0.1.0-alpha.1.md). The installed alpha is accepted; no further device writes are needed for publication.
+Hardware coverage includes ON/BT/OFF, battery and cable insertion/removal,
+Shift held across both transport transitions, fresh pairing, saved-profile
+reconnect after OFF/unplug5s/reconnect, Studio save/persistence, indicators,
+manual stock return/reinstall and explicitly approved flash self-test/acceptance.
+No RF sniffer or current/supply measurement is claimed. Retained recovery is not
+a guarantee. Sleep, measured battery reporting and broader host coverage remain
+in the [roadmap](../ROADMAP.md).
 
-Pinned local and clean GitHub builds produce the same OTA bytes. Debug ELF hashes can differ between host environments and are recorded individually in provenance. All 53 browser tests, 28 Python/publication tests, compiled USB/Studio/BLE, encrypted reconnect, saved-map persistence, boot and importer tests pass. Source/history/archive/site audits and both localhost/project-subpath checks pass. Physical results cover one Edge and CachyOS host, not every revision or operating system.
+The source UI now caps Bluetooth selection/import to indices 0..2: pinned native
+metadata reports PROFILE_COUNT as an inclusive maximum, despite the runtime
+rejecting that index. This compatibility clamp does not widen advertised limits
+or change firmware. Current firmware bytes and frozen localhost8770 test site
+remain unchanged. Output actions are hidden from both Functions and Advanced; existing saved
+bindings remain readable/importable for compatibility. Final UI/package CI is pending.
 
-Version tags create drafts only. Published release notes record the exact-image hardware checklist; Pages promotes the already-built, checksummed website archive. Main requires CI, including for administrators; force-push/deletion is disabled. Private vulnerability reporting is enabled. Current run/deployment state is visible in [Actions](https://github.com/jc-tanedo/lofree-edge-zmk/actions).
+GitHub CI passed for prior head4fe2420; local compiled GPIO/USB/Studio/BLE,
+encrypted reconnect, all4 output actions, importer and trial rollback tests pass
+for the exact OTA above. Source/history/site/archive audits and hosted subpaths
+passed. Required compiler is pinned LLVM23.1.4. Optional device tooling needs
+Python hid==1.0.8 plus the system HIDAPI library, not the different hidapi binding.
 
-Vendor inputs/history remain outside the repository in the original workspace's private directory. Public builds require no proprietary inputs. LLVM18 is unsupported: its compiled add-layer behavior fails; use the pinned official LLVM23.1.4 toolchain and utilities. Optional acceptance tooling requires `hid==1.0.8` plus the system HIDAPI library, not the different Python `hidapi` binding.
-
-Next work is in the [roadmap](../ROADMAP.md): sleep/power management, physical-switch integration, measured battery reporting, and broader hardware/host validation. Wireless editing and additional layers remain investigations/deferred work. Preserve upstream licenses, risk warnings, exact-SHA release gates, and private-material exclusions.
+Published release remains v0.1.0-alpha.1. Do not tag, merge or publish alpha.2
+without review; its hardware checklist is now recorded. Pages promotion must use
+the already-built matching website archive. Vendor inputs remain outside this
+repository; clean public builds require no proprietary files. Preserve upstream
+notices and conspicuous own-risk messaging.

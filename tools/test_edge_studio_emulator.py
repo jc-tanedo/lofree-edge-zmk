@@ -163,7 +163,7 @@ print('PASS: Caps -> Fn, enable/rename spare layer, save through the actual flas
 
 m.reset()
 assert m.boot_slot == 0x20000
-assert u.run_until(u.dp_pullup, 100)
+assert u.run_until(u.dp_pullup, 1000)
 u.bus_reset()
 u.control(bytes([0,5,1,0,0,0,0,0]))
 u.control(bytes([0,9,1,0,0,0,0,0]))

@@ -26,11 +26,11 @@ Deep/idle sleep and battery-life behavior are unfinished.
 
 ## Physical mode switch
 
-**needs investigation** · Power and mode handling
+**completed** · Power and mode handling
 
-Native stack does not yet follow the physical mode GPIO; shortcuts select output.
+Implemented and owner-validated in the alpha.2 candidate: ON USB/Studio only, BT Bluetooth with USB power only, OFF inactive. One Edge/CachyOS validated; broader hosts and sleep remain separate work.
 
-**Acceptance:** Map switch positions electrically and verify correct USB/BLE/power behavior and reconnect across transitions.
+**Acceptance:** ON enables USB/Studio only; BT enables Bluetooth with USB power only; OFF suppresses input/radio/lighting/data. Verify guarded transitions, legacy-binding immunity, saved maps/bonds and cable/battery behavior on the exact image.
 
 [Tracking issue](https://github.com/jc-tanedo/lofree-edge-zmk/issues/3)
 

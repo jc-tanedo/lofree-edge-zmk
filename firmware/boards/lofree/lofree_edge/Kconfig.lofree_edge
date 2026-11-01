@@ -1,2 +1,21 @@
 config BOARD_LOFREE_EDGE
     select SOC_TLSR8278
+
+config LOFREE_EDGE_SWITCH_DIAGNOSTICS
+    bool "Observe Edge candidate switch inputs (no automatic switching)"
+    depends on BOARD_LOFREE_EDGE
+    depends on !LOFREE_EDGE_MODE_SWITCH
+    default n
+    help
+      Enable only PD5-PD7 inputs, with outputs disabled and pulls unchanged,
+      as corroborated by stock initialization. Expose levels through the
+      read-only board status report. No automatic transport policy is enabled.
+
+config LOFREE_EDGE_MODE_SWITCH
+    bool "Physical BT/ON/OFF switch controls Edge transports"
+    depends on BOARD_LOFREE_EDGE && TLSR_BLE
+    default n
+    help
+      Use the measured PD5/PD6 selector. ON enables USB only, BT enables
+      Bluetooth only, and OFF enables neither. No transport fallback or
+      output-key override is allowed. Moves use guarded planned restarts.

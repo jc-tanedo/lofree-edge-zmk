@@ -31,7 +31,7 @@ native_capture = {
 }
 (ROOT/'build/reports/edge-ble-native-keymap.json').write_text(json.dumps(native_capture,indent=2)+'\n')
 # The actual RPC metadata must advertise the native stack's BLE output option.
-output = next(d for d in native_capture['behaviors'] if d['displayName']=='Output Selection')
+output = next(d for d in native_capture['behaviors'] if d['displayName'].startswith('Output Selection'))
 assert any(v.get('constant')==2 for group in output['metadata'] for v in group['param1'])
 print('PASS: native Bluetooth/output metadata and captured keymap for export validation')
 
@@ -45,6 +45,52 @@ def stack_snapshot():
         used=len(mem)-first
         result.append({'name':name,'size':size,'used':used,'spare':size-used-4})
     return result
+
+# Confirm through the updater while ON; USB must not exist in BT.
+# Accept only the emulated image through the real updater's self-test/confirm.
+# This test has already used two trial boots; a third unconfirmed boot must roll
+# back by design. Never disable that firmware protection to test reconnection.
+sys.path.insert(0,str(ROOT/'.deps/zmk-tc32/tc32/scripts'))
+import telink_ota
+vendor_ep=lighting['hids'][1]['endpoints'][0]&127
+vendor_interface=lighting['vendor_interface']
+u=lighting['u']
+def ota_command(command):
+    frame=telink_ota.command_frame(command)
+    u.control(bytes([0x21,9,5,2,vendor_interface,0,len(frame),0]),out=frame)
+    end=m.ms()+5000
+    while m.ms()<end:
+        advance(1)
+        reply=u.in_ep(vendor_ep)
+        if reply and int.from_bytes(reply[9:11],'little')==command:
+            assert reply[29]==0, (hex(command),reply.hex())
+            return bytes(reply)
+    raise AssertionError(f'No emulated OTA acknowledgement for {command:x}')
+ota_command(0xff07)
+confirmation=ota_command(0xff03)
+assert confirmation[17]==0 and confirmation[18]&4
+print('PASS: emulator-native flash self-test and confirmation before controlled mode restart')
+
+
+controlled = '\nCONFIG_LOFREE_EDGE_MODE_SWITCH=y\n' in (ROOT/'firmware/build'/os.environ['EDGE_TEST_BUILD']/'zephyr/.config').read_text()
+if controlled:
+    pads = m.pad_levels
+    switch_level = 0xc0  # PD5 low selects BT, with USB cable modeled present.
+    def selector_pads(port):
+        value, floating = pads(port)
+        if port == 3:
+            return (value & 0x1f) | switch_level, floating & 0x1f
+        return value, floating
+    m.pad_levels = selector_pads
+    try:
+        advance(2500)
+    except te.SoftwareReset:
+        m.reset()
+    else:
+        raise AssertionError('Physical selector did not request guarded restart')
+    advance(300)
+    assert not u.dp_pullup(), 'BT must not enumerate USB/Studio'
+    print('PASS: ON-to-BT guarded restart disables USB data')
 
 radio = ble_radio.Radio(m)
 steps = []
@@ -128,30 +174,6 @@ central.att_send(bytes.fromhex('121c0000'))
 advance(100)
 print('PASS: encrypted BLE LED output drives the Caps indicator')
 
-# Accept only the emulated image through the real updater's self-test/confirm.
-# This test has already used two trial boots; a third unconfirmed boot must roll
-# back by design. Never disable that firmware protection to test reconnection.
-sys.path.insert(0,str(ROOT/'.deps/zmk-tc32/tc32/scripts'))
-import telink_ota
-vendor_ep=lighting['hids'][1]['endpoints'][0]&127
-vendor_interface=lighting['vendor_interface']
-u=lighting['u']
-def ota_command(command):
-    frame=telink_ota.command_frame(command)
-    u.control(bytes([0x21,9,5,2,vendor_interface,0,len(frame),0]),out=frame)
-    end=m.ms()+5000
-    while m.ms()<end:
-        advance(1)
-        reply=u.in_ep(vendor_ep)
-        if reply and int.from_bytes(reply[9:11],'little')==command:
-            assert reply[29]==0, (hex(command),reply.hex())
-            return bytes(reply)
-    raise AssertionError(f'No emulated OTA acknowledgement for {command:x}')
-ota_command(0xff07)
-confirmation=ota_command(0xff03)
-assert confirmation[17]==0 and confirmation[18]&4
-print('PASS: emulator-native flash self-test and confirmation preserve the paired bond')
-
 # Reboot the keyboard while the modeled host retains its bond. No new pairing.
 stack_before_reset = stack_snapshot()
 (ROOT/'build/tmp/edge-ble-reconnect-flash.bin').write_bytes(lighting['flash'].mem)
@@ -196,3 +218,9 @@ for current in stack_snapshot():
 print('STACK WATERMARKS: '+json.dumps(results))
 assert lighting['flash'].mem[8:12] == bytes(4), 'Retained stock was changed'
 print('PASS: combined Studio/USB/BLE compiled-image checks; retained stock untouched')
+
+# The observation-only variant intentionally retains simultaneous legacy outputs.
+config = (ROOT/'firmware/build'/os.environ['EDGE_TEST_BUILD']/'zephyr/.config').read_text()
+if '\nCONFIG_LOFREE_EDGE_MODE_SWITCH=y\n' in config:
+    from edge_mode_emulator_checks import run
+    run(globals())

@@ -14,6 +14,8 @@ sh tools/build_edge_zmk.sh --ble-studio
 EDGE_TEST_BUILD=lofree_edge-ble-studio .venv/bin/python tools/test_edge_ble_delayed_dma.py
 EDGE_TEST_BUILD=lofree_edge-ble-studio .venv/bin/python tools/test_edge_boot_emulator.py
 EDGE_TEST_BUILD=lofree_edge-ble-studio .venv/bin/python tools/test_edge_import_emulator.py
+EDGE_SWITCH_DIAGNOSTIC=1 sh tools/build_edge_zmk.sh --ble-studio
+EDGE_TEST_BUILD=lofree_edge-ble-studio-switch-diagnostic .venv/bin/python tools/test_edge_switch_inputs_emulator.py
 EDGE_SITE_BASE='' sh tools/build_edge_studio_ui.sh
 .venv/bin/python tools/package_release.py --site-base '' --site-only --site-output build/localhost-site
 python3 tools/check_website.py --site build/localhost-site --base ''

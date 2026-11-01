@@ -539,12 +539,12 @@ export function EdgeWorkspace(p: Props) {
                 : "No matching supported actions."}
             </p>
           )}
-          {category === "Advanced" && selectedBinding && (
+          {category === "Advanced" && selectedBinding && selectedBinding.behaviorId !== IDS.outputs && (
             <details className="edge-advanced-editor">
               <summary>Advanced action editor</summary>
               <BehaviorBindingPicker
                 binding={selectedBinding}
-                behaviors={Object.values(p.behaviors)}
+                behaviors={Object.values(p.behaviors).filter(b => b.id !== IDS.outputs)}
                 layers={layers.map((l, i) => ({
                   id: l.id,
                   name: l.name || `Layer ${i + 1}`,

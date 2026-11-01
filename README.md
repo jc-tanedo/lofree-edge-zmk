@@ -31,7 +31,8 @@ This is an independent project, not affiliated with or endorsed by Lofree, Telin
 | Backlight | Stock implementation | Toggle and brightness implemented; not all stock effects |
 | Bluetooth input | Vendor functionality | Pairing, typing, media, Caps and reconnect physically tested |
 | Wireless editing / flashing | Not supported by these tools | Not supported; Studio and flashing require USB |
-| Sleep / power / physical switch | Vendor implementation, not independently characterized | Unfinished; radio mode selection uses shortcuts |
+| Physical switch | Vendor implementation | Alpha.2: ON USB/Studio, BT Bluetooth, OFF inactive; [owner validated](docs/validation/v0.1.0-alpha.2.md) |
+| Sleep / power | Vendor implementation, not independently characterized | Unfinished; no battery-life claim |
 | Battery reporting | Not independently verified by this project | Placeholder; not a measured battery level |
 | Recovery | Vendor behavior | Retained-image return exists; **recovery is not guaranteed** |
 
@@ -69,3 +70,5 @@ Serve only the built website, never the repository root. Initial build prerequis
 Read [contributing](CONTRIBUTING.md), [security reporting](SECURITY.md), [linked credits](ATTRIBUTION.md) and [the roadmap](ROADMAP.md). Include the release version, hardware revision if known, host OS/browser and reproducible steps. Never upload device backups, Bluetooth keys or raw captures containing private data.
 
 Original contributions are GPL-3.0-or-later unless an existing per-file notice states otherwise. Third-party licenses remain unchanged. See [LICENSE](LICENSE), [LICENSING.md](LICENSING.md) and [third-party notices](THIRD_PARTY_NOTICES.md).
+
+The alpha.2 switch-controller candidate has passed [exact-image hardware validation](docs/validation/v0.1.0-alpha.2.md). Alpha.1 remains the published release until alpha.2 is reviewed and released.

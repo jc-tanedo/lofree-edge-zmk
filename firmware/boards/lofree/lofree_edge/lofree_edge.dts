@@ -25,6 +25,11 @@
   compatible = "lofree,edge-backlight";
   led { label = "White key backlight"; };
  };
+ edge_mode_switch: mode-switch {
+  compatible = "lofree,edge-mode-switch";
+  bt-gpios = <&gpiod 5 GPIO_ACTIVE_LOW>;
+  off-gpios = <&gpiod 6 GPIO_ACTIVE_LOW>;
+ };
  kscan0: kscan {
   compatible = "lofree,edge-kscan-matrix";
   caps-source-gpios = <&gpioc 1 GPIO_ACTIVE_HIGH>;

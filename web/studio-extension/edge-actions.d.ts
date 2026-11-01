@@ -30,6 +30,8 @@ export function basicAction(
   k: (typeof PRINTED_KEYS)[number],
   layers: Layer[],
 ): Action;
+export const EDGE_BLUETOOTH_PROFILES: number;
+export function edgeBehaviorMetadata<T extends GetBehaviorDetailsResponse>(details: T): T;
 export function functionActions(): Action[];
 export function layerActions(l: Layer[]): Action[];
 export function shortcutActions(mac?: boolean): Action[];

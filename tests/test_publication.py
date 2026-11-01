@@ -24,6 +24,12 @@ class PublicationTests(unittest.TestCase):
  def test_unchecked_hardware_blocks_promotion(self):
   args=list(self.metadata());args[2]['body']=args[2]['body'].replace('[x]','[ ]',1)
   with self.assertRaisesRegex(ValueError,'Missing hardware'):validate_metadata(*args)
+ def test_missing_switch_hardware_evidence_blocks_promotion(self):
+  for case in ('switch-mode-routing','switch-cable-battery','legacy-output-immunity'):
+   with self.subTest(case=case):
+    args=list(self.metadata())
+    args[2]['body']=args[2]['body'].replace('- [x] hardware:'+case,'')
+    with self.assertRaisesRegex(ValueError,'Missing hardware check: '+case):validate_metadata(*args)
  def test_draft_or_wrong_commit_cannot_deploy(self):
   args=list(self.metadata());args[2]['isDraft']=True
   with self.assertRaises(ValueError):validate_metadata(*args)

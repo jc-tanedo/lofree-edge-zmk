@@ -1,6 +1,7 @@
 """Create matching website, firmware, source, notices and provenance; never touches hardware."""
 import argparse,hashlib,json,os,re,shutil,subprocess,tarfile,zlib
 from pathlib import Path
+from verify_promotion import CASES
 import markdown
 from audit_publication import audit_source,audit_site,audit_archive,source_files,PRIVATE
 ROOT=Path(__file__).resolve().parents[1]
@@ -114,8 +115,8 @@ def main():
  tar_files(release/(stem+'-source.tar.gz'),source)
  # Audit before publishing; license/source review is also a human release gate.
  for f in release.glob('*.tar.gz'):audit_archive(f)
- notes=f'''# Lofree Edge ZMK {version}\n\n> EXPERIMENTAL — USE ENTIRELY AT YOUR OWN RISK. Firmware, website, tools and instructions may make your keyboard unusable, erase settings or interrupt input. Recovery may require a programmer and may fail. No warranty. Backups and retained stock are not guarantees.\n\nIndependent project; no vendor endorsement. Substantial AI assistance; see AI_DISCLOSURE.md in the source archive.\n\nBLE+USB Studio; three total layers. USB required for editing/flashing. Sleep, physical-switch handling and measured battery reporting remain unfinished.\n\nFirmware SHA-256: `{sha(image)}`\n\n## Exact-artifact hardware checklist\n\n'''
- for case in ['typing','usb','ble-pair-reconnect','layers-save-power-cycle','fn-media','caps-on-off','backlight','trial-acceptance','retained-image-return']:notes+='- [ ] hardware:'+case+'\n'
+ notes=f'''# Lofree Edge ZMK {version}\n\n> EXPERIMENTAL — USE ENTIRELY AT YOUR OWN RISK. Firmware, website, tools and instructions may make your keyboard unusable, erase settings or interrupt input. Recovery may require a programmer and may fail. No warranty. Backups and retained stock are not guarantees.\n\nIndependent project; no vendor endorsement. Substantial AI assistance; see AI_DISCLOSURE.md in the source archive.\n\nBLE+USB Studio; three total layers. USB required for editing/flashing. The physical selector controls USB/Studio (ON), Bluetooth with USB power only (BT), and inactive input/radio/lighting/data (OFF). Moving it restarts firmware; save edits first. Three Bluetooth profiles remain. Sleep and measured battery reporting remain unfinished.\n\nFirmware SHA-256: `{sha(image)}`\n\n## Exact-artifact hardware checklist\n\n'''
+ for case in CASES:notes+='- [ ] hardware:'+case+'\n'
  notes+='\nDo not publish until every required hardware check is recorded against this exact SHA. Emulation is not a substitute.\n'
  (release/'RELEASE_NOTES.md').write_text(notes)
  (release/'SHA256SUMS').write_text(''.join(sha(f)+'  '+f.name+'\n' for f in sorted(release.iterdir()) if f.is_file() and f.name not in {'SHA256SUMS','RELEASE_NOTES.md'}))

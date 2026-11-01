@@ -81,6 +81,8 @@ export function create_rpc_connection({ signal }: { signal?: AbortSignal } = {})
     "bcklight",
     "studio_unlock",
     "prev_firmware",
+    "bluetooth",
+    "outputs",
   ];
   const details = Object.fromEntries(
     names.map((name) => {
@@ -103,7 +105,9 @@ export function create_rpc_connection({ signal }: { signal?: AbortSignal } = {})
             param2: [{ range: { min: 0, max: 100 } }],
           },
         ];
-      return [id, { id, displayName: name, metadata }];
+      if (name === "bluetooth") metadata = [{param1:[{constant:3}],param2:[{range:{min:0,max:3}}]}];
+      if (name === "outputs") metadata = [{param1:[{range:{min:0,max:3}}],param2:[{nil:{}}]}];
+      return [id, { id, displayName: name === "outputs" ? "Output Selection (ignored; use physical switch)" : name, metadata }];
     }),
   );
   let responses: ReadableStreamDefaultController<RequestResponse>;

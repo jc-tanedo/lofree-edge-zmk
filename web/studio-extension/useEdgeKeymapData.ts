@@ -5,6 +5,7 @@ import type { GetBehaviorDetailsResponse } from "@zmkfirmware/zmk-studio-ts-clie
 import { LockState } from "@zmkfirmware/zmk-studio-ts-client/core";
 import { ConnectionContext } from "./rpc/ConnectionContext";
 import { LockStateContext } from "./rpc/LockStateContext";
+import { edgeBehaviorMetadata } from "./edge-export/studio-actions.js";
 import { usePub } from "./usePubSub";
 
 // Commit one complete read, and ignore late results after timeout/lock/disconnect.
@@ -45,7 +46,7 @@ export function useEdgeKeymapData() {
           const result = (await call_rpc(conn!, { behaviors: { getBehaviorDetails: { behaviorId } } })).behaviors?.getBehaviorDetails;
           if (!active) return;
           if (!result || result.id !== behaviorId) throw new Error("The keyboard returned incomplete action definitions.");
-          details[behaviorId] = result;
+          details[behaviorId] = edgeBehaviorMetadata(result);
         }
         window.clearTimeout(timer);
         if (!active) return;

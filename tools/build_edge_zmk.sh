@@ -42,8 +42,14 @@ case "${1:-}" in
   CONFIGS="$CONFIGS;$ROOT/firmware/lofree_edge/ble.conf"
   if [ "$1" != --ble ]; then
    CONFIGS="$CONFIGS;$ROOT/firmware/lofree_edge/ble-studio.conf"
-   python "$ROOT/tools/generate_edge_studio.py" --ble
-   OVERLAYS="$ROOT/firmware/lofree_edge/studio-ble.keymap;$ROOT/firmware/lofree_edge/studio.overlay;$ROOT/firmware/lofree_edge/ble.overlay"
+   if [ "${EDGE_SWITCH_DIAGNOSTIC:-0}" = 1 ]; then
+    python "$ROOT/tools/generate_edge_studio.py" --ble --legacy-output
+    BLE_KEYMAP="$ROOT/build/generated/studio-ble-diagnostic.keymap"
+   else
+    python "$ROOT/tools/generate_edge_studio.py" --ble
+    BLE_KEYMAP="$ROOT/firmware/lofree_edge/studio-ble.keymap"
+   fi
+   OVERLAYS="$BLE_KEYMAP;$ROOT/firmware/lofree_edge/studio.overlay;$ROOT/firmware/lofree_edge/ble.overlay"
    if [ "$1" = --ble-studio-export ]; then
     test -n "${2:-}" && test -f "$2"
     BUILD="$ROOT/firmware/build/lofree_edge-ble-export-validation"
@@ -52,6 +58,11 @@ case "${1:-}" in
   fi
   ;;
 esac
+if [ "${EDGE_SWITCH_DIAGNOSTIC:-0}" = 1 ]; then
+ test "${1:-}" = --ble-studio || { echo "Switch diagnostics require --ble-studio" >&2; exit 2; }
+ BUILD="$ROOT/firmware/build/lofree_edge-ble-studio-switch-diagnostic"
+ CONFIGS="$CONFIGS;$ROOT/firmware/lofree_edge/switch-diagnostic.conf"
+fi
 export SOURCE_DATE_EPOCH=${SOURCE_DATE_EPOCH:-$(git -C "$ROOT" log -1 --format=%ct 2>/dev/null || echo 0)}
 cmake -S "$ZMK/app" -B "$BUILD" -GNinja \
  -DZephyr_DIR="$ZEPHYR_BASE/share/zephyr-package/cmake" \

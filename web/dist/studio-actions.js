@@ -1,4 +1,4 @@
-// UI presets only. The device's advertised behavior metadata is authoritative.
+// Device metadata supplies action limits, with the Edge three-profile build contract below.
 import { KEY_LAYOUT } from "./layout.js";
 import { KEY_SYMBOLS } from "./keymap-export-symbols.js";
 import { behaviorId } from "./keymap-export.js";
@@ -17,6 +17,17 @@ export const IDS = Object.fromEntries(
     "outputs",
   ].map((n) => [n, behaviorId(n)]),
 );
+export const EDGE_BLUETOOTH_PROFILES = 3;
+// Pinned native behavior_bt.c advertises PROFILE_COUNT as an inclusive maximum;
+// its runtime accepts only indices below that count. Clamp this known mismatch
+// for the Edge build without widening any device-advertised range.
+export function edgeBehaviorMetadata(details) {
+  if (!details || details.id !== IDS.bluetooth) return details;
+  return {...details, metadata: (details.metadata || []).map(set => ({...set,
+    param2: (set.param2 || []).map(value => value.range ? {...value,
+      range: {...value.range, max: Math.min(value.range.max, EDGE_BLUETOOTH_PROFILES - 1)}} : value)
+  }))};
+}
 export const PRINTED_KEYS = [...KEY_LAYOUT].sort((a, b) => a.slot - b.slot);
 const short = {
   "+": "=",
@@ -186,7 +197,7 @@ export function basicAction(k, layers) {
 }
 export function functionActions() {
   return [
-    ...Array.from({ length: 4 }, (_, i) => ({
+    ...Array.from({ length: EDGE_BLUETOOTH_PROFILES }, (_, i) => ({
       label: `Bluetooth ${i + 1}`,
       group: "Bluetooth profiles",
       binding: binding("bluetooth", 3, i),
@@ -196,15 +207,6 @@ export function functionActions() {
       group: "Bluetooth profiles",
       binding: binding("bluetooth", 0, 0),
     },
-    ...[
-      ["Use USB", 1],
-      ["Use Bluetooth", 2],
-      ["Toggle USB / Bluetooth", 0],
-    ].map(([label, cmd]) => ({
-      label,
-      group: "Output",
-      binding: binding("outputs", cmd),
-    })),
     ...Object.entries(consumer).map(([u, label]) => ({
       label,
       group: Number(u) < 0xb0 ? "Display" : "Media",

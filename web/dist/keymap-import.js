@@ -1,4 +1,5 @@
 import { KEY_SYMBOLS, KEY_ALIASES } from './keymap-export-symbols.js';
+import { edgeBehaviorMetadata } from './studio-actions.js';
 import { behaviorId } from './keymap-export.js';
 
 const actions = {
@@ -214,7 +215,7 @@ export function planImport(parsed,current,details) {
     const bindings=layer.bindings.map(binding=>{
       let id=behaviorId(binding.action);
       if(binding.action==='prev_firmware' && !details.has(id)) id=behaviorId('edge_stock_return');
-      const meta=details.get(id);
+      const meta=edgeBehaviorMetadata(details.get(id));
       if(!meta) throw new Error(`The connected keyboard does not provide ${binding.action}.`);
       let param1=binding.param1;
       if(['momentary_layer','toggle_layer','to_layer'].includes(binding.action)) param1=sourceIds.get(param1);

@@ -20,10 +20,10 @@
   {
     "id": "switch",
     "title": "Physical mode switch",
-    "status": "needs investigation",
+    "status": "completed",
     "milestone": "Power and mode handling",
-    "limitation": "Native stack does not yet follow the physical mode GPIO; shortcuts select output.",
-    "acceptance": "Map switch positions electrically and verify correct USB/BLE/power behavior and reconnect across transitions.",
+    "limitation": "Implemented and owner-validated in the alpha.2 candidate: ON USB/Studio only, BT Bluetooth with USB power only, OFF inactive. One Edge/CachyOS validated; broader hosts and sleep remain separate work.",
+    "acceptance": "ON enables USB/Studio only; BT enables Bluetooth with USB power only; OFF suppresses input/radio/lighting/data. Verify guarded transitions, legacy-binding immunity, saved maps/bonds and cable/battery behavior on the exact image.",
     "issue": "https://github.com/jc-tanedo/lofree-edge-zmk/issues/3"
   },
   {
