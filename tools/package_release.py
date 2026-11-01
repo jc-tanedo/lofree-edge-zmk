@@ -56,6 +56,8 @@ def main():
   for pattern in ['LICENSE*','NOTICE*','COPYING*']:
    for f in dep.glob(pattern):
     if f.is_file():shutil.copyfile(f,license_dir/(name+'-'+f.name))
+ for notice in (ROOT/'licenses').glob('*'):
+  if notice.is_file():shutil.copyfile(notice,license_dir/notice.name)
  for f in ['LICENSE','RISK.md','ATTRIBUTION.md','LICENSING.md','THIRD_PARTY_NOTICES.md']:shutil.copyfile(ROOT/f,license_dir/f)
  notices=[];modules=ROOT/'.deps/zmk-studio/node_modules'
  for package_path in json.loads((modules.parent/'package-lock.json').read_text())['packages']:

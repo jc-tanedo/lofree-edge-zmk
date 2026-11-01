@@ -10,6 +10,7 @@ Upstream copyright, licenses and NOTICE files remain authoritative and are retai
 | tc32-keyboards | GPL-3.0; reference only, not linked into Edge |
 | ZMK Studio / Studio messages / client | Preserve each upstream Apache-2.0 license and notices |
 | nanopb | zlib license; preserve LICENSE.txt |
+| Inter Variable 4.0 font | SIL OFL 1.1; copyright The Inter Project Authors; licenses/Inter-OFL.txt |
 | Frontend dependencies | Exact package versions, origins and license metadata generated during packaging |
 
 No vendor endorsement is implied. Development-tool credits do not claim redistribution rights over the tools themselves.
