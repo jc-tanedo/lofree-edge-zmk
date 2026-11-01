@@ -12,7 +12,8 @@ from edge_ota import ota
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--position', choices=['ON', 'BT', 'OFF'], required=True)
+    parser.add_argument('--position', choices=['ON', 'BT', 'OFF', 'unknown'],
+                        default='unknown', help='Human-observed label; never inferred by this tool')
     parser.add_argument('--cable', choices=['connected', 'absent'], default='connected')
     args = parser.parse_args()
     hid = ota._hid_module()
