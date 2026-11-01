@@ -21,8 +21,8 @@ The source UI now caps Bluetooth selection/import to indices 0..2: pinned native
 metadata reports PROFILE_COUNT as an inclusive maximum, despite the runtime
 rejecting that index. This compatibility clamp does not widen advertised limits
 or change firmware. Current firmware bytes and frozen localhost8770 test site
-remain unchanged. Legacy output actions are explicitly grouped as ignored when
-the connected firmware advertises that policy. Final UI/package CI is pending.
+remain unchanged. Output actions are hidden from both Functions and Advanced; existing saved
+bindings remain readable/importable for compatibility. Final UI/package CI is pending.
 
 GitHub CI passed for prior head4fe2420; local compiled GPIO/USB/Studio/BLE,
 encrypted reconnect, all4 output actions, importer and trial rollback tests pass

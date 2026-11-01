@@ -32,7 +32,7 @@ export function basicAction(
 ): Action;
 export const EDGE_BLUETOOTH_PROFILES: number;
 export function edgeBehaviorMetadata<T extends GetBehaviorDetailsResponse>(details: T): T;
-export function functionActions(outputsIgnored?: boolean): Action[];
+export function functionActions(): Action[];
 export function layerActions(l: Layer[]): Action[];
 export function shortcutActions(mac?: boolean): Action[];
 export function specialActions(): Action[];

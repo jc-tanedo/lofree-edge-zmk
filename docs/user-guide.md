@@ -57,7 +57,8 @@ Changing position briefly restarts firmware. Save Studio edits first; unsaved
 changes may be lost. Saved mappings/layers/bonds persist. Fn+1/2/3 select the
 three Bluetooth profiles in BT; Fn+Backspace clears the selected pairing.
 Legacy output-selection bindings cannot override the switch. New defaults leave
-Fn+4/5 unassigned. The palette groups these as ignored legacy output actions.
+Fn+4/5 unassigned. Output actions are hidden from both Functions and Advanced. Existing bindings
+remain readable/importable for compatibility.
 
 Use ON for USB installation, diagnostics and Studio. Fn+Space (hold three seconds,
 release) requests retained-stock return; recovery is not guaranteed. Sleep and

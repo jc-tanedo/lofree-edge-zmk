@@ -195,7 +195,7 @@ export function basicAction(k, layers) {
         ),
       };
 }
-export function functionActions(outputsIgnored = false) {
+export function functionActions() {
   return [
     ...Array.from({ length: EDGE_BLUETOOTH_PROFILES }, (_, i) => ({
       label: `Bluetooth ${i + 1}`,
@@ -207,15 +207,6 @@ export function functionActions(outputsIgnored = false) {
       group: "Bluetooth profiles",
       binding: binding("bluetooth", 0, 0),
     },
-    ...[
-      ["Use USB", 1],
-      ["Use Bluetooth", 2],
-      ["Toggle USB / Bluetooth", 0],
-    ].map(([label, cmd]) => ({
-      label,
-      group: outputsIgnored ? "Legacy output (ignored; use physical switch)" : "Output",
-      binding: binding("outputs", cmd),
-    })),
     ...Object.entries(consumer).map(([u, label]) => ({
       label,
       group: Number(u) < 0xb0 ? "Display" : "Media",

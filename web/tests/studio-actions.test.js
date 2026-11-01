@@ -217,12 +217,12 @@ test("Bluetooth presets are gated by the device profile range and advertised out
     "BT 2",
   );
   assert.equal(
-    bindingLabel(options.find((a) => a.label === "Use Bluetooth").binding),
+    bindingLabel({behaviorId:IDS.outputs,param1:2,param2:0}),
     "Bluetooth output",
   );
   assert.equal(
     supportsBinding(
-      options.find((a) => a.label === "Use Bluetooth").binding,
+      {behaviorId:IDS.outputs,param1:2,param2:0},
       bt,
       layers,
     ),
@@ -238,5 +238,5 @@ test("Edge exposes three profiles despite the native metadata's inclusive-count 
   assert.equal(supportsBinding({behaviorId:IDS.bluetooth,param1:3,param2:2},definitions,layers),true);
   assert.equal(supportsBinding({behaviorId:IDS.bluetooth,param1:3,param2:3},definitions,layers),false);
   assert.equal(functionActions().filter(a=>a.binding.behaviorId===IDS.bluetooth && a.binding.param1===3).length,3);
-  assert.match(functionActions(true).find(a=>a.label==='Use USB').group,/ignored/);
+  assert.ok(functionActions().every(a=>a.binding.behaviorId!==IDS.outputs));
 });
