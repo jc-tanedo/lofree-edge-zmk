@@ -1,8 +1,8 @@
 # Physical mode switch
 
-**In progress. Experimental firmware and tools are used entirely at your own risk.** Read [RISK.md](../RISK.md). The published alpha.1 does not follow the slider. The first alpha.2 diagnostic candidate only observes inputs; it does not implement the behavior below.
+**Implemented; owner-validated alpha.2 candidate. Experimental firmware and tools are used entirely at your own risk.** Read [RISK.md](../RISK.md). The published alpha.1 does not follow the slider. The first alpha.2 diagnostic candidate only observes inputs; it does not implement the behavior below.
 
-## Agreed behavior after hardware verification
+## Validated behavior
 
 | Position | Typing | USB data / Studio | Bluetooth |
 | --- | --- | --- | --- |
@@ -12,7 +12,7 @@
 
 OFF also disables the backlight. Charging remains controlled by the hardware; this work makes no deep-sleep or battery-life claim. A brief restart when the switch moves is acceptable. Save Studio edits before moving it; unsaved changes may be lost. Saved maps, layers and bonds must survive.
 
-The switch will override legacy output-selection bindings. New defaults will leave Fn+4/Fn+5 unassigned. Existing maps will remain readable/importable without a reset; their old output bindings will not override the slider. Keep three Bluetooth profiles and Fn+1/2/3 selection, plus existing pairing, lighting, media, unlock and recovery shortcuts.
+The switch overrides legacy output-selection bindings. New defaults leave Fn+4/Fn+5 unassigned. Existing maps will remain readable/importable without a reset; their old output bindings will not override the slider. Keep three Bluetooth profiles and Fn+1/2/3 selection, plus existing pairing, lighting, media, unlock and recovery shortcuts.
 
 ## Evidence and remaining gate
 
@@ -20,7 +20,7 @@ Existing instruction analysis of stock mode selection reads port D inputs, inclu
 
 The diagnostic candidate enables only PD5-PD7 inputs with their outputs disabled and preserves output latches and pull configuration. It retains the previous keyboard, USB, Bluetooth and recovery behavior. It must not be mistaken for the final switch-controlled build.
 
-The USB-connected input table is now reproducible (below). Next: complete compiled transition tests, then validate enumeration/radio/power behavior with the exact controller image, including battery operation and cable changes. Keep raw private investigation artifacts outside the public repository.
+The input table and controller behavior are now validated; see [the exact-image hardware record](validation/v0.1.0-alpha.2.md). Keep raw private investigation artifacts outside the public repository.
 
 ## Diagnostic status interface
 
@@ -65,11 +65,10 @@ observations with USB connected, not emulator results. PD5 low takes Bluetooth
 precedence in the stock decoder; otherwise PD6 low selects OFF. PD7 remained
 high and its role is unverified; the new controller leaves PD7 untouched.
 
-The installed, accepted image is still the input-only diagnostic cd4a22d3.
-Automatic routing is being implemented offline and has not been flashed or
-hardware-validated. Battery/cable behavior remains a required candidate test.
+At that earlier diagnostic stage, the accepted image was cd4a22d3. The final controller is now installed,
+accepted and validated as recorded above.
 
-## Controller implementation under test
+## Controller implementation
 
 The board-owned `edge_mode` module initializes only the PD5/PD6 inputs and
 fails closed if their input/output/function configuration is wrong. Staged,
@@ -94,5 +93,5 @@ EDGE_TEST_BUILD=lofree_edge-ble-studio .venv/bin/python tools/test_edge_ble_emul
 ```
 
 Compiled checks do not establish physical RF performance or battery behavior.
-The accepted observation-only diagnostic remains installed until a new exact-SHA
-candidate is separately handed off for hardware testing.
+The exact controller candidate is now accepted and owner-tested. RF performance and
+current draw were not independently measured; sleep remains unimplemented.

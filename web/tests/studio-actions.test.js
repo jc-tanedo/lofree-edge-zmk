@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   IDS,
+  edgeBehaviorMetadata,
   PRINTED_KEYS,
   basicAction,
   bindingLabel,
@@ -197,7 +198,7 @@ test("Bluetooth presets are gated by the device profile range and advertised out
   );
   assert.equal(
     supportsBinding(
-      options.find((a) => a.label === "Bluetooth 4").binding,
+      {behaviorId: IDS.bluetooth, param1: 3, param2: 3},
       bt,
       layers,
     ),
@@ -227,4 +228,15 @@ test("Bluetooth presets are gated by the device profile range and advertised out
     ),
     true,
   );
+});
+
+test("Edge exposes three profiles despite the native metadata's inclusive-count error", () => {
+  const raw = { id: IDS.bluetooth, metadata: [{param1:[{constant:3}], param2:[{range:{min:0,max:3}}]}] };
+  const fixed = edgeBehaviorMetadata(raw);
+  assert.equal(raw.metadata[0].param2[0].range.max, 3, "must not mutate the RPC response");
+  const definitions = {[IDS.bluetooth]:fixed};
+  assert.equal(supportsBinding({behaviorId:IDS.bluetooth,param1:3,param2:2},definitions,layers),true);
+  assert.equal(supportsBinding({behaviorId:IDS.bluetooth,param1:3,param2:3},definitions,layers),false);
+  assert.equal(functionActions().filter(a=>a.binding.behaviorId===IDS.bluetooth && a.binding.param1===3).length,3);
+  assert.match(functionActions(true).find(a=>a.label==='Use USB').group,/ignored/);
 });

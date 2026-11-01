@@ -45,17 +45,27 @@ The first alpha uses an explicit command-line acceptance step. Install the pinne
 
 Confirm runs the upstream flash self-test and boot guard checks. A refused self-test is a stop condition, not a reason to bypass the guard. Linux USB access may require the included udev rule and reconnecting the keyboard. Manual retained-image return remains available only while that image and recovery path are valid; it is not a guarantee.
 
-## Connection shortcuts
+## Physical mode switch (alpha.2)
 
-The following shortcuts describe released **v0.1.0-alpha.1**. The unreleased
-alpha.2 controller instead follows BT/ON/OFF: ON is required for USB/Studio,
-BT is Bluetooth with USB power only, and OFF suppresses input and lighting.
-Save edits before moving it; changing position restarts firmware. Its factory
-Fn+4/Fn+5 are unassigned and old output bindings are ignored. Hardware validation
-is in progress; see [physical-switch status](physical-switch.md).
+| Position | Input | USB / Studio |
+| --- | --- | --- |
+| ON | USB; Bluetooth inactive | Available with USB connected |
+| BT | Bluetooth | Power only; Studio unavailable |
+| OFF | No input/radio/lighting | No USB data; charging hardware-controlled |
 
+Changing position briefly restarts firmware. Save Studio edits first; unsaved
+changes may be lost. Saved mappings/layers/bonds persist. Fn+1/2/3 select the
+three Bluetooth profiles in BT; Fn+Backspace clears the selected pairing.
+Legacy output-selection bindings cannot override the switch. New defaults leave
+Fn+4/5 unassigned. The palette groups these as ignored legacy output actions.
 
-Fn+4 selects USB output; Fn+5 selects Bluetooth output. Fn+1/2/3 select Bluetooth profiles, and Fn+Backspace clears the current profile. Actual battery level, sleep and physical mode-switch handling are unfinished. See [roadmap](../ROADMAP.md).
+Use ON for USB installation, diagnostics and Studio. Fn+Space (hold three seconds,
+release) requests retained-stock return; recovery is not guaranteed. Sleep and
+accurate battery reporting remain unfinished. See [roadmap](../ROADMAP.md).
+
+Alpha.2 is a validated candidate, pending review/release. Published alpha.1 still
+uses Fn+4 for USB output and Fn+5 for Bluetooth output and does not follow the
+physical slider. Keep tools/firmware versions in mind when following this guide.
 
 ## Recovery
 

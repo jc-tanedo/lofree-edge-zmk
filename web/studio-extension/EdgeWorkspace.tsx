@@ -156,7 +156,7 @@ export function EdgeWorkspace(p: Props) {
   }
   let actions =
     category === "Functions"
-      ? functionActions()
+      ? functionActions(p.behaviors[IDS.outputs]?.displayName?.includes("ignored"))
       : category === "Layers"
         ? layerActions(layers)
         : category === "Shortcuts"

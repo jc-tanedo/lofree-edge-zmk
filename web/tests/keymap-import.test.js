@@ -161,3 +161,13 @@ test('Bluetooth and output bindings round-trip without firmware rebuilding',()=>
  assert.throws(()=>planImport(parseKeymap(exported.replace('&bt 3 2','&bt BT_SEL 3')),{...map,maxLayerNameLength:20},details),/Invalid parameters/);
  assert.throws(()=>planImport(parseKeymap(exported),{...map,maxLayerNameLength:20},metadata()),/does not provide bluetooth/);
 });
+
+test('import rejects nonexistent fourth Edge profile even with upstream off-by-one metadata',()=>{
+  const details=metadata();
+  details.set(behaviorId('bluetooth'),{id:behaviorId('bluetooth'),metadata:[{param1:[{constant:3}],param2:[{range:{min:0,max:3}}]}]});
+  const parsed=parseKeymap(source);
+  parsed.layers[0].bindings[0]={action:'bluetooth',param1:3,param2:3};
+  assert.throws(()=>planImport(parsed,original,details),/Invalid parameters/);
+  parsed.layers[0].bindings[0].param2=2;
+  assert.doesNotThrow(()=>planImport(parsed,original,details));
+});

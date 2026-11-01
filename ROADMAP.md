@@ -26,9 +26,9 @@ Deep/idle sleep and battery-life behavior are unfinished.
 
 ## Physical mode switch
 
-**in progress** · Power and mode handling
+**completed** · Power and mode handling
 
-Released alpha.1 uses output shortcuts. PD5/PD6 are measured; the alpha.2 controller compiles and needs final transition, battery/cable and exact-image hardware validation.
+Implemented and owner-validated in the alpha.2 candidate: ON USB/Studio only, BT Bluetooth with USB power only, OFF inactive. One Edge/CachyOS validated; broader hosts and sleep remain separate work.
 
 **Acceptance:** ON enables USB/Studio only; BT enables Bluetooth with USB power only; OFF suppresses input/radio/lighting/data. Verify guarded transitions, legacy-binding immunity, saved maps/bonds and cable/battery behavior on the exact image.
 
