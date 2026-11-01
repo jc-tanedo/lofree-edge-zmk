@@ -12,6 +12,7 @@ import {
   Command,
   Layers,
   Settings2,
+  Power,
   Search,
   Plus,
   ChevronRight,
@@ -63,6 +64,7 @@ const tabs = [
   ["Shortcuts", Command],
   ["Layers", Layers],
   ["Advanced", Settings2],
+  ["Power", Power],
 ] as const;
 const initialGeometry = PRINTED_KEYS.map((k) => ({
   ...k,
@@ -360,7 +362,7 @@ export function EdgeWorkspace(p: Props) {
                 id={`tab-${name}`}
                 role="tab"
                 aria-selected={category === name}
-                aria-controls="edge-action-panel"
+                aria-controls={name === "Power" ? "edge-power-panel" : "edge-action-panel"}
                 tabIndex={category === name ? 0 : -1}
                 onKeyDown={(e) => {
                   if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
@@ -383,7 +385,7 @@ export function EdgeWorkspace(p: Props) {
               </button>
             ))}
           </div>
-          <label className="edge-search">
+          {category !== "Power" && <label className="edge-search">
             <Search size={15} />
             <input
               aria-label="Search actions"
@@ -396,9 +398,10 @@ export function EdgeWorkspace(p: Props) {
                 <X size={13} />
               </button>
             )}
-          </label>
+          </label>}
         </div>
         <div
+          hidden={category === "Power"}
           className="edge-action-body"
           role="tabpanel"
           id="edge-action-panel"
@@ -568,8 +571,16 @@ export function EdgeWorkspace(p: Props) {
                 "Edits apply immediately. Save writes changes to device storage."}
           </p>
         </div>
+        <div
+          hidden={category !== "Power"}
+          className="edge-action-body"
+          role="tabpanel"
+          id="edge-power-panel"
+          aria-labelledby="tab-Power"
+        >
+          <EdgePower ready={unlocked && !!map} busy={busy || externalBusy} />
+        </div>
       </section>
-      <EdgePower ready={unlocked && !!map} busy={busy || externalBusy} />
       <dialog
         ref={dialog}
         className="edge-dialog"

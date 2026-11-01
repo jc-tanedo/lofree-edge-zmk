@@ -1,20 +1,42 @@
-Power-management implementation is in progress on `firmware/power-management`.
-Canonical version is now unreleased `0.1.0-alpha.3`; alpha.2 remains installed.
-Studio Power supports device reads, dim/off/sleep timers, relative dim brightness,
-Never, validation, explicit save/readback, defaults/discard, old-firmware fallback,
-timeout/retry and dirty navigation guards. Isolated browser checks pass.
+# Power management — in progress
 
-The compiled prior alpha.3 integration passed secured settings/PWM/held-key/manual-off
-and reboot persistence; encrypted BLE suspend/pad wake x3 and all mode/legacy-output
-regressions passed with stack margins >=128 bytes. Additional checks passed for
-RF-register loss on suspend, a key racing with entry, USB-host suspend and BT/OFF deep
-entry. Storage fault-injection validation and full CI remain in progress. Deep wake/current are not modeled; physical hardware tests remain mandatory.
-The first trimmed stacks failed tests. An additional pre-reset peak check found
-Studio1712/1800 (84 spare); its allocation is now2048 with a16-entry behavior queue.
-Current build uses22316/22528 static RAM, with three profiles/layers.
-See [power management](power-management.md). No hardware writes performed.
+Branch `firmware/power-management`, draft [PR #12](https://github.com/jc-tanedo/lofree-edge-zmk/pull/12).
+Version `0.1.0-alpha.3` is unreleased. Firmware candidate SHA-256
+`3b233eba7abec417b946df30cb474f34de15d3ff82c2b9eb3a48a36a868062fd`
+was installed by the owner and remains an unconfirmed trial.
 
-# Current status
+**Hardware failure:** Bluetooth idle wake takes about one second and loses the
+first brief key press; a second press is required. Do not accept or publish this
+candidate. The encrypted peripheral model passes 18ms wake taps and does not
+reproduce the physical failure. Filtered owner-host Bluetooth timing is the next
+diagnostic step; the agent-side Bluetooth query does not expose the named device
+and cannot establish its connection state.
+
+Owner-confirmed ON checks pass: ordinary typing, media, Caps indicator,
+backlight, saved mappings/layers, Power defaults/read/save and configured
+2s/4s/10s/20% dim/off/restore, held-key inhibition and manual-off preservation.
+Power now uses the existing Studio tab bar. Its component stays mounted across
+tab changes so drafts and navigation protection remain intact. Both production
+bases compile; isolated browser tab/draft/guard checks pass. The frozen 8781
+hardware-test installer remains unchanged.
+
+Full local CI and [GitHub CI](https://github.com/jc-tanedo/lofree-edge-zmk/actions/runs/41305111518)
+passed for firmware commit `113357f9f9565ffa35fd0fb6f3ddf6282ef9cd8d`:
+secured settings, failed writes/corrupt/future schemas, PWM/manual-off/held keys,
+persistence, encrypted retained suspend with simulated RF loss, entry-race keys,
+USB-host suspend/resume, BT/OFF deep-entry setup, boot guard/import/diagnostic
+checks, both website bases and independent source/history/archive/site audits.
+Deep wake and current are not modeled. These green checks do not override the
+physical first-key failure. Studio has 332 bytes spare at its observed first-boot
+peak with a 2048-byte allocation; static RAM is 22316/22528, behavior queue 16,
+profiles/layers three. Earlier trimmed stack allocations were rejected by tests.
+
+The owner has no current-measurement equipment. Draw, battery improvements and
+the current-measurement release gate remain unverified. See
+[power management](power-management.md) and the [hardware record](validation/v0.1.0-alpha.3.md).
+No release, Pages deployment or acceptance has occurred.
+
+# Released alpha.2 baseline
 
 Physical-switch implementation is complete on `firmware/physical-mode-switch`,
 Merged PR #10 / closed issue #3. Exact alpha.2 OTA SHA-256
