@@ -9,7 +9,7 @@ def tar_files(path,files):
  with tarfile.open(path,'w:gz') as t:
   for p,name in files:t.add(p,arcname=name,recursive=False)
 def main():
- p=argparse.ArgumentParser(description=__doc__);p.add_argument('--site-base',default='/lofree-edge-zmk');a=p.parse_args()
+ p=argparse.ArgumentParser(description=__doc__);p.add_argument('--site-base',default='/lofree-edge-zmk');p.add_argument('--site-only',action='store_true');p.add_argument('--site-output',default='build/site');a=p.parse_args()
  base=a.site_base.rstrip('/')
  if base and not re.fullmatch(r'/[a-zA-Z0-9_-]+',base):raise SystemExit('Expected empty base or one project subdirectory')
  version=(ROOT/'VERSION').read_text().strip()
@@ -23,8 +23,10 @@ def main():
  if data[8:12]!=b'KNLT' or int.from_bytes(data[24:28],'little')!=len(data) or len(data)>0x20000 or int.from_bytes(data[-4:],'little') != zlib.crc32(data[:-4])^0xffffffff:raise SystemExit('Firmware header/CRC/size check failed')
  # Prevent relabeling an old image with a new project version.
  if version.encode() not in data:raise SystemExit('Firmware does not contain the canonical version')
- site=ROOT/'build/site';release=ROOT/'build/release';site.mkdir(parents=True,exist_ok=True);release.mkdir(parents=True,exist_ok=True)
- for old in release.iterdir():
+ site=(ROOT/a.site_output).resolve();
+ if not site.is_relative_to(ROOT/'build'):raise SystemExit('Website output must stay in build/')
+ release=ROOT/'build/release';site.mkdir(parents=True,exist_ok=True);release.mkdir(parents=True,exist_ok=True)
+ for old in ([] if a.site_only else release.iterdir()):
   if old.is_file():old.unlink()
  for old in list(site.iterdir()):
   if old.is_dir():shutil.rmtree(old)
@@ -82,6 +84,8 @@ def main():
    f.write_text(text)
  for old,new in assets.items():(site/old).rename(site/new)
  audit_site(site)
+ if a.site_only:
+  print('PASS: standalone website staged at '+str(site.relative_to(ROOT)));return
  shutil.copyfile(image,release/(stem+'.ota.bin'))
  shutil.copyfile(image.with_name('zmk.elf'),release/(stem+'.elf'))
  provenance={**build_info,'dependencies':locks,'site_base':base,'hardware_validation_at_build':'pending; published release body records exact-SHA hardware evidence'}

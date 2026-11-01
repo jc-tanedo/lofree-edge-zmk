@@ -56,8 +56,8 @@ cmake -S "$ZMK/app" -B "$BUILD" -GNinja \
  -DZephyr_DIR="$ZEPHYR_BASE/share/zephyr-package/cmake" \
  "-DZEPHYR_MODULES=$MODULES" \
  -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
- "-DCMAKE_C_FLAGS=-ffile-prefix-map=$ROOT=. -fdebug-prefix-map=$ROOT=." \
- "-DCMAKE_ASM_FLAGS=-ffile-prefix-map=$ROOT=. -fdebug-prefix-map=$ROOT=." \
+ "-DCMAKE_C_FLAGS=-ffile-prefix-map=$ROOT=. -fdebug-prefix-map=$ROOT=. -DLOFREE_BUILD_EPOCH=$SOURCE_DATE_EPOCH" \
+ "-DCMAKE_ASM_FLAGS=-ffile-prefix-map=$ROOT=. -fdebug-prefix-map=$ROOT=. -DLOFREE_BUILD_EPOCH=$SOURCE_DATE_EPOCH" \
  -DBOARD=lofree_edge -DZEPHYR_TOOLCHAIN_VARIANT=host/llvm \
  -DLLVM_TOOLCHAIN_PATH="${LLVM_TOOLCHAIN_PATH:-/usr}" -DTC32_THUMB=ON \
  -DTC32_THUMB_TOOLS="$ROOT/.deps/tc32-devtools/compiler" \
