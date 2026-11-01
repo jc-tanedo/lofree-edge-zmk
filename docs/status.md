@@ -5,12 +5,16 @@ Version `0.1.0-alpha.3` is unreleased. Firmware candidate SHA-256
 `3b233eba7abec417b946df30cb474f34de15d3ff82c2b9eb3a48a36a868062fd`
 was installed by the owner and remains an unconfirmed trial.
 
-**Hardware failure:** Bluetooth idle wake takes about one second and loses the
-first brief key press; a second press is required. Do not accept or publish this
-candidate. The encrypted peripheral model passes 18ms wake taps and does not
-reproduce the physical failure. Filtered owner-host Bluetooth timing is the next
-diagnostic step; the agent-side Bluetooth query does not expose the named device
-and cannot establish its connection state.
+**Hardware validation is incomplete:** the owner reports about one second of
+Bluetooth wake delay. A first-key loss was initially reported, but a later
+single-tap capture produced one letter and two notifications, consistent with
+press/release. That sample does not reproduce first-key loss. Its filter omitted
+timing headers, so it cannot establish latency or link state. A timed warm/idle comparison delivered both taps; its cue-to-report delays
+include human reaction and do not measure firmware latency. Retained sleep is
+expected to keep Bluetooth connected. Caps-indicator sleep/wake observation is
+the next physical check. Do not accept
+or publish before the remaining physical gates are resolved. Agent-side
+Bluetooth queries expose no named Edge and cannot establish host connection state.
 
 Owner-confirmed ON checks pass: ordinary typing, media, Caps indicator,
 backlight, saved mappings/layers, Power defaults/read/save and configured

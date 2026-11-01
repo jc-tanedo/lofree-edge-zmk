@@ -35,9 +35,11 @@ def run(s):
         assert not m.regs_mem[0x583]&0x80,'Caps gate active while asleep'
         assert not s['u'].dp_pullup(),'USB enumerated while sleeping BT'
         before=len(central.ntf)
+        started=m.ms()
         tap(3,1)
-        until(lambda:any(h==20 and '04' in payload for _,h,payload in central.ntf[before:]),1500)
-        until(lambda:any(h==20 and payload=='0000000000000000' for _,h,payload in central.ntf[before:]),1500)
+        until(lambda:any(h==20 and '04' in payload for _,h,payload in central.ntf[before:]),max(0,100-(m.ms()-started)))
+        until(lambda:any(h==20 and payload=='0000000000000000' for _,h,payload in central.ntf[before:]),max(0,150-(m.ms()-started)))
+        print('MODELED WAKE latency ms:',[(round(t-started,3),h) for t,h,_ in central.ntf[before:]],flush=True)
         assert len(m.wakes)>wake_count, 'No new pad wake for this cycle'
         assert m.reset_count==reset
     # Keep a physical key held even if the deadline passes.
