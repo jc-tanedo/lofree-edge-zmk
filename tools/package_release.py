@@ -88,7 +88,7 @@ def main():
   print('PASS: standalone website staged at '+str(site.relative_to(ROOT)));return
  shutil.copyfile(image,release/(stem+'.ota.bin'))
  shutil.copyfile(image.with_name('zmk.elf'),release/(stem+'.elf'))
- provenance={**build_info,'dependencies':locks,'site_base':base,'hardware_validation_at_build':'pending; published release body records exact-SHA hardware evidence'}
+ provenance={**build_info,'dirty':bool(subprocess.check_output(['git','status','--porcelain'],cwd=ROOT,text=True).strip()),'dependencies':locks,'site_base':base,'hardware_validation_at_build':'pending; published release body records exact-SHA hardware evidence'}
  (release/'provenance.json').write_text(json.dumps(provenance,indent=2)+'\n')
  shutil.copyfile(site/'dependency-notices.json',release/'dependency-notices.json')
  files=[(p,str(p.relative_to(site))) for p in site.rglob('*') if p.is_file()]

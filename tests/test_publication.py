@@ -18,7 +18,7 @@ class PublicationTests(unittest.TestCase):
  def metadata(self):
   v=(ROOT/'VERSION').read_text().strip();sha='a'*64
   release={'isDraft':False,'body':sha+'\n'+'\n'.join('- [x] hardware:'+case for case in CASES)}
-  provenance={'version':v,'site_base':'/lofree-edge-zmk','commit':'abc','firmware_sha256':sha}
+  provenance={'dirty':False,'version':v,'site_base':'/lofree-edge-zmk','commit':'abc','firmware_sha256':sha}
   return v,'v'+v,release,provenance,'abc'
  def test_complete_hardware_evidence_passes(self):validate_metadata(*self.metadata())
  def test_unchecked_hardware_blocks_promotion(self):

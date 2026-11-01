@@ -10,6 +10,8 @@ class Links(HTMLParser):
    if key in ('href','src') and value:self.links.append(value)
 def validate(site,base):
  count=0
+ studio=(site/'studio/index.html').read_text()
+ if f'src="{base}/edge-shell.' not in studio:raise ValueError('Studio must load the site-root shared module explicitly')
  for p in site.rglob('*.html'):
   parser=Links();parser.feed(p.read_text())
   for link in parser.links:

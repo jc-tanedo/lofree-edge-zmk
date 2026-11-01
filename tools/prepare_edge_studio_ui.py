@@ -1,6 +1,5 @@
 """Stage pinned Studio with the project-owned Edge interface; preserve vendor input."""
 from pathlib import Path
-import os
 import shutil
 import re
 
@@ -112,15 +111,13 @@ u=undo.read_text().replace('    let undo = await doCb();','    try {\n    let un
 u=u.replace('    setUndoStack(undoStack.slice(1));\n    setRedoStack([doCb, ...redoStack]);\n\n    await undoCb();','    await undoCb();\n    setUndoStack(undoStack.slice(1));\n    setRedoStack([doCb, ...redoStack]);')
 u=u.replace('    let [doCb, undoCb] = undoStack[0];','    try {\n    let [doCb, undoCb] = undoStack[0];').replace('    setLocked(false);\n  };','    } finally { setLocked(false); }\n  };',1)
 undo.write_text(u)
-# One source for navigation/tokens; Vite copies these public assets unchanged.
-(stage/'public').mkdir(exist_ok=True)
-for shared in ('edge-shell.js', 'edge-design.css'):
-    shutil.copyfile(ROOT/'web/dist'/shared, stage/'public'/shared)
+# Shared assets are inserted after Vite so root and project-site paths stay exact.
+for name in ('edge-shell.js','edge-design.css'):
+    file=stage/'public'/name
+    if file.exists():file.unlink()
 html=stage/'index.html'
-base=os.environ.get('EDGE_SITE_BASE','').rstrip('/')
-html.write_text(html.read_text().replace('<title>ZMK Studio</title>','<title>Edge Studio</title>').replace('<body>', '<body class="edge-suite edge-editor"><edge-risk-notice></edge-risk-notice>').replace('</head>', '<link rel="stylesheet" href="'+base+'/edge-design.css?v=6">\n<script type="module" src="'+base+'/edge-shell.js?v=5"></script>\n</head>'))
-print(f'Staged upstream Studio with the Edge interface: {stage}')
-# Shared module is served at the site root rather than bundled into Studio.
+html.write_text(html.read_text().replace('<title>ZMK Studio</title>','<title>Edge Studio</title>').replace('<body>', '<body class="edge-suite edge-editor"><edge-risk-notice></edge-risk-notice>'))
 vite=stage/'vite.config.ts'
-v= vite.read_text().replace('    rollupOptions: {','    rollupOptions: {\n      external: (id: string) => id.includes("edge-shell.js"),').replace('        download: "./download.html",\n','')
+v= vite.read_text().replace('        download: "./download.html",\n','')
 vite.write_text(v)
+print(f'Staged upstream Studio with the Edge interface: {stage}')

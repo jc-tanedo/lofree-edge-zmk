@@ -31,3 +31,5 @@ p.write_text(s)
 shutil.copyfile(ROOT/'web/tests/fixtures/edge-ui-import-test.keymap',stage/'src/preview-import.keymap')
 subprocess.run(['./node_modules/.bin/tsc'],cwd=stage,check=True)
 subprocess.run(['./node_modules/.bin/vite','build','--base='+os.environ.get('EDGE_SITE_BASE','')+'/studio-qa/','--outDir='+str(ROOT/'web/dist/studio-qa'),'--emptyOutDir=false'],cwd=stage,check=True)
+
+subprocess.run(['python3',str(ROOT/'tools/finalize_studio.py'),'--directory','web/dist/studio-qa','--base',os.environ.get('EDGE_SITE_BASE','')],check=True)

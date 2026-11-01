@@ -15,4 +15,5 @@ mkdir -p src/data
 cp "$ROOT/data/studio-release-data.json" src/data/release-data.json
 ./node_modules/.bin/tsc
 ./node_modules/.bin/vite build --base="${EDGE_SITE_BASE:-}/studio/" --outDir="$ROOT/web/dist/studio" --emptyOutDir=true
+python3 "$ROOT/tools/finalize_studio.py" --base "${EDGE_SITE_BASE:-}"
 cp LICENSE NOTICE "$ROOT/web/dist/studio/"

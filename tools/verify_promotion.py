@@ -4,6 +4,7 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 CASES=['typing','usb','ble-pair-reconnect','layers-save-power-cycle','fn-media','caps-on-off','backlight','trial-acceptance','retained-image-return']
 def validate_metadata(version,tag,release,provenance,commit):
+ if provenance.get('dirty',True):raise ValueError('Uncommitted source cannot deploy')
  if release['isDraft']:raise ValueError('Draft release cannot deploy')
  if tag!='v'+version or provenance['version']!=version:raise ValueError('Version/tag mismatch')
  if provenance['site_base']!='/lofree-edge-zmk':raise ValueError('Wrong website base')
