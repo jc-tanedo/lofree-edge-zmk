@@ -1,6 +1,7 @@
 zephyr_library()
 zephyr_library_sources(board.c)
 zephyr_library_sources(edge_lighting.c)
+target_sources_ifdef(CONFIG_LOFREE_EDGE_MODE_SWITCH app PRIVATE "${CMAKE_CURRENT_LIST_DIR}/edge_power.c")
 zephyr_library_sources(edge_status.c)
 zephyr_library_sources_ifdef(CONFIG_LOFREE_EDGE_MODE_SWITCH edge_mode.c)
 target_include_directories(app PRIVATE "${CMAKE_CURRENT_LIST_DIR}")
@@ -96,5 +97,20 @@ if(CONFIG_LOFREE_EDGE_MODE_SWITCH)
   endif()
   set_source_files_properties("${EDGE_ROOT}/.deps/zmk-tc32/app/src/endpoints.c"
     TARGET_DIRECTORY app PROPERTIES HEADER_FILE_ONLY TRUE)
-  target_sources(app PRIVATE "${CMAKE_CURRENT_BINARY_DIR}/edge_endpoints.c")
+  set_source_files_properties("${EDGE_ROOT}/.deps/zmk-tc32/app/src/behavior_queue.c" TARGET_DIRECTORY app PROPERTIES HEADER_FILE_ONLY TRUE)
+  target_sources(app PRIVATE "${CMAKE_CURRENT_BINARY_DIR}/edge_endpoints.c" "${CMAKE_CURRENT_BINARY_DIR}/edge_behavior_queue.c")
+endif()
+
+if(CONFIG_TLSR_BLE_LOW_POWER)
+  execute_process(COMMAND "${EDGE_ROOT}/.venv/bin/python"
+    "${EDGE_ROOT}/tools/stage_edge_power.py" "${CMAKE_CURRENT_BINARY_DIR}"
+    RESULT_VARIABLE EDGE_POWER_STAGE_RESULT)
+  if(NOT EDGE_POWER_STAGE_RESULT EQUAL 0)
+    message(FATAL_ERROR "Review Edge power staging")
+  endif()
+  set_source_files_properties("${EDGE_ROOT}/.deps/zmk-tc32/tc32/src/ble/ble_sleep.c"
+    "${EDGE_ROOT}/.deps/zmk-tc32/tc32/src/gpio_matrix_sleep.c"
+    TARGET_DIRECTORY app PROPERTIES HEADER_FILE_ONLY TRUE)
+  target_sources(app PRIVATE "${CMAKE_CURRENT_BINARY_DIR}/edge_ble_sleep.c"
+    "${CMAKE_CURRENT_LIST_DIR}/edge_power_matrix.c")
 endif()

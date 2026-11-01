@@ -16,9 +16,9 @@ The first prerelease now has clean builds, package/license audits, hosted-path v
 
 ## Sleep and power management
 
-**needs investigation** · Power and mode handling
+**in progress** · Power and mode handling
 
-Deep/idle sleep and battery-life behavior are unfinished.
+Runtime dim/off/sleep settings and Edge wake integration are under development; physical sleep/wake and measured power remain unvalidated.
 
 **Acceptance:** Measure wired/BLE idle current, validate wake keys and reconnect, and demonstrate no lost saved mappings across repeated sleep/wake cycles.
 

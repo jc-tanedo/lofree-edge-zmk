@@ -20,7 +20,8 @@ case "${1:-}" in
   python3 "$ROOT/tools/check_dependency.py" zmk-studio-messages
   python "$ROOT/tools/generate_edge_studio.py"
   BUILD="$ROOT/firmware/build/lofree_edge-studio"
-  MODULES="$MODULES;$ROOT/.deps/nanopb;$ROOT/.deps/zmk-studio-messages"
+  python "$ROOT/tools/stage_edge_power_messages.py"
+  MODULES="$MODULES;$ROOT/.deps/nanopb;$ROOT/build/generated/edge-studio-messages"
   OVERLAYS="$ROOT/firmware/lofree_edge/studio.keymap;$ROOT/firmware/lofree_edge/studio.overlay"
   CONFIGS="$CONFIGS;$ROOT/firmware/lofree_edge/studio.conf"
   if [ "$1" = --studio-export ]; then

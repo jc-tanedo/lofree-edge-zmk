@@ -14,3 +14,5 @@ Use main as the default branch. VERSION is canonical SemVer, initially 0.1.0-alp
 Every release remains used entirely at the user's own risk. Successful testing is evidence for the tested device, not a guarantee. Do not move a published tag or silently replace assets. Fix mistakes in a new version and retain the original source/checksums.
 
 Before launch, enable Pages via Actions, private vulnerability reporting, and main branch protections requiring CI. Create linked roadmap issues with tools/sync_roadmap_issues.py only after reviewing its dry-run output.
+
+Power-management releases additionally require exact-image evidence for device settings persistence, dim/off timing, connected and deep Bluetooth wake, OFF selector wake, USB host suspend, and measured current. `verify_promotion.py` rejects a release missing any of these markers. No earlier image's wake results or unmeasured battery-life inference satisfies these gates.

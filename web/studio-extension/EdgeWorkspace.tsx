@@ -1,3 +1,4 @@
+import { EdgePower } from "./EdgePower";
 import { useContext, useEffect, useRef, useState } from "react";
 import type {
   Keymap,
@@ -568,6 +569,7 @@ export function EdgeWorkspace(p: Props) {
           </p>
         </div>
       </section>
+      <EdgePower ready={unlocked && !!map} busy={busy || externalBusy} />
       <dialog
         ref={dialog}
         className="edge-dialog"

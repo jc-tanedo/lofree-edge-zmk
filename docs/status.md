@@ -1,3 +1,18 @@
+Power-management implementation is in progress on `firmware/power-management`.
+Canonical version is now unreleased `0.1.0-alpha.3`; alpha.2 remains installed.
+Studio Power supports device reads, dim/off/sleep timers, relative dim brightness,
+Never, validation, explicit save/readback, defaults/discard, old-firmware fallback,
+timeout/retry and dirty navigation guards. Isolated browser checks pass.
+
+The compiled prior alpha.3 integration passed secured settings/PWM/held-key/manual-off
+and reboot persistence; encrypted BLE suspend/pad wake x3 and all mode/legacy-output
+regressions passed with stack margins >=128 bytes. Additional checks passed for
+RF-register loss on suspend, a key racing with entry, USB-host suspend and BT/OFF deep
+entry. Storage fault-injection validation and full CI remain in progress. Deep wake/current are not modeled; physical hardware tests remain mandatory.
+The first trimmed Studio and OTA stacks failed tests and were restored. Current
+build uses 22388/22528 static RAM and a 32-entry behavior queue, three profiles/layers.
+See [power management](power-management.md). No hardware writes performed.
+
 # Current status
 
 Physical-switch implementation is complete on `firmware/physical-mode-switch`,

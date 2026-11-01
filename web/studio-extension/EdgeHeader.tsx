@@ -29,10 +29,12 @@ export function AppHeader(p: AppHeaderProps) {
   useSub("rpc_notification.keymap.unsavedChangesStatusChanged", (v) =>
     setUnsaved(v),
   );
+  const [powerDirty,setPowerDirty] = useState(false);
+  useSub("edge.power.dirty",setPowerDirty);
   useEffect(() => {
-    document.dispatchEvent(new CustomEvent("edge-unsaved-changes", { detail: !!unsaved }));
+    document.dispatchEvent(new CustomEvent("edge-unsaved-changes", { detail: !!unsaved || powerDirty }));
     return () => { document.dispatchEvent(new CustomEvent("edge-unsaved-changes", { detail: false })); };
-  }, [unsaved]);
+  }, [unsaved,powerDirty]);
   const [busy, setBusy] = useState(false),
     [error, setError] = useState(""),
     [reset, setReset] = useState(false),
@@ -141,7 +143,7 @@ export function AppHeader(p: AppHeaderProps) {
                 <LockKeyhole size={13} />
                 Locked
               </>
-            ) : readState === "loading" ? "Reading keymap…" : readState === "error" ? "Keymap unavailable" : unsaved ? (
+            ) : readState === "loading" ? "Reading keymap…" : readState === "error" ? "Keymap unavailable" : powerDirty ? "Unsaved power settings" : unsaved ? (
               <>
                 <Circle size={8} />
                 Unsaved changes

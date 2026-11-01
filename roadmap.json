@@ -11,9 +11,9 @@
   {
     "id": "sleep",
     "title": "Sleep and power management",
-    "status": "needs investigation",
+    "status": "in progress",
     "milestone": "Power and mode handling",
-    "limitation": "Deep/idle sleep and battery-life behavior are unfinished.",
+    "limitation": "Runtime dim/off/sleep settings and Edge wake integration are under development; physical sleep/wake and measured power remain unvalidated.",
     "acceptance": "Measure wired/BLE idle current, validate wake keys and reconnect, and demonstrate no lost saved mappings across repeated sleep/wake cycles.",
     "issue": "https://github.com/jc-tanedo/lofree-edge-zmk/issues/2"
   },

@@ -9,7 +9,8 @@ ROOT = Path(__file__).resolve().parents[1]
 os.environ.setdefault('EDGE_TEST_BUILD', 'lofree_edge-studio')
 generated = ROOT / 'build/tmp/studio-python-proto'
 generated.mkdir(exist_ok=True)
-proto = ROOT / '.deps/zmk-studio-messages/proto/zmk'
+proto = ROOT / 'build/generated/edge-studio-messages/proto/zmk'
+if not proto.exists(): proto = ROOT / '.deps/zmk-studio-messages/proto/zmk'
 subprocess.run(['protoc', f'--proto_path={proto}', f'--python_out={generated}',
                 *map(str, proto.glob('*.proto'))], check=True)
 sys.path.insert(0, str(generated))
@@ -85,6 +86,13 @@ def rpc(request):
                 print(f'RPC {request_id}: response in {tick_index}ms', flush=True)
                 return response.request_response
         tick()
+    if os.environ.get('EDGE_TEST_STACKS'):
+        import stack_use
+        print('RPC timeout CPU:',hex(m.r[15]),[hex(v) for v in m.r],flush=True)
+        for name,lo,size in stack_use.stacks(str(ROOT/'firmware/build'/os.environ['EDGE_TEST_BUILD']/'zephyr/zmk.elf')):
+            mem=m.sram[lo-0x840000+4:lo-0x840000+size]
+            first=next((i for i,b in enumerate(mem) if b!=0xaa),len(mem))
+            print('RPC timeout stack',name,size,len(mem)-first,flush=True)
     raise AssertionError(f'No Studio response for {request}')
 
 def unlock():
@@ -112,6 +120,13 @@ assert rpc(request).core.get_device_info.name == 'Lofree Edge ZMK'
 request = pb.Request()
 request.keymap.get_keymap = True
 assert rpc(request).meta.simple_error == 1, 'Editing channel not initially locked'
+if os.environ.get('EDGE_TEST_POWER'):
+    request=pb.Request();request.core.edge_get_power=True
+    assert rpc(request).meta.simple_error==1, 'Power reader not secured'
+    request=pb.Request();request.core.edge_set_power.schema=1
+    assert rpc(request).meta.simple_error==1, 'Power writer not secured'
+    print('PASS: both power RPCs require physical Studio unlock',flush=True)
+
 unlock()
 current = keymap()
 assert len(current.layers) == 2 and current.available_layers == 1

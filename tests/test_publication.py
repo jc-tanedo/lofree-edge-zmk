@@ -30,6 +30,12 @@ class PublicationTests(unittest.TestCase):
     args=list(self.metadata())
     args[2]['body']=args[2]['body'].replace('- [x] hardware:'+case,'')
     with self.assertRaisesRegex(ValueError,'Missing hardware check: '+case):validate_metadata(*args)
+ def test_missing_power_hardware_evidence_blocks_promotion(self):
+  for case in ('power-settings-persistence','idle-dim-off','ble-suspend-wake','ble-deep-wake','off-selector-wake','usb-host-suspend','power-current-measurements'):
+   with self.subTest(case=case):
+    args=list(self.metadata())
+    args[2]['body']=args[2]['body'].replace('- [x] hardware:'+case,'')
+    with self.assertRaisesRegex(ValueError,'Missing hardware check: '+case):validate_metadata(*args)
  def test_draft_or_wrong_commit_cannot_deploy(self):
   args=list(self.metadata());args[2]['isDraft']=True
   with self.assertRaises(ValueError):validate_metadata(*args)

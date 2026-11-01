@@ -174,6 +174,10 @@ central.att_send(bytes.fromhex('121c0000'))
 advance(100)
 print('PASS: encrypted BLE LED output drives the Caps indicator')
 
+if os.environ.get('EDGE_TEST_POWER_SLEEP'):
+    from edge_power_emulator_checks import run as power_checks
+    power_checks(globals())
+
 # Reboot the keyboard while the modeled host retains its bond. No new pairing.
 stack_before_reset = stack_snapshot()
 (ROOT/'build/tmp/edge-ble-reconnect-flash.bin').write_bytes(lighting['flash'].mem)

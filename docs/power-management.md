@@ -1,0 +1,37 @@
+# Power management bring-up
+
+Experimental; firmware, tools and instructions are used entirely at your own risk. [Risk notice](../RISK.md).
+
+This feature is under development on `firmware/power-management`, tracking [issue #2](https://github.com/jc-tanedo/lofree-edge-zmk/issues/2). Alpha.2 has fixed idle backlight shutoff and no validated low-power sleep. Nothing here certifies a new image for hardware or publication.
+
+## Policy and Studio
+
+A project-specific additive core RPC extension uses the existing Studio connection, framing, mutex and physical unlock. Get uses core request 16; Set uses 17; response 16 is EdgePower. Fields 1–7 are schema, dim seconds, off seconds, Bluetooth sleep seconds, dim percentage of requested brightness, capabilities, and status. Core fields 1–4 are unchanged. Old firmware's no-response is treated as unsupported; no second serial/HID reader is opened.
+
+Schema 1 defaults: dim after 30 s, off after 120 s, sleep after 900 s, dim to 20%. Every deadline is measured from last key activity; zero is Never. Active deadlines must be ordered; range 0–86400 seconds; dim 0–100%. Dimming multiplies requested brightness and never turns on manually disabled lighting. Physical held positions, nonzero HID reports, queued behavior work and writes inhibit Bluetooth sleep. Settings are one versioned CRC-protected TLSR settings-log value; save only on explicit user action and read back after saving. Unknown newer schemas are not overwritten. Power defaults affect no keymap or bond.
+
+ON retains USB/Studio and uses lighting timers. BT uses retained suspend while its encrypted link is ready; while advertising it uses pad-wake deep sleep after the configured timeout (pairing gets at least 60 s). USB power in BT does not suppress its policy. OFF enters selector-only deep sleep after a 20 s startup holdoff. USB-host suspend in ON inhibits lighting and uses pad/core/timer wake with remote-wake requests only when the host permits it. Both paths remain unvalidated on hardware. Deep wake reboots and may consume the wake key; retained suspend is intended to deliver the wake key, pending hardware validation. Selector policy remains authoritative.
+
+## Stock reference and source boundary
+
+Offline V0116 analysis corroborated six row wake pads PC5/PC4/PC3/PC2/PC0/PB7 and selector PD5/PD6 at 0xa124/0xa278. Its deep path 0xb050 inhibits PB4 and sets all 15 column pulls to 100 kΩ pulldown, then disables their outputs. Connected idle 0x8734 uses pad+timer wake with a 400 ms target; USB-suspend 0xfb34 uses pad+USB-core wake. These are static findings, not physical wake/current evidence. The actual low-level callback entry is 0x24d4, not the preceding trampoline 0x24d0. PD7 is a conditional additional wake source whose purpose remains unknown and is left untouched. A bounded search did not establish stock-editable separate dim/off timers.
+
+Proprietary inputs and decompiler excerpts remain outside this repository. Our board setup is original code using public TC32 APIs. Upstream immutable checkouts are staged with reviewed hashes. Shared PB5/Caps gating remains inhibited while scanning sleeps. Radio registers/TX level are restored by upstream retained-suspend hooks.
+
+## Memory and gates
+
+Alpha.2 full emulator stack watermarks: Studio 696/1800, USB 320/1024, OTA 352/1152, IRQ 396/1024, work 608/1536 bytes. Suspend build initially exceeded SRAM by 1116 bytes. The initial Studio 1152/work 1280 allocations failed a real compiled Studio stack-sentinel test and were reverted. Current candidate keeps Studio 1800/work 1536, uses main 768/USB 768/OTA 1152/IRQ 896, and bounds the behavior queue at 32 entries (previously 64). Layers/profiles remain 3. The earlier host/OFF integration build used 22132/22528 bytes static RAM with OTA 896; a deeper mode-transition test measured 824 bytes used and only 68 spare, so OTA was restored to 1152. The current build uses 22388/22528 bytes. Every stack must pass fresh watermark tests including settings writes, encryption and sleep/resume; previous watermarks do not certify it.
+
+Required remaining coverage: compiled timer/PWM boundaries, held keys/deferred actions, version/corrupt record/write failure, locked RPCs, persistence, RF-loss resume, deep wake/trial guard, OFF/selector/cable states, browser loading/error/retry and dirty navigation, old firmware fallback, exact-SHA hardware tests and measured current. No battery-life claim before measurements. Measured battery reporting remains [issue #4](https://github.com/jc-tanedo/lofree-edge-zmk/issues/4).
+
+## Validation so far
+
+Portable C policy and actual shared TypeScript codec tests pass. The compiled power harness passed secured reads/writes, invalid ordering rejection, dim/off PWM transitions, manual-off preservation, held-key inhibition, restoration on activity, USB continuity and saved power/keymap/layer readback after reset on the prior integration image. The alpha.3 rerun also passed.
+
+Isolated browser fixture checks passed: locked controls; defaults and save/readback; invalid ordering; rejected save retaining the draft; older firmware fallback; 15-second stalled read ending in a retry error; ignored late response; reconnect/retry; dirty navigation confirmation. These checks cannot access a physical keyboard. No browser console errors were observed in the exercised paths.
+
+The backend is `CONFIG_TLSR_SETTINGS_LOG`, not NVS. It uses two journal areas in the storage partition, CRC-16 for each named record and commit-last area headers during compaction. Power settings add a versioned CRC-32 payload in one named record; the older value is invalidated only after the replacement is written. Atomicity is bounded by that upstream log implementation and flash behavior, not a recovery guarantee.
+
+Power settings use a new `edge_power/config` namespace (schema 1), so upgrading from alpha.2 uses defaults without resetting saved mappings or bonds. Alpha.2 ignores this namespace. Future stored power schemas are read-only on schema-1 firmware. The UI and CLI use the canonical alpha.3 version; no release is published by this branch.
+
+The current compiled image also passed encrypted connected wake with modeled radio-register loss, a key injected exactly at sleep entry, three actual pad wakes with first press/release reports, mode/legacy-output regressions, USB host suspend/core resume, and both BT/OFF deep-entry GPIO masks. These assertions do not simulate deep wake. The smallest reported connected-suspend stack margin was 148 bytes in idle; full regression requires at least 128 bytes spare in every observed stack.

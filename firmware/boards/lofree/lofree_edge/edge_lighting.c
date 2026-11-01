@@ -14,6 +14,7 @@
 #include <zmk/hid_indicators.h>
 #include "edge_lighting.h"
 #include "edge_mode.h"
+#include "edge_power.h"
 
 BUILD_ASSERT(IS_ENABLED(CONFIG_ZMK_KSCAN_MATRIX_POLLING),
              "Shared Caps column needs polling and the scan-boundary hooks");
@@ -51,7 +52,7 @@ void edge_caps_scan_begin(void)
 }
 void edge_caps_scan_end(void)
 {
-    bool on = edge_mode_allows_keys() && atomic_get(&caps_on) != 0;
+    bool on = edge_mode_allows_keys() && edge_power_indicators_allowed() && atomic_get(&caps_on) != 0;
     gpio_pin_set_dt(&caps, on);
     caps_gate(on);
 }
@@ -119,13 +120,13 @@ static int set_brightness(const struct device *dev, uint32_t led, uint8_t value)
 #if IS_ENABLED(CONFIG_LOFREE_EDGE_MODE_SWITCH)
     requested_brightness = value;
 #endif
-    return apply_brightness(edge_mode_allows_keys() ? value : 0);
+    return apply_brightness(edge_mode_allows_keys() ? edge_power_effective_brightness(value) : 0);
 }
 
 void edge_lighting_mode_changed(void)
 {
 #if IS_ENABLED(CONFIG_LOFREE_EDGE_MODE_SWITCH)
-    apply_brightness(edge_mode_allows_keys() ? requested_brightness : 0);
+    apply_brightness(edge_mode_allows_keys() ? edge_power_effective_brightness(requested_brightness) : 0);
     if (!edge_mode_allows_keys()) { caps_gate(false); }
 #endif
 }

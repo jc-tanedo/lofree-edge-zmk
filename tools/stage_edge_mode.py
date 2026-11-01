@@ -83,6 +83,9 @@ def stage_endpoints(out):
 }''')
     text = replace(text, 'return get_instance_from_transport(preferred_transport);', 'return get_instance_from_transport(zmk_endpoint_get_preferred_transport());')
     (out / 'edge_endpoints.c').write_text(text)
+    queue = read('app/src/behavior_queue.c', 'b5201256f674a83f92705630919fbb0237765b93a01b147c4b34bde816f8a05c')
+    queue += '\nbool edge_behavior_queue_busy(void) { return k_msgq_num_used_get(&zmk_behavior_queue_msgq) || k_work_busy_get(&queue_work.work); }\n'
+    (out / 'edge_behavior_queue.c').write_text(queue)
 
 if __name__ == '__main__':
     stage_endpoints(Path(sys.argv[1]))
