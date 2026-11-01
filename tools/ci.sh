@@ -3,6 +3,9 @@ set -eu
 ROOT=$(CDPATH= cd -- "$(dirname "$0")/.." && pwd)
 cd "$ROOT"
 mkdir -p build/reports build/tmp
+export TMPDIR="$ROOT/build/tmp"
+export LLVM_TOOLCHAIN_PATH="${LLVM_TOOLCHAIN_PATH:-$ROOT/build/toolchain23}"
+export PATH="$LLVM_TOOLCHAIN_PATH/bin:$PATH"
 python3 tools/sync_version.py
 python3 tools/render_roadmap.py
 node --test web/tests/*.test.js

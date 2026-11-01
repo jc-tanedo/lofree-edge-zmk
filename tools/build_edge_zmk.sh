@@ -5,7 +5,8 @@ ROOT=$(CDPATH= cd -- "$(dirname "$0")/.." && pwd)
 ZMK="$ROOT/.deps/zmk-tc32"
 ZEPHYR_BASE="$ROOT/.deps/zephyr-tc32"
 export ZEPHYR_BASE
-export PATH="$ROOT/.venv/bin:$PATH"
+export LLVM_TOOLCHAIN_PATH="${LLVM_TOOLCHAIN_PATH:-$ROOT/build/toolchain23}"
+export PATH="$ROOT/.venv/bin:$LLVM_TOOLCHAIN_PATH/bin:$PATH"
 export PYTHONDONTWRITEBYTECODE=1
 export TMPDIR="$ROOT/build/tmp"
 export XDG_CACHE_HOME="$ROOT/build/tmp/cache"
