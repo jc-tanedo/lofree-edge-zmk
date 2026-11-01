@@ -1,6 +1,6 @@
 # Physical mode switch
 
-**Implemented; owner-validated alpha.2 candidate. Experimental firmware and tools are used entirely at your own risk.** Read [RISK.md](../RISK.md). The published alpha.1 does not follow the slider. The first alpha.2 diagnostic candidate only observes inputs; it does not implement the behavior below.
+**Implemented; owner-validated in alpha.2. Experimental firmware and tools are used entirely at your own risk.** Read [RISK.md](../RISK.md). Older alpha.1 does not follow the slider. The first alpha.2 diagnostic candidate only observes inputs; it does not implement the behavior below.
 
 ## Validated behavior
 

@@ -1,7 +1,7 @@
 # Current status
 
 Physical-switch implementation is complete on `firmware/physical-mode-switch`,
-PR #10 / issue #3. Exact alpha.2 OTA SHA-256
+Merged PR #10 / closed issue #3. Exact alpha.2 OTA SHA-256
 `ee74d5411891418eb6b08621c2fc21175bbecbe70c65511476aac11c5326297e`
 passed owner hardware validation on one Edge/CachyOS host and is installed and
 accepted (count 0). See [the validation record](validation/v0.1.0-alpha.2.md).
@@ -20,18 +20,17 @@ in the [roadmap](../ROADMAP.md).
 The source UI now caps Bluetooth selection/import to indices 0..2: pinned native
 metadata reports PROFILE_COUNT as an inclusive maximum, despite the runtime
 rejecting that index. This compatibility clamp does not widen advertised limits
-or change firmware. Current firmware bytes and frozen localhost8770 test site
-remain unchanged. Output actions are hidden from both Functions and Advanced; existing saved
-bindings remain readable/importable for compatibility. Final UI/package CI is pending.
+or change firmware. The firmware bytes match the owner-tested image. Output actions are hidden from both Functions and Advanced; existing saved
+bindings remain readable/importable for compatibility. UI/package CI passed on final feature head9043e86.
 
-GitHub CI passed for prior head4fe2420; local compiled GPIO/USB/Studio/BLE,
+GitHub CI passed for final feature head9043e86; local compiled GPIO/USB/Studio/BLE,
 encrypted reconnect, all4 output actions, importer and trial rollback tests pass
 for the exact OTA above. Source/history/site/archive audits and hosted subpaths
 passed. Required compiler is pinned LLVM23.1.4. Optional device tooling needs
 Python hid==1.0.8 plus the system HIDAPI library, not the different hidapi binding.
 
-Published release remains v0.1.0-alpha.1. Do not tag, merge or publish alpha.2
-without review; its hardware checklist is now recorded. Pages promotion must use
+Release version is v0.1.0-alpha.2; its exact-image hardware checklist is recorded.
+Version tags create drafts; publication requires artifact and hardware review. Pages promotion must use
 the already-built matching website archive. Vendor inputs remain outside this
 repository; clean public builds require no proprietary files. Preserve upstream
 notices and conspicuous own-risk messaging.

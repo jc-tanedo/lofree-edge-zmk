@@ -9,7 +9,7 @@ Independent, experimental firmware and browser tools for the Lofree Edge 84-key 
 
 ![Firmware installer with a persistent experimental-use warning](docs/images/firmware.png)
 
-> Use published prerelease artifacts only. [The alpha validation record](docs/validation/v0.1.0-alpha.1.md) covers one Edge and CachyOS host; prior-build tests do not validate a newly built image.
+> Use published prerelease artifacts only. [The alpha.2 validation record](docs/validation/v0.1.0-alpha.2.md) covers one Edge and CachyOS host; prior-build tests do not validate a newly built image.
 
 ## Why this exists
 
@@ -71,4 +71,4 @@ Read [contributing](CONTRIBUTING.md), [security reporting](SECURITY.md), [linked
 
 Original contributions are GPL-3.0-or-later unless an existing per-file notice states otherwise. Third-party licenses remain unchanged. See [LICENSE](LICENSE), [LICENSING.md](LICENSING.md) and [third-party notices](THIRD_PARTY_NOTICES.md).
 
-The alpha.2 switch-controller candidate has passed [exact-image hardware validation](docs/validation/v0.1.0-alpha.2.md). Alpha.1 remains the published release until alpha.2 is reviewed and released.
+Version 0.1.0-alpha.2 adds the physical BT/ON/OFF switch and has passed [exact-image hardware validation](docs/validation/v0.1.0-alpha.2.md). Download published artifacts from [Releases](https://github.com/jc-tanedo/lofree-edge-zmk/releases).

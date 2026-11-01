@@ -64,7 +64,7 @@ Use ON for USB installation, diagnostics and Studio. Fn+Space (hold three second
 release) requests retained-stock return; recovery is not guaranteed. Sleep and
 accurate battery reporting remain unfinished. See [roadmap](../ROADMAP.md).
 
-Alpha.2 is a validated candidate, pending review/release. Published alpha.1 still
+These instructions target v0.1.0-alpha.2. Older alpha.1 firmware still
 uses Fn+4 for USB output and Fn+5 for Bluetooth output and does not follow the
 physical slider. Keep tools/firmware versions in mind when following this guide.
 
