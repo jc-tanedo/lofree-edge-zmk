@@ -6,9 +6,9 @@ Statuses describe work, not promised delivery dates. The completed core-feature 
 
 ## Release hardening
 
-**in progress** · First public prerelease
+**completed** · First public prerelease
 
-Clean builds, packaging, licensing, hosted paths and exact-SHA hardware review are required.
+The first prerelease now has clean builds, package/license audits, hosted-path validation and exact-SHA hardware evidence; these gates remain required for future releases.
 
 **Acceptance:** CI passes from a clean checkout; artifacts audited; exact OTA passes the hardware checklist before publication.
 

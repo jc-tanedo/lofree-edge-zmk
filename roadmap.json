@@ -2,9 +2,9 @@
   {
     "id": "release-readiness",
     "title": "Release hardening",
-    "status": "in progress",
+    "status": "completed",
     "milestone": "First public prerelease",
-    "limitation": "Clean builds, packaging, licensing, hosted paths and exact-SHA hardware review are required.",
+    "limitation": "The first prerelease now has clean builds, package/license audits, hosted-path validation and exact-SHA hardware evidence; these gates remain required for future releases.",
     "acceptance": "CI passes from a clean checkout; artifacts audited; exact OTA passes the hardware checklist before publication.",
     "issue": "https://github.com/jc-tanedo/lofree-edge-zmk/issues/1"
   },
