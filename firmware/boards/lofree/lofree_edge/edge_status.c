@@ -4,6 +4,8 @@
 #include <errno.h>
 #include <string.h>
 #include <zephyr/device.h>
+#include <zephyr/init.h>
+#include <zephyr/irq.h>
 #include <zephyr/sys/sys_io.h>
 #include <zephyr/usb/class/usb_hid.h>
 #include <zmk/hid_indicators.h>
@@ -16,6 +18,23 @@ static uint8_t led_count, led_length, led_id, led_mask, led_result;
 static uint8_t descriptor[128], status[32];
 static uint16_t stock_page;
 static uint8_t stock_window[67];
+
+#if IS_ENABLED(CONFIG_LOFREE_EDGE_SWITCH_DIAGNOSTICS)
+static int edge_switch_inputs_init(void)
+{
+    /* Stock 0x9dfc: PD5-PD7 are GPIO inputs with outputs disabled.
+     * Preserve other pins, output latches, and every pull configuration.
+     * No mode decisions are made by this diagnostic build.
+     */
+    unsigned int key = irq_lock();
+    sys_write8(sys_read8(0x0080059aU) | 0xe0, 0x0080059aU);
+    sys_write8(sys_read8(0x0080059eU) | 0xe0, 0x0080059eU);
+    sys_write8(sys_read8(0x00800599U) | 0xe0, 0x00800599U);
+    irq_unlock(key);
+    return 0;
+}
+SYS_INIT(edge_switch_inputs_init, APPLICATION, 90);
+#endif
 static const uint8_t feature_desc[] = {
     0x06,0x00,0xff, 0x09,0x07, 0xa1,0x01, 0x85,0x07,
     0x15,0x00, 0x26,0xff,0x00, 0x75,0x08, 0x95,0x1f,
@@ -72,7 +91,7 @@ static int vendor_get(const struct device *dev, struct usb_setup_packet *setup,
                                            : -ENOTSUP;
     }
     memset(status, 0, sizeof(status));
-    status[0]=7; status[1]='E'; status[2]='D'; status[3]=1;
+    status[0]=7; status[1]='E'; status[2]='D'; status[3]=2;
     status[4]=led_count; status[5]=led_length; status[6]=led_id;
     status[7]=led_mask; status[8]=led_result;
     status[9]=zmk_hid_indicators_get_current_profile();
@@ -85,6 +104,12 @@ static int vendor_get(const struct device *dev, struct usb_setup_packet *setup,
     status[21]=sys_read8(0x00800582U);
     status[22]=sys_read8(0x00800583U);
     status[23]=sys_read8(0x00800586U);
+    /* Schema 2 appends fixed switch-input observations; bytes 0..23 retain
+     * their original meaning. Never expose arbitrary register access.
+     */
+    status[24]=sys_read8(0x00800598U) & 0xe0;
+    status[25]=sys_read8(0x00800599U) & 0xe0;
+    status[26]=IS_ENABLED(CONFIG_LOFREE_EDGE_SWITCH_DIAGNOSTICS);
     *data=status; *len=sizeof(status);
     return 0;
 }

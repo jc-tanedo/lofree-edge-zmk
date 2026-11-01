@@ -1,5 +1,9 @@
 # Publication status
 
+Physical-switch work is on `firmware/physical-mode-switch`, tracked in issue #3. Agreed: ON = USB typing/Studio; BT = BLE typing with USB power only; OFF = no output/radio/backlight/USB data. Keep three BLE profiles. Brief restart/reconnect is accepted; preserve saved mappings/bonds. Read [physical-switch investigation](physical-switch.md) before continuing.
+
+Current gate: stock initializer replay corroborates PD5-PD7 GPIO input configuration, but physical slider/cable roles are still unverified. An opt-in alpha.2 diagnostic build observes these inputs through backwards-compatible status schema2; transport selection remains unchanged. The diagnostic image compiles with official LLVM23.1.4; 31 Python tests and the compiled eight-input-combination test pass. Combined BLE/Studio and final frozen-image checks are being completed before hardware handoff. No device flash/acceptance has occurred for this work. Do not claim physical-switch support, enable its routing, publish a release, or close issue #3 until the physical table and final behavior are verified.
+
 Canonical development is this repository on `main`. The first experimental prerelease is [v0.1.0-alpha.1](https://github.com/jc-tanedo/lofree-edge-zmk/releases/tag/v0.1.0-alpha.1); the matching browser tools are hosted on [GitHub Pages](https://jc-tanedo.github.io/lofree-edge-zmk/). Everything remains entirely at the user's own risk; see [RISK.md](../RISK.md).
 
 The exact OTA SHA-256 c4df776d24cf11a4c0d9c4b1464486d663ff5ab1e4a93b877d593494749559b8 passed the owner's physical hardware checklist, explicit flash self-test/acceptance, retained-stock return/reinstall, and mapping/Bluetooth-bond persistence after a full power cycle. See [the validation record](validation/v0.1.0-alpha.1.md). The installed alpha is accepted; no further device writes are needed for publication.

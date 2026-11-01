@@ -4,6 +4,7 @@ The electrical matrix is an explicit model of the recovered active-low wiring;
 this validates compiled control flow, not physical brightness or board wiring.
 """
 from pathlib import Path
+import hashlib
 import os
 import sys
 
@@ -17,6 +18,7 @@ build = root / 'firmware/build' / os.environ.get('EDGE_TEST_BUILD', 'lofree_edge
 addresses, sizes = run_boot.symbols(str(build / 'zmk.elf'))
 flash = te.Flash()
 image = (build / 'zmk.ota.bin').read_bytes()
+print('IMAGE SHA-256:', hashlib.sha256(image).hexdigest(), flush=True)
 # Synthetic retained slot: our own image, never vendor firmware.
 stock = image
 flash.mem[:len(stock)] = stock
@@ -104,7 +106,7 @@ print('PASS: USB starts, backlight uses PB4/PWM4,50% and255-count period')
 
 caps_report(True)
 diag = u.control(bytes([0xa1,1,7,3,vendor_interface,0,32,0]))
-assert diag[:4] == bytes([7,ord('E'),ord('D'),1]), 'Missing board feature7 status'
+assert diag[:4] == bytes([7,ord('E'),ord('D'),2]), 'Missing board feature7 status'
 assert diag[5:8] == bytes([2,1,2]) and diag[8] == 0, 'Caps report not accepted'
 assert diag[9] & 2 and diag[10] == 1, 'Board status did not observe host Caps state'
 u.control(bytes([0x21,9,8,3,vendor_interface,0,3,0]),out=bytes([8,0,0]))

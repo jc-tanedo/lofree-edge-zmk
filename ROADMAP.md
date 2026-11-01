@@ -26,7 +26,7 @@ Deep/idle sleep and battery-life behavior are unfinished.
 
 ## Physical mode switch
 
-**needs investigation** · Power and mode handling
+**in progress** · Power and mode handling
 
 Native stack does not yet follow the physical mode GPIO; shortcuts select output.
 

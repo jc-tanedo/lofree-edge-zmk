@@ -52,6 +52,11 @@ case "${1:-}" in
   fi
   ;;
 esac
+if [ "${EDGE_SWITCH_DIAGNOSTIC:-0}" = 1 ]; then
+ test "${1:-}" = --ble-studio || { echo "Switch diagnostics require --ble-studio" >&2; exit 2; }
+ BUILD="$ROOT/firmware/build/lofree_edge-ble-studio-switch-diagnostic"
+ CONFIGS="$CONFIGS;$ROOT/firmware/lofree_edge/switch-diagnostic.conf"
+fi
 export SOURCE_DATE_EPOCH=${SOURCE_DATE_EPOCH:-$(git -C "$ROOT" log -1 --format=%ct 2>/dev/null || echo 0)}
 cmake -S "$ZMK/app" -B "$BUILD" -GNinja \
  -DZephyr_DIR="$ZEPHYR_BASE/share/zephyr-package/cmake" \

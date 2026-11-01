@@ -20,7 +20,7 @@
   {
     "id": "switch",
     "title": "Physical mode switch",
-    "status": "needs investigation",
+    "status": "in progress",
     "milestone": "Power and mode handling",
     "limitation": "Native stack does not yet follow the physical mode GPIO; shortcuts select output.",
     "acceptance": "Map switch positions electrically and verify correct USB/BLE/power behavior and reconnect across transitions.",
