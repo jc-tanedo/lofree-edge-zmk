@@ -2,7 +2,7 @@ import { EdgeConnection } from './webhid.js';
 import { flashFirmware, validateFirmware } from './firmware.js';
 import { protectFirmwareTransfer, readFirmwareAttempt, saveFirmwareAttempt } from './firmware-session.js';
 
-export function mountFirmwarePanel({ begin, end, disconnectExisting }) {
+export function mountFirmwarePanel({ begin, end, disconnectExisting, onConnectionChange = () => {} }) {
   const byId = id => document.getElementById(id);
   let connection = null;
   let verified = false;
@@ -25,6 +25,7 @@ export function mountFirmwarePanel({ begin, end, disconnectExisting }) {
     document.querySelector('edge-navigation').inert = running;
     byId('firmware-install').disabled = running || !image || !connection?.device.opened;
     const connected = verified && connection?.device.opened;
+    onConnectionChange(Boolean(connected));
     byId('firmware-connect').textContent = connected ? '✓ Connected' : 'Connect stock update interface';
     byId('firmware-connect').classList.toggle('connected', Boolean(connected));
     byId('firmware-connect').disabled = running || connected || !navigator.hid || !window.isSecureContext;

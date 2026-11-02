@@ -7,6 +7,7 @@ import { factoryMap, targetOptions, remapKey, countChanges, hasPendingChanges } 
 
 const byId = id => document.getElementById(id);
 let connection = null;
+let firmwareConnected = false;
 let snapshot = null;
 let busy = false;
 const supported = window.isSecureContext && 'hid' in navigator;
@@ -137,8 +138,8 @@ function render() {
   byId('read').disabled = busy || !connected;
   byId('read').textContent = 'Read settings';
   byId('export').disabled = busy || !snapshot;
-  byId('connection-status').textContent = connected ? 'Connected' : 'Disconnected';
-  byId('connection-status').classList.toggle('connected', connected);
+  byId('connection-status').textContent = firmwareConnected ? 'Update interface connected' : connected ? 'Connected' : 'Disconnected';
+  byId('connection-status').classList.toggle('connected', connected || firmwareConnected);
   byId('read-state').textContent = busy && connected ? 'Keyboard busy' : snapshot ? 'Snapshot available' : connected ? 'Ready to read' : 'Waiting for connection';
   byId('device-description').textContent = connected ? `${connection.device.productName} is connected and ready.` : 'Plug in a USB data cable and switch your keyboard to wired mode.';
   byId('empty-state').hidden = Boolean(snapshot);
@@ -213,6 +214,7 @@ if (!supported) {
 render();
 
 mountFirmwarePanel({
+  onConnectionChange(connected) { firmwareConnected = connected; render(); },
   begin() { if (busy) return false; busy = true; render(); return true; },
   end() { busy = false; render(); },
   async disconnectExisting() {

@@ -91,3 +91,11 @@ shows descriptors→keyboard HID attachment ranging about0.11–5.62s, followed
 by vendor HID attachment roughly5.04–5.18s later. This supports investigating
 USB HID control-request initialization; it does not establish the exact failing
 request or root cause. No firmware fix has been made for startup delay.
+
+## Firmware connection feedback
+
+Isolated browser QA with simulated HID confirms verified connection changes the
+button to “✓ Connected” and header to “Update interface connected”; disconnect
+restores both. Persistent risk notice stays visible. No hardware was opened.
+The first inline preview mock was blocked by CSP and its tab was closed; external
+mock module then provided the verified simulation. Existing six web tests pass.
