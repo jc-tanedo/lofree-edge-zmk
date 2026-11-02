@@ -16,10 +16,20 @@ def stage():
         raise RuntimeError('Review power RPC against changed pinned core.proto')
     text = original.replace('        bool reset_settings = 4;', '''        bool reset_settings = 4;
         bool edge_get_power = 16;
-        EdgePower edge_set_power = 17;''', 1)
-    text = text.replace('message Response {\n    oneof response_type {', 'message Response {\n    oneof response_type {\n        EdgePower edge_power = 16;', 1)
+        EdgePower edge_set_power = 17;
+        bool edge_get_security = 18;
+        EdgeSecurity edge_set_security = 19;''', 1)
+    text = text.replace('message Response {\n    oneof response_type {', 'message Response {\n    oneof response_type {\n        EdgePower edge_power = 16;\n        EdgeSecurity edge_security = 17;', 1)
     text += '''
-// Project-specific, versioned extension. Seconds=0 means Never.
+// Project-specific, independently versioned extensions.
+// Security defaults to requiring physical unlock.
+message EdgeSecurity {
+    uint32 schema = 1;
+    uint32 require_unlock = 2;
+    uint32 status = 3;
+}
+
+// Power seconds=0 means Never.
 message EdgePower {
     uint32 schema = 1;
     uint32 dim_seconds = 2;

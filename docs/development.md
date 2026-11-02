@@ -68,3 +68,11 @@ firmware controllers are removed.
 stages both mock workspaces under `build/qa-site/lofree-edge-zmk/`. Serve only
 that public QA root. QA bundles are excluded from release output by both the
 packager and publication audit. Browser checks must not use a real device.
+
+## Studio security extension
+
+See [security.md](security.md) for policy, additive RPC fields and schema.
+`stage_edge_security.py` hash-checks and derives the upstream core hook without
+editing dependencies. `test_edge_security_emulator.py` uses compiled firmware
+and synthetic flash only. Security warnings inspect the live current keymap
+across all layers, including unsaved changes; they are not browser-cached maps.

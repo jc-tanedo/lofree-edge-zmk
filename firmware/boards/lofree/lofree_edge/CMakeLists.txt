@@ -39,6 +39,16 @@ zephyr_library_include_directories("${EDGE_ROOT}/.deps/zmk-tc32/app/include")
 zephyr_library_sources("${CMAKE_CURRENT_BINARY_DIR}/edge_kscan.c")
 
 if(CONFIG_ZMK_STUDIO)
+  execute_process(COMMAND "${EDGE_ROOT}/.venv/bin/python"
+    "${EDGE_ROOT}/tools/stage_edge_security.py" "${CMAKE_CURRENT_BINARY_DIR}"
+    RESULT_VARIABLE EDGE_SECURITY_RESULT)
+  if(NOT EDGE_SECURITY_RESULT EQUAL 0)
+    message(FATAL_ERROR "Review Edge Studio security hooks")
+  endif()
+  set_source_files_properties("${EDGE_ROOT}/.deps/zmk-tc32/app/src/studio/core.c"
+    TARGET_DIRECTORY app PROPERTIES HEADER_FILE_ONLY TRUE)
+  target_sources(app PRIVATE "${CMAKE_CURRENT_BINARY_DIR}/edge_studio_core.c"
+    "${CMAKE_CURRENT_LIST_DIR}/edge_security.c")
   # CDC FIFO can be full even after irq_tx_ready() was true. Returning lets
   # the USB worker drain it; spinning here blocks that same worker forever.
   # Derive a tiny patch from pinned upstream, preserving the analysis input.

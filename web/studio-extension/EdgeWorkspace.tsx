@@ -1,4 +1,5 @@
 import type { KeymapReadProgress } from "./useEdgeKeymapData";
+import { EdgeSecurity } from "./EdgeSecurity";
 import { EdgePower } from "./EdgePower";
 import { useContext, useEffect, useRef, useState } from "react";
 import type {
@@ -14,6 +15,7 @@ import {
   Layers,
   Settings2,
   Power,
+  Shield,
   Search,
   Plus,
   ChevronRight,
@@ -67,6 +69,7 @@ const tabs = [
   ["Layers", Layers],
   ["Advanced", Settings2],
   ["Power", Power],
+  ["Security", Shield],
 ] as const;
 const initialGeometry = PRINTED_KEYS.map((k) => ({
   ...k,
@@ -84,6 +87,8 @@ export function EdgeWorkspace(p: Props) {
     [error, setError] = useState(""),
     [notice, setNotice] = useState(""),
     [mac, setMac] = useState(false);
+  const [lockingEnabled,setLockingEnabled] = useState<boolean>();
+  useSub("edge.security.policy",setLockingEnabled);
   const [externalBusy, setExternalBusy] = useState(false);
   useSub("edge.ui.busy", (value) => {
     setExternalBusy(value);
@@ -115,6 +120,7 @@ export function EdgeWorkspace(p: Props) {
     selected = p.selectedKeyPosition,
     selectedBinding =
       selected === undefined ? undefined : layer?.bindings[selected];
+  const hasUnlock = layers.some(l => l.bindings.some(b => b.behaviorId === IDS.studio_unlock));
   const unlocked =
     !!conn.conn && lock === LockState.ZMK_STUDIO_CORE_LOCK_STATE_UNLOCKED;
   const ready = unlocked && !!map && !busy && !externalBusy;
@@ -361,6 +367,11 @@ export function EdgeWorkspace(p: Props) {
           </div>
         </div>
       </section>
+      {map && !hasUnlock && lockingEnabled !== false && <div role="alert" className="edge-inline-error edge-unlock-warning">
+        <strong>No Unlock Studio binding in this keymap.</strong>{" "}
+        {lockingEnabled === true ? "Locking is enabled." : "Locking may be enabled; its current policy is unavailable."}{" "}
+        Add an accessible Unlock Studio binding before disconnecting or allowing this session to lock. Removing the last unlock binding can prevent future editing; a settings reset or recovery may be needed. Recovery is not guaranteed.
+      </div>}
       <section className="edge-action-dock" aria-label="Key actions">
         <div className="edge-dock-toolbar">
           <div role="tablist" aria-label="Action categories">
@@ -370,7 +381,7 @@ export function EdgeWorkspace(p: Props) {
                 id={`tab-${name}`}
                 role="tab"
                 aria-selected={category === name}
-                aria-controls={name === "Power" ? "edge-power-panel" : "edge-action-panel"}
+                aria-controls={name === "Power" ? "edge-power-panel" : name === "Security" ? "edge-security-panel" : "edge-action-panel"}
                 tabIndex={category === name ? 0 : -1}
                 onKeyDown={(e) => {
                   if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
@@ -393,7 +404,7 @@ export function EdgeWorkspace(p: Props) {
               </button>
             ))}
           </div>
-          {category !== "Power" && <label className="edge-search">
+          {category !== "Power" && category !== "Security" && <label className="edge-search">
             <Search size={15} />
             <input
               aria-label="Search actions"
@@ -409,7 +420,7 @@ export function EdgeWorkspace(p: Props) {
           </label>}
         </div>
         <div
-          hidden={category === "Power"}
+          hidden={category === "Power" || category === "Security"}
           className="edge-action-body"
           role="tabpanel"
           id="edge-action-panel"
@@ -587,6 +598,9 @@ export function EdgeWorkspace(p: Props) {
           aria-labelledby="tab-Power"
         >
           <EdgePower ready={unlocked && !!map} busy={busy || externalBusy} />
+        </div>
+        <div hidden={category !== "Security"} className="edge-action-body" role="tabpanel" id="edge-security-panel" aria-labelledby="tab-Security">
+          <EdgeSecurity ready={unlocked && !!map} busy={busy || externalBusy} hasUnlock={hasUnlock} />
         </div>
       </section>
       <dialog

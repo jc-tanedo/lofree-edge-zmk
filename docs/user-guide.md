@@ -45,6 +45,15 @@ The first alpha uses an explicit command-line acceptance step. Install the pinne
 
 Confirm runs the upstream flash self-test and boot guard checks. A refused self-test is a stop condition, not a reason to bypass the guard. Linux USB access may require the included udev rule and reconnecting the keyboard. Manual retained-image return remains available only while that image and recovery path are valid; it is not a guarantee.
 
+## Studio security preview — unreleased
+
+The new [Security tab](security.md) beside Power can make physical unlock
+optional on firmware supporting this setting. Enabled is the default. Disabling
+allows software with Studio access to edit without Fn+U; enabling locks
+immediately. Keep an accessible Unlock Studio binding. Studio warns before
+enabling without one and when the last binding is removed while locking is on.
+This requires a firmware update and has not yet passed physical validation.
+
 ## Physical mode switch (alpha.2)
 
 | Position | Input | USB / Studio |

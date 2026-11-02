@@ -124,9 +124,22 @@ export function create_rpc_connection({ signal }: { signal?: AbortSignal } = {})
   let responses: ReadableStreamDefaultController<RequestResponse>;
   const dirtyNotice = () =>
     notify?.enqueue({ keymap: { unsavedChangesStatusChanged: dirty } });
+  let security={schema:1,requireUnlock:1,status:0};
   let power={schema:1,dimSeconds:30,offSeconds:120,sleepSeconds:900,dimPercent:20,capabilities:7,status:0};
   function handle(r: Request): any {
-    const core=r.core as typeof r.core & {edgeGetPower?:boolean;edgeSetPower?:typeof power};
+    const core=r.core as typeof r.core & {edgeGetPower?:boolean;edgeSetPower?:typeof power;edgeGetSecurity?:boolean;edgeSetSecurity?:typeof security};
+    if(core?.edgeGetSecurity) {
+      if(legacyPower)return {meta:{simpleError:2}};
+      if(locked)return {meta:{simpleError:1}};
+      return {core:{edgeSecurity:clone(security)}};
+    }
+    if(core?.edgeSetSecurity) {
+      if(locked)return {meta:{simpleError:1}};
+      security={...core.edgeSetSecurity,status:0};
+      locked=!!security.requireUnlock;
+      notify?.enqueue({core:{lockStateChanged:locked ? 0 : 1}});
+      return {core:{edgeSecurity:clone(security)}};
+    }
     if(core?.edgeGetPower) {
       if(legacyPower)return {meta:{simpleError:2}};
       if(failPower){failPower=false;return {core:{edgePower:{...power,dimSeconds:86401}}};}

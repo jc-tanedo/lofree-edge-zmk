@@ -1455,3 +1455,7 @@ dialog::backdrop {
 .edge-read-progress progress::-webkit-progress-value { background: linear-gradient(90deg, #777, #ededed); border-radius: 6px; }
 .edge-read-progress progress::-moz-progress-bar { background: linear-gradient(90deg, #777, #ededed); border-radius: 6px; }
 .edge-read-progress span { min-width: 3ch; color: var(--edge-muted); font-size: 12px; font-variant-numeric: tabular-nums; }
+
+.edge-security-toggle { display: flex; align-items: center; gap: .7rem; font-weight: 600; }
+.edge-security-toggle input { width: 18px; height: 18px; accent-color: var(--edge-accent, #da793c); }
+.edge-unlock-warning { margin: 0 0 24px; padding: 18px; }

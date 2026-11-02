@@ -1,3 +1,20 @@
+# Optional physical unlock — implementation under validation
+
+Security tab added beside Power. Device-owned default-on unlock policy, secured
+get/set RPCs, independent CRC-protected settings record, fail-closed corruption
+and future-schema handling. Enabling immediately locks; disabling bypasses
+idle/disconnect relock. ON-only Studio restriction remains. Explicit confirmation
+for policy changes; save/discard pending maps first. UI warns when the last
+unlock binding is removed with locking on, and before enabling without one.
+See [technical/user details](security.md).
+
+Compiled security emulator passes authorization, validation, storage errors,
+disconnect, reboot persistence, immediate relock, corrupt/future records and
+mapping preservation. Codec and isolated browser disable/cancel/enable/lockout
+warning checks pass; browser logs have no errors. New image not installed or
+hardware-certified. Owner’s accepted145f81d2 image and frozen8785 remain intact.
+Remaining regression, package and exact-image gates are still pending.
+
 # Firmware React migration — UI validation passed
 
 Firmware is now a React JSX workspace using Studio's pinned React/Vite tree.

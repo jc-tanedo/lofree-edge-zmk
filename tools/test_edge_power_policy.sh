@@ -8,3 +8,6 @@ cc -std=c11 -Wall -Wextra -Werror -fsanitize=undefined -Ifirmware/boards/lofree/
 build/reports/power/policy-test
 NODE_PATH="$ROOT/.deps/zmk-studio/node_modules" .deps/zmk-studio/node_modules/.bin/esbuild web/tests/power-codec.ts --bundle --platform=node --format=cjs --outfile=build/reports/power/codec-test.cjs
 node build/reports/power/codec-test.cjs
+
+NODE_PATH="$ROOT/.deps/zmk-studio/node_modules" .deps/zmk-studio/node_modules/.bin/esbuild web/tests/security-codec.ts --bundle --platform=node --format=cjs --outfile=build/reports/power/security-codec-test.cjs
+node build/reports/power/security-codec-test.cjs

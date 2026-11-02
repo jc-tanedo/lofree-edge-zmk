@@ -127,6 +127,13 @@ if os.environ.get('EDGE_TEST_POWER'):
     assert rpc(request).meta.simple_error==1, 'Power writer not secured'
     print('PASS: both power RPCs require physical Studio unlock',flush=True)
 
+if os.environ.get('EDGE_TEST_SECURITY'):
+    request=pb.Request();request.core.edge_get_security=True
+    assert rpc(request).meta.simple_error==1, 'Security reader bypassed lock'
+    request=pb.Request();request.core.edge_set_security.schema=1
+    assert rpc(request).meta.simple_error==1, 'Security writer bypassed lock'
+    print('PASS: security get/set both reject locked sessions',flush=True)
+
 unlock()
 current = keymap()
 assert len(current.layers) == 2 and current.available_layers == 1

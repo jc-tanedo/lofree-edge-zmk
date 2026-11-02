@@ -29,12 +29,14 @@ export function AppHeader(p: AppHeaderProps) {
   useSub("rpc_notification.keymap.unsavedChangesStatusChanged", (v) =>
     setUnsaved(v),
   );
+  const [securityDirty,setSecurityDirty] = useState(false);
+  useSub("edge.security.dirty",setSecurityDirty);
   const [powerDirty,setPowerDirty] = useState(false);
   useSub("edge.power.dirty",setPowerDirty);
   useEffect(() => {
-    document.dispatchEvent(new CustomEvent("edge-unsaved-changes", { detail: !!unsaved || powerDirty }));
+    document.dispatchEvent(new CustomEvent("edge-unsaved-changes", { detail: !!unsaved || powerDirty || securityDirty }));
     return () => { document.dispatchEvent(new CustomEvent("edge-unsaved-changes", { detail: false })); };
-  }, [unsaved,powerDirty]);
+  }, [unsaved,powerDirty,securityDirty]);
   const [busy, setBusy] = useState(false),
     [error, setError] = useState(""),
     [reset, setReset] = useState(false),
