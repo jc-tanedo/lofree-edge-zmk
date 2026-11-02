@@ -29,7 +29,7 @@ b = text.index('export default function Keyboard()', a)
 text = text[:a] + text[b:]
 a = text.index('  const [\n    layouts,', text.index('export default function Keyboard()'))
 b = text.index('  const [keymapScale', a)
-text = text[:a] + '  const { layouts, selectedPhysicalLayoutIndex, setSelectedPhysicalLayoutIndex, keymap, setKeymap, behaviors, loadingError, retry } = useEdgeKeymapData();\n\n' + text[b:]
+text = text[:a] + '  const { layouts, selectedPhysicalLayoutIndex, setSelectedPhysicalLayoutIndex, keymap, setKeymap, behaviors, loadingError, readProgress, retry } = useEdgeKeymapData();\n\n' + text[b:]
 text = text.replace('  const behaviors = useBehaviors();', '')
 text = 'import { useEdgeKeymapData } from "../useEdgeKeymapData";\n' + text
 text = text.replace('import React, {', 'import {').replace('  SetStateAction,\n', '').replace('  PhysicalLayout,\n', '')
@@ -59,7 +59,7 @@ text = text.replace('console.error("Failed to set binding", resp.keymap?.setLaye
 text = text.replace('          } else {\n          }','          } else {\n            throw new Error("The keyboard refused to undo this assignment.");\n          }')
 text = text.replace('console.error("Error moving", resp);','throw new Error("The keyboard refused the layer move.");')
 a = text.index('  return (\n    <div className="grid grid-cols-[auto_1fr]')
-text = text[:a]+'  return <EdgeWorkspace keymap={keymap} layout={layouts?.[selectedPhysicalLayoutIndex]} behaviors={behaviors} selectedLayerIndex={selectedLayerIndex} selectedKeyPosition={selectedKeyPosition} onLayer={setSelectedLayerIndex} onKey={setSelectedKeyPosition} onBinding={doUpdateBinding} onAdd={addLayer} onRemove={removeLayer} onMove={moveLayer} onRename={changeLayerName} loadingError={loadingError} onRetry={retry}/>;\n}\n'
+text = text[:a]+'  return <EdgeWorkspace keymap={keymap} layout={layouts?.[selectedPhysicalLayoutIndex]} behaviors={behaviors} selectedLayerIndex={selectedLayerIndex} selectedKeyPosition={selectedKeyPosition} onLayer={setSelectedLayerIndex} onKey={setSelectedKeyPosition} onBinding={doUpdateBinding} onAdd={addLayer} onRemove={removeLayer} onMove={moveLayer} onRename={changeLayerName} loadingError={loadingError} readProgress={readProgress} onRetry={retry}/>;\n}\n'
 keyboard.write_text(text)
 app = stage/'src/App.tsx'
 text = app.read_text()

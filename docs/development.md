@@ -34,3 +34,9 @@ Source lives here; .deps, build, firmware/build and generated Studio/catalog fil
 Release builds use the checksum-pinned official LLVM 23.1.4 distribution. LLVM 18.1.8 compiled and passed image conversion checks but the compiled emulator entered the fatal handler on add-layer; it is not supported for this release. Do not bypass the compiled Studio/BLE tests or assume a successful compiler exit proves a working image.
 
 Packaging reads compiler/version/hash provenance recorded at build time. It refuses a mismatched compiler or stale image metadata. Root browser modules are version-named in packages so an update cannot mix native ESM files from different releases.
+
+Studio read-progress QA: use “Pause mapping reads” for the initial unknown-total
+phase, then “Pause action reads” and “Read next action” to observe completed
+responses advancing the determinate bar. The15s timeout must replace both bar
+and skeleton with Retry; released late replies must not revive the old read.
+These controls exist only in studio-qa and cannot access hardware.

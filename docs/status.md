@@ -1,3 +1,18 @@
+# Studio mapping-read progress and risk banner
+
+Shared Firmware/Studio banner uses “EXPERIMENTAL — USE AT YOUR OWN RISK”.
+Studio retains skeletons and now shows read phases, then measured progress after
+its supported-action count is known. Progress counts3 completed initial reads
+plus each validated action definition; it does not simulate per-key byte progress.
+No additional device calls or firmware changes. Timeout/error hides progress,
+late replies are ignored and Retry starts over.
+
+Isolated hardware-free browser QA passes: locked/read-only state, initial unknown
+progress, action count advancing1→2, timeout replacing progress with Retry, late
+response ignored and successful retry into live layout. Screenshot:
+build/reports/power/mapping-progress.png (simulated fixture). Both production
+base builds/package audits are being refreshed; owner’s8785 session is untouched.
+
 # Alpha.3 power management — remaining hardware gates
 
 Branch `firmware/power-management`, draft [PR #12](https://github.com/jc-tanedo/lofree-edge-zmk/pull/12).

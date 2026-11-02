@@ -15,11 +15,14 @@ let notify: ReadableStreamDefaultController<Notification> | undefined,
   failRead = false;
 let pauseReads = false, pausePower=false, failPower=false, legacyPower=false, rejectPower=false;
 const pendingReads: Array<() => void> = [];
+let pauseDetails = false;
+const pendingDetails: Array<() => void> = [];
 const clone = <T,>(v: T): T => structuredClone(v);
 export function PreviewControls() {
   const [isLocked, setLocked] = useState(locked);
   const [paused, setPaused] = useState(false);
   const [pausedPower,setPausedPower]=useState(false);
+  const [detailsPaused,setDetailsPaused]=useState(false);
   const [legacy,setLegacy]=useState(false);
   return (
     <div
@@ -41,6 +44,8 @@ export function PreviewControls() {
         setPaused(pauseReads);
         if (!pauseReads) pendingReads.splice(0).forEach(reply => reply());
       }}>{paused ? "Resume mapping reads" : "Pause mapping reads"}</button>
+      <button onClick={() => { pauseDetails=!pauseDetails;setDetailsPaused(pauseDetails);if(!pauseDetails)pendingDetails.splice(0).forEach(reply=>reply()); }}>{detailsPaused ? "Resume action reads" : "Pause action reads"}</button>
+      <button onClick={() => pendingDetails.shift()?.()}>Read next action</button>
       <button onClick={() => { failRead = true; }}>Fail next mapping read</button>
       <button onClick={()=>{pausePower=!pausePower;setPausedPower(pausePower);if(!pausePower)pendingReads.splice(0).forEach(reply=>reply());}}>{pausedPower ? "Resume power reads" : "Pause power reads"}</button>
       <button onClick={()=>{failPower=true;}}>Fail next power read</button>
@@ -248,6 +253,7 @@ export function create_rpc_connection({ signal }: { signal?: AbortSignal } = {})
         responses = c;
         signal?.addEventListener("abort", () => {
           pendingReads.splice(0);
+          pendingDetails.splice(0);
           responses.error(new Error("Preview connection closed"));
         }, { once: true });
       },
@@ -261,6 +267,7 @@ export function create_rpc_connection({ signal }: { signal?: AbortSignal } = {})
       write(r) {
         const reply = () => responses.enqueue({ requestId: r.requestId, ...handle(r) });
         if ((pauseReads && r.keymap?.getKeymap) || (pausePower && (r.core as any)?.edgeGetPower)) pendingReads.push(reply);
+        else if (pauseDetails && r.behaviors?.getBehaviorDetails) pendingDetails.push(reply);
         else reply();
       },
     }),

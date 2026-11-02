@@ -1,3 +1,4 @@
+import type { KeymapReadProgress } from "./useEdgeKeymapData";
 import { EdgePower } from "./EdgePower";
 import { useContext, useEffect, useRef, useState } from "react";
 import type {
@@ -44,6 +45,7 @@ import {
 
 type Props = {
   loadingError?: string;
+  readProgress?: KeymapReadProgress;
   onRetry: () => unknown;
   keymap: Keymap | null | undefined;
   layout?: PhysicalLayout;
@@ -193,7 +195,13 @@ export function EdgeWorkspace(p: Props) {
         <div role="status" className="edge-loading-status">
           <span className="edge-eyebrow">READING KEYBOARD</span>
           <h1>Loading your keymap</h1>
-          <p>Reading mappings, layers and supported actions from your keyboard.</p>
+          <p>{p.readProgress?.label || "Preparing to read the keyboard…"}</p>
+          <div className="edge-read-progress">
+            <progress aria-label="Keyboard read progress" max={p.readProgress?.total || 1} value={p.readProgress?.completed} />
+            {p.readProgress?.total && p.readProgress.completed !== undefined && (
+              <span aria-hidden="true">{Math.floor(p.readProgress.completed / p.readProgress.total * 100)}%</span>
+            )}
+          </div>
         </div>
         <div className="edge-skeleton-layout" aria-hidden="true">
           <div className="edge-skeleton-layers"><span /><span /><span /></div>
