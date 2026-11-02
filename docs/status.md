@@ -1,3 +1,20 @@
+# Enlarged idle stack — complete local CI passed
+
+The same tools/ci.sh run exited0:37 Python tests, frontend/codec checks, native
+security/USB/BLE/mode/Power/deep-entry/boot/import/diagnostic suites, both website
+bases (30 targets each), source/history and source+website archive audits passed.
+Report: build/reports/idle448-full-ci.log. OTA SHA-256:
+3fde7a03218f8886391c54a3476a56a48592b74c7147460f00a61982a0f13722.
+Native stack guards stay128B; narrowed connected-wake idle spare180B. Static RAM
+22420/22528B. The replacement runner's CI41471171660 on c64d76a is still running.
+
+No hardware handoff yet. Package provenance currently identifies build commit1089aef;
+source-only documentation/runner updates followed during validation. Refresh the
+build/package from the final clean tree, verify the OTA remains byte-identical,
+and await remote CI before freezing the physical-test snapshot. Installed accepted
+145f81d2 remains unchanged. Current-draw and exact-image physical gates remain open;
+Fn/media cold wake remains tracked. No merge/tag/release/Pages deployment.
+
 # Replacement runners executing CI
 
 Owner rebuilt/recreated the runners; API verified three online Linux/X64 runners.
