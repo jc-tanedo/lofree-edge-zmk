@@ -1,3 +1,14 @@
+# Actions disk cleanup — CI rerun pending
+
+CI run41460825158 failed during pinned compiler extraction because the hosted
+runner exhausted disk space, before project tests ran. CI and draft-release now
+free unused bundled SDKs/apt cache before setup. CI/release/Pages each have an
+always-run final cleanup for their own transient build/dependency/deployment
+storage; release/site artifacts and reports are preserved. The shared script
+skips local/self-hosted environments and rejects a mismatched workspace.
+Guard and dry-run checks pass locally; real cleanup is exercised only on the
+hosted runner. Firmware bytes and installed keyboard are unchanged.
+
 # Optional Studio unlock — local checks passed; hardware pending
 
 Branch `firmware/power-management`, draft [PR #12](https://github.com/jc-tanedo/lofree-edge-zmk/pull/12).

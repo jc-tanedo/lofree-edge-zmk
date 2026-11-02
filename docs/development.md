@@ -81,3 +81,15 @@ across all layers, including unsaved changes; they are not browser-cached maps.
 call site. It injects only the decoded disabled-policy value before settings
 load; the full security emulator separately reads actual synthetic flash records.
 The short regression must keep at least128B observed margin in every stack.
+
+## Actions disk cleanup
+
+CI and draft-release jobs free unused preinstalled Android/.NET/Haskell/CodeQL
+SDKs and apt cache before downloading dependencies/compiler. All three workflows
+run cleanup with `always()` after their final build/upload/deployment step.
+Transient compiler downloads, dependencies, build staging and deployment copies
+are removed; release/site artifacts and reports are retained until runner disposal.
+`ci_cleanup.sh` refuses system/workspace cleanup outside a matching GitHub-hosted
+Linux workspace, so normal local and self-hosted invocations are skipped. Use
+`prepare|finish --dry-run` with the explicit hosted-runner environment to inspect
+targets without deleting anything. No published releases/artifacts are deleted.

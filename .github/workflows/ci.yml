@@ -21,9 +21,14 @@ jobs:
           node-version: '22.14.0'
       - name: System build tools
         run: sudo apt-get update && sudo apt-get install -y device-tree-compiler protobuf-compiler ninja-build libtinfo6 zstd
+      - name: Free runner disk space
+        run: sh tools/ci_cleanup.sh prepare
       - name: Public dependencies
         run: python3 tools/bootstrap.py
       - name: Pinned release compiler
         run: .venv/bin/python tools/install_toolchain.py
       - name: Build, tests and publication audits
         run: sh tools/ci.sh
+      - name: Clean transient build storage
+        if: ${{ always() }}
+        run: sh tools/ci_cleanup.sh finish
