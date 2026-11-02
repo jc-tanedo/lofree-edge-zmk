@@ -1458,4 +1458,4 @@ dialog::backdrop {
 
 .edge-security-toggle { display: flex; align-items: center; gap: .7rem; font-weight: 600; }
 .edge-security-toggle input { width: 18px; height: 18px; accent-color: var(--edge-accent, #da793c); }
-.edge-unlock-warning { margin: 0 0 24px; padding: 18px; }
+.edge-unlock-warning { margin: 0 clamp(20px, 3vw, 48px) 24px; padding: 18px 22px; }

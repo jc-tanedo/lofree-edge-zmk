@@ -28,7 +28,7 @@ Unreleased alpha.3 passes available-equipment owner functional checks on one Edg
 
 **in progress** · Studio settings
 
-A default-on, persistent requirement is implemented with a Security tab beside Power. Last-unlock-binding warnings and confirmed policy changes are included; new firmware is required. Compiled and mock tests pass; physical validation is pending. See [security details](docs/security.md).
+A default-on, persistent requirement is implemented with a Security tab beside Power. Missing-unlock warnings, blocked unsafe keymap saves/imports, and guarded policy enabling are included. Runtime policy requires supporting firmware; UI guards need no new flash. Compiled/mock checks pass; owner verified both policy reboot modes on accepted3fde7a03. Remaining exact-image validation is in progress. See [security details](docs/security.md).
 
 **Acceptance:** Exact-image tests show default lock, disable/save/reconnect/reboot, re-enable/immediate lock and physical unlock, missing-binding warnings, retained maps/bonds/Power settings, ON-only Studio, and recovery/regression checks.
 

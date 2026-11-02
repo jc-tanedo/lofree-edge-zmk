@@ -29,6 +29,8 @@ export function AppHeader(p: AppHeaderProps) {
   useSub("rpc_notification.keymap.unsavedChangesStatusChanged", (v) =>
     setUnsaved(v),
   );
+  const [saveBlocked,setSaveBlocked] = useState(false);
+  useSub("edge.keymap.save-blocked",setSaveBlocked);
   const [securityDirty,setSecurityDirty] = useState(false);
   useSub("edge.security.dirty",setSecurityDirty);
   const [powerDirty,setPowerDirty] = useState(false);
@@ -177,8 +179,9 @@ export function AppHeader(p: AppHeaderProps) {
           </button>
           <button
             className="edge-button edge-button-primary edge-save-button"
-            disabled={!ready || !unsaved}
-            onClick={() => void run(p.onSave)}
+            disabled={!ready || !unsaved || saveBlocked}
+            title={saveBlocked ? "Add an Unlock Studio binding or disable the unlock requirement in Security before saving." : undefined}
+            onClick={() => { if (!saveBlocked) void run(p.onSave); }}
           >
             <Save size={15} />
             {busy ? "Working…" : "Save"}

@@ -25,10 +25,12 @@ s=s.replace('connectedDeviceLabel={connectedDeviceName}','connectedDeviceLabel={
 p.write_text(s)
 # A local fixture button avoids browser-managed upload storage during QA.
 p=stage/'src/KeymapImport.tsx';s=p.read_text()
+s='import qaWithoutUnlock from "./preview-import-no-unlock.keymap?raw";\n'+s
 s='import qaSource from "./preview-import.keymap?raw";\n'+s
-s=s.replace('<input ref={input}', '<button onClick={()=>void load(new File([qaSource],"edge-ui-import-test.keymap"))}>Load QA import fixture</button><input ref={input}')
+s=s.replace('<input ref={input}', '<button onClick={()=>void load(new File([qaWithoutUnlock],"edge-no-unlock.keymap"))}>Load QA import without unlock</button><button onClick={()=>void load(new File([qaSource],"edge-ui-import-test.keymap"))}>Load QA import fixture</button><input ref={input}')
 p.write_text(s)
 shutil.copyfile(ROOT/'web/tests/fixtures/edge-ui-import-test.keymap',stage/'src/preview-import.keymap')
+(stage/'src/preview-import-no-unlock.keymap').write_text((ROOT/'web/tests/fixtures/edge-ui-import-test.keymap').read_text().replace('&studio_unlock','&none'))
 subprocess.run(['./node_modules/.bin/tsc'],cwd=stage,check=True)
 subprocess.run(['./node_modules/.bin/vite','build','--base='+os.environ.get('EDGE_SITE_BASE','')+'/studio-qa/','--outDir='+str(ROOT/'web/dist/studio-qa'),'--emptyOutDir=false'],cwd=stage,check=True)
 

@@ -15,10 +15,11 @@ shutil.copyfile(ROOT/'web/studio-extension/KeymapExport.tsx', stage/'src/KeymapE
 shutil.copyfile(ROOT/'web/studio-extension/KeymapImport.tsx', stage/'src/KeymapImport.tsx')
 extension = stage/'src/edge-export'
 extension.mkdir(exist_ok=True)
-for name in ('keymap-export.js','keymap-export-symbols.js','keymap-import.js','layout.js','studio-actions.js'):
+for name in ('keymap-export.js','keymap-export-symbols.js','keymap-import.js','layout.js','studio-actions.js','unlock-guard.js'):
     shutil.copyfile(ROOT/'web/dist'/name, extension/name)
 shutil.copyfile(ROOT/'web/studio-extension/keymap-export.d.ts',extension/'keymap-export.d.ts')
 shutil.copyfile(ROOT/'web/studio-extension/keymap-import.d.ts',extension/'keymap-import.d.ts')
+shutil.copyfile(ROOT/'web/studio-extension/unlock-guard.d.ts',extension/'unlock-guard.d.ts')
 shutil.copyfile(ROOT/'web/studio-extension/edge-actions.d.ts',extension/'studio-actions.d.ts')
 keyboard = stage/'src/keyboard/Keyboard.tsx'
 text = keyboard.read_text()
@@ -63,6 +64,10 @@ text = text[:a]+'  return <EdgeWorkspace keymap={keymap} layout={layouts?.[selec
 keyboard.write_text(text)
 app = stage/'src/App.tsx'
 text = app.read_text()
+text = 'import { assertUnlockSaveAllowed } from "./edge-export/unlock-guard.js";\nimport { securityRpc } from "./edge-security-rpc";\n' + text
+anchor = '      let resp = await call_rpc(conn.conn, { keymap: { saveChanges: true } });'
+assert text.count(anchor)==1
+text = text.replace(anchor, '      await assertUnlockSaveAllowed(r => call_rpc(conn.conn!, r), async () => (await securityRpc(conn.conn!)).requireUnlock !== 0);\n'+anchor)
 anchor = '  const [doIt, undo, redo, canUndo, canRedo, reset] = useUndoRedo();'
 assert text.count(anchor)==1
 text = text.replace(anchor,anchor+'\n  useSub("edge.keymap.imported", () => reset());')

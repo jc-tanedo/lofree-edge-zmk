@@ -1,10 +1,11 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 import { useContext, useEffect, useRef, useState } from "react";
-import { NoResponseError, MetaError } from "@zmkfirmware/zmk-studio-ts-client";
+import { call_rpc, NoResponseError, MetaError } from "@zmkfirmware/zmk-studio-ts-client";
 import { LockState } from "@zmkfirmware/zmk-studio-ts-client/core";
 import { ConnectionContext } from "./rpc/ConnectionContext";
 import { LockStateContext } from "./rpc/LockStateContext";
 import { useConnectedDeviceData } from "./rpc/useConnectedDeviceData";
+import { assertUnlockSaveAllowed } from "./edge-export/unlock-guard.js";
 import { securityRpc } from "./edge-security-rpc";
 import { usePub, useSub } from "./usePubSub";
 
@@ -35,6 +36,7 @@ export function EdgeSecurity({
   );
   useSub("rpc_notification.keymap.unsavedChangesStatusChanged", setUnsaved);
   const dirty = saved !== undefined && saved !== draft;
+  const cannotEnable = draft && !hasUnlock;
   useEffect(() => {
     void publish("edge.security.dirty", dirty);
     return () => {
@@ -105,7 +107,8 @@ export function EdgeSecurity({
       busy ||
       state !== "ready" ||
       !dirty ||
-      unsaved !== false
+      unsaved !== false ||
+      cannotEnable
     )
       return;
     const id = generation.current,
@@ -125,6 +128,7 @@ export function EdgeSecurity({
       void publish("edge.ui.busy", false);
     }, 15000);
     try {
+      if (requested) await assertUnlockSaveAllowed(r => call_rpc(conn, r), async () => true);
       const actual = await securityRpc(conn, requested);
       // Enabling immediately locks: the secured read must wait for physical unlock.
       if (!requested) await securityRpc(conn);
@@ -208,9 +212,7 @@ export function EdgeSecurity({
           </p>
           {dirty && draft && !hasUnlock && (
             <p role="alert" className="edge-inline-error">
-              No Unlock Studio binding exists in the current keymap. Enabling
-              locking can prevent further editing after this session locks. Add
-              an accessible unlock binding first.
+              No Unlock Studio binding exists in the current keymap. Enabling locking is blocked. Add an accessible unlock binding first.
             </p>
           )}
           {unsaved !== false && (
@@ -228,7 +230,7 @@ export function EdgeSecurity({
             </button>
             <button
               className="edge-button edge-button-primary"
-              disabled={!dirty || unsaved !== false}
+              disabled={!dirty || unsaved !== false || cannotEnable}
               onClick={() => setConfirm(true)}
             >
               Save security settings
@@ -266,7 +268,7 @@ export function EdgeSecurity({
           </button>
           <button
             className="edge-button edge-button-primary"
-            disabled={!ready || busy || state !== "ready" || unsaved !== false}
+            disabled={!ready || busy || state !== "ready" || unsaved !== false || cannotEnable}
             onClick={save}
           >
             {draft ? "Enable and lock" : "Disable unlock requirement"}

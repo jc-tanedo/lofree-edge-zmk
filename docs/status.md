@@ -1,3 +1,24 @@
+# UI follow-up during accepted3fde7a03 hardware validation
+
+Owner requested an inset missing-unlock warning and prevention of unsafe saves.
+Warning now has responsive20–48px horizontal margins and22px inner padding.
+Main Save is disabled when the live map lacks a direct unlock binding and locking
+is enabled/unknown. The save handler independently reads the device map/policy;
+imports preflight their target and recheck before persistence. Security cannot
+stage-confirm enabling without a binding. Undo/Discard remain usable; disabled
+protection permits maps without unlock. These are client guards, not firmware
+restrictions, and require no new flash.
+
+The installed accepted OTA remains3fde7a03; no firmware source/image change.
+Owner passed ON baseline, both security reboot modes, manual stock return/reinstall,
+and original warning/Undo. New save guards pass synthetic browser checks (enabled/disabled save,
+Undo, guarded enabling and blocked import) on8791; the owner’s8789 editor/frozen installer is untouched. Remaining
+hardware checks include the updated guard UX and mode/Power regressions. Final
+firmware CI41472762063 passed on1c021ad; frontend follow-up passes64 JavaScript tests,37 Python tests and30 website targets
+for each base. Production review is prepared on8792. Live warning bounds show
+horizontal gaps and padding; CDP screenshot capture timed out, so no screenshot
+claim is made. Source/site audits are run before committing this follow-up.
+
 # Enlarged idle stack — complete local CI passed
 
 The same tools/ci.sh run exited0:37 Python tests, frontend/codec checks, native

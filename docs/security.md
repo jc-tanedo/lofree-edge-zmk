@@ -2,7 +2,7 @@
 
 Experimental firmware and tools. Use at your own risk. [Risk notice](../RISK.md).
 
-## User behavior — unreleased, hardware test pending
+## User behavior — unreleased, hardware validation in progress
 
 Studio's Security tab is beside Power. “Require physical unlock before editing”
 is enabled by default. Unlock with Fn+U in the default keymap, or your remapped
@@ -15,18 +15,27 @@ after reconnect/reboot. It does not enable Bluetooth Studio: the physical ON
 position remains required. Enabling the requirement locks the current session
 immediately. Save/discard keymap edits before changing policy.
 
-Studio warns if locking is enabled and the current keymap has no direct Unlock
-Studio binding, including after assignment, layer deletion or an import removes
-the last binding. The warning is conservative if firmware cannot report its
-policy. Enabling without a binding also warns in the confirmation. Warnings do
-not prohibit the change. Presence checks do not prove a layer/key is physically
-reachable or detect unlocks hidden in custom macros; keep an accessible binding.
-Without one, a later lock can prevent editing and may require reset/recovery,
-which is not guaranteed.
+Studio warns when the current keymap has no direct Unlock Studio binding and
+locking is enabled or its policy is unavailable. The warning is inset from the
+window edges. Keymap Save is disabled in this state; Undo/Discard remain available
+to restore the binding. To deliberately save a keymap without an unlock binding,
+disable protection before editing it. Security cannot enable protection without a
+direct unlock binding. Save/discard map edits before changing the policy.
 
-Older firmware shows an unsupported message instead of a toggle that only
-changes browser state. These settings require a new firmware image. The owner’s
-installed145f81d2 image has not been changed by implementation or mock tests.
+The save handler reads the current device map before persistence and checks the
+device policy if no unlock binding exists. Imports check their target before
+applying changes and check the live map again before saving. An unknown policy
+fails closed for a missing binding. These are web-UI guards, not new firmware
+restrictions: another client can bypass them. Presence checks do not prove that a
+layer/key is physically reachable or detect unlocks hidden in custom macros.
+Keep an accessible direct binding. Recovery is not guaranteed.
+
+Older firmware shows an unsupported message for policy changes. The runtime policy
+requires supporting firmware; warning spacing and save guards are frontend-only.
+The owner accepted OTA3fde7a03 during hardware validation and passed ON baseline,
+both policy power-cycle modes, manual stock return/reinstall and warning/Undo.
+Further exact-image hardware checks remain pending; no additional flash is needed
+for these UI changes.
 
 ## Protocol and storage
 

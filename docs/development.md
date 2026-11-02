@@ -117,3 +117,13 @@ Use the full CI BLE test to reproduce independently of ignored diagnostic fixtur
 TC32EMU_SUSPEND_RF=lost EDGE_TEST_BUILD=lofree_edge-ble-studio \
   EDGE_TEST_POWER_SLEEP=1 .venv/bin/python tools/test_edge_ble_delayed_dma.py
 ```
+
+## Unlock save guard
+
+`web/dist/unlock-guard.js` checks the authoritative map/policy at persistence.
+Header disabled state comes from the live workspace; the save handler independently
+rechecks the device. Imports validate target and final live map. Security blocks
+enabling without a direct unlock binding. This is a client guard, not firmware
+enforcement. `web/tests/unlock-guard.test.js` covers enabled/disabled/unknown policy,
+restoration, live readback and import preflight. The isolated preview includes a
+“Load QA import without unlock” fixture; it cannot access hardware.

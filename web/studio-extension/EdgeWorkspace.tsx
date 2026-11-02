@@ -1,3 +1,4 @@
+import { hasUnlockBinding, unlockSaveBlocked } from "./edge-export/unlock-guard.js";
 import type { KeymapReadProgress } from "./useEdgeKeymapData";
 import { EdgeSecurity } from "./EdgeSecurity";
 import { EdgePower } from "./EdgePower";
@@ -120,7 +121,9 @@ export function EdgeWorkspace(p: Props) {
     selected = p.selectedKeyPosition,
     selectedBinding =
       selected === undefined ? undefined : layer?.bindings[selected];
-  const hasUnlock = layers.some(l => l.bindings.some(b => b.behaviorId === IDS.studio_unlock));
+  const hasUnlock = hasUnlockBinding(map);
+  const saveBlocked = unlockSaveBlocked(map, lockingEnabled);
+  useEffect(() => { void publish("edge.keymap.save-blocked", saveBlocked); }, [saveBlocked]);
   const unlocked =
     !!conn.conn && lock === LockState.ZMK_STUDIO_CORE_LOCK_STATE_UNLOCKED;
   const ready = unlocked && !!map && !busy && !externalBusy;
@@ -370,7 +373,7 @@ export function EdgeWorkspace(p: Props) {
       {map && !hasUnlock && lockingEnabled !== false && <div role="alert" className="edge-inline-error edge-unlock-warning">
         <strong>No Unlock Studio binding in this keymap.</strong>{" "}
         {lockingEnabled === true ? "Locking is enabled." : "Locking may be enabled; its current policy is unavailable."}{" "}
-        Add an accessible Unlock Studio binding before disconnecting or allowing this session to lock. Removing the last unlock binding can prevent future editing; a settings reset or recovery may be needed. Recovery is not guaranteed.
+        Saving is blocked while locking is enabled or its policy is unavailable. Restore an accessible Unlock Studio binding before disconnecting or allowing this session to lock. To save a keymap without one, disable locking in Security before editing. Recovery is not guaranteed.
       </div>}
       <section className="edge-action-dock" aria-label="Key actions">
         <div className="edge-dock-toolbar">

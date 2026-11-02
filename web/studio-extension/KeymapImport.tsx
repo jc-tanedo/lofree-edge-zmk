@@ -4,7 +4,9 @@ import type { Keymap } from '@zmkfirmware/zmk-studio-ts-client/keymap';
 import { LockState } from '@zmkfirmware/zmk-studio-ts-client/core';
 import { ConnectionContext } from './rpc/ConnectionContext';
 import { LockStateContext } from './rpc/LockStateContext';
-import { usePub } from './usePubSub';
+import { usePub, useSub } from './usePubSub';
+import { securityRpc } from './edge-security-rpc';
+import { assertUnlockSaveAllowed, unlockSaveBlocked, UNLOCK_SAVE_ERROR } from './edge-export/unlock-guard.js';
 import { parseKeymap, planImport, readImportContext, applyImport } from './edge-export/keymap-import.js';
 import type { Plan, Rpc } from './edge-export/keymap-import.js';
 import { exportFiles, exportZip, exportLayout, describeBinding } from './edge-export/keymap-export.js';
@@ -13,6 +15,8 @@ export function KeymapImport() {
   const { conn } = useContext(ConnectionContext);
   const lock = useContext(LockStateContext);
   const publish = usePub();
+  const [lockingEnabled,setLockingEnabled]=useState<boolean>();
+  useSub("edge.security.policy",setLockingEnabled);
   const input = useRef<HTMLInputElement>(null);
   const dialog = useRef<HTMLDialogElement>(null);
   const failedConnections = useRef(new WeakSet<object>());
@@ -23,6 +27,7 @@ export function KeymapImport() {
   const ready=!!conn && lock===LockState.ZMK_STUDIO_CORE_LOCK_STATE_UNLOCKED;
   const rpc:Rpc=async request=>{
     if(!conn || failedConnections.current.has(conn)) throw new Error('Keyboard disconnected. Reconnect before continuing.');
+    if(request.keymap?.saveChanges) await assertUnlockSaveAllowed(rpc,async()=> (await securityRpc(conn)).requireUnlock !== 0);
     let timer:ReturnType<typeof setTimeout>|undefined;
     try {
       const response=await Promise.race([call_rpc(conn,request),new Promise<never>((_,reject)=>{
@@ -63,6 +68,7 @@ export function KeymapImport() {
     const warn=(event:BeforeUnloadEvent)=>{event.preventDefault();event.returnValue='';};
     window.addEventListener('beforeunload',warn);
     try {
+      await assertUnlockSaveAllowed(rpc,async()=> (await securityRpc(conn!)).requireUnlock !== 0,{layers:preview.plan.targets});
       const result=await applyImport(rpc,preview.plan,(done,total)=>setMessage(`Applying ${done} of ${total} key changes…`));
       await publish('edge.keymap.imported',result);
       await publish('rpc_notification.keymap.unsavedChangesStatusChanged',false);
@@ -79,6 +85,7 @@ export function KeymapImport() {
       dialog.current?.close();setPreview(null);
     } finally { window.removeEventListener('beforeunload',warn);setBusy(false); }
   }
+  const blocked=!!preview && unlockSaveBlocked({layers:preview.plan.targets},lockingEnabled);
   return <div className="p-2 flex flex-col gap-2 border-t border-base-300 max-w-64">
     <input ref={input} type="file" accept=".keymap" hidden onChange={event=>{
       const file=event.target.files?.[0];event.target.value='';if(file) void load(file);
@@ -99,11 +106,12 @@ export function KeymapImport() {
           </ul></details>
           <p className="text-sm">Changes take effect during import and are saved to the keyboard. Keep keys released and leave this window open until it finishes.</p>
         </>}
+        {blocked && <p role="alert" className="edge-inline-error">{UNLOCK_SAVE_ERROR}</p>}
         <p className="text-sm py-2" role="status">{busy?message:'Download a backup first if you want to restore your current setup later.'}</p>
         <div className="modal-action flex-wrap">
           <button className="btn btn-sm" disabled={busy} onClick={backup}>Download current backup ↓</button>
           <button className="btn btn-sm" disabled={busy} onClick={()=>dialog.current?.close()}>Cancel</button>
-          <button className="btn btn-sm btn-primary" disabled={busy||!ready} onClick={()=>void apply()}>Apply and save</button>
+          <button className="btn btn-sm btn-primary" disabled={busy||!ready||blocked} onClick={()=>void apply()}>Apply and save</button>
         </div>
       </div>
     </dialog>
