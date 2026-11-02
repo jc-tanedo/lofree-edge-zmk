@@ -21,7 +21,10 @@ Hosted browser checks confirm correct script/Studio/image paths, verified image,
 required checkbox and initially-disabled confirmation; no console errors.37 Python
 tests pass; publication tests use the source fallback and actual React-rendered
 ack/reset controls rather than searching generated static HTML for dialogs.
-Publication audit passes201 curated files. Final release-archive refresh is next.
+Publication audit passes201 curated files, Git history, website and source/website
+archives. The final package refresh passed against code commit6351a96. The
+production React review build is served at localhost8766; the owner’s loaded
+page was not refreshed. Save edits before manually refreshing.
 Installed firmware OTA
 145f81d2… remains unchanged; its functional hardware record does not certify a
 new physical install through this frontend. Release gates remain open.
