@@ -13,7 +13,7 @@
     "title": "Sleep and power management",
     "status": "in progress",
     "milestone": "Power and mode handling",
-    "limitation": "Unreleased alpha.3 corrected image passes owner ON lighting, battery connected/deep wake, OFF selector wake and persistence checks. USB startup SET_IDLE timeout has a source fix awaiting hardware validation; host suspend, broader row coverage and measured current remain incomplete. Fn cold wake is tracked separately.",
+    "limitation": "Unreleased alpha.3 candidate passes owner lighting/settings, battery connected/deep wake, OFF selector wake, persistence, USB startup and CachyOS host-resume checks. Broader row/modifier coverage and measured current remain incomplete. Fn cold wake is tracked separately; no battery-life savings claim.",
     "acceptance": "Measure wired/BLE idle current, validate wake keys and reconnect, and demonstrate no lost saved mappings across repeated sleep/wake cycles.",
     "issue": "https://github.com/jc-tanedo/lofree-edge-zmk/issues/2"
   },
