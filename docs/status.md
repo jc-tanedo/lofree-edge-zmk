@@ -1,3 +1,20 @@
+# USB startup candidate — preflight passed, ready for hardware handoff
+
+GitHub CI [run41368704446](https://github.com/jc-tanedo/lofree-edge-zmk/actions/runs/41368704446)
+passed on commit `edb4bd001f9bb9881126b263f4744a6f3060d2b5`. Local preflight was
+interrupted by shutdown, then resumed from the unfinished stack/storage tests
+with an exact-hash rebuild. Remaining checks completed with exit0, including
+boot/import/diagnostic tests, both website bases and source/history/archive/site
+audits (196 source files). Installed firmware has not changed.
+
+Frozen candidate OTA `145f81d269f030e2338f61662f1f8ceeaf1d5499d3f2c34791c6d88ab404131e`
+is served separately at `http://127.0.0.1:8785/lofree-edge-zmk/`, labeled
+“HARDWARE TEST alpha.3 — USB startup SET_IDLE correction”. Its copied site passes
+independent audits and26 local-link checks; browser confirms selected label,
+verified image, disabled install while disconnected and visible risk notice.
+Frozen bytes match the catalog. All independent preflight work is finished.
+No physical pass, flash or acceptance is implied for this candidate.
+
 # Alpha.3 power management — hardware validation in progress
 
 Branch `firmware/power-management`, draft [PR #12](https://github.com/jc-tanedo/lofree-edge-zmk/pull/12).
