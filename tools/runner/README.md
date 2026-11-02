@@ -17,7 +17,8 @@ and setup actions, not the distribution's default Python/Node packages.
    `scripts/start.sh`. Keep your registration/startup configuration unchanged.
 2. Choose the runner version you already deploy or another supported version from
    [actions/runner releases](https://github.com/actions/runner/releases).
-   Copy the official SHA-256 for its **Linux x64** archive. Both build arguments
+   Copy the official SHA-256 for its **Linux x64** archive: exactly64 hexadecimal
+   characters, without a `sha256:` prefix. Both build arguments
    are required; a missing or mismatched checksum fails the build.
 3. Build from that runner project's directory (substitute the actual values):
 

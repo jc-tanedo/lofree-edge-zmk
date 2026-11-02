@@ -1,3 +1,11 @@
+# Runner digest format clarified
+
+Owner's next build supplied a sha256: prefix plus an extra trailing non-hex
+character. Official actions/runner release API verified the v2.338.2 Linux x64
+digest. Dockerfile now rejects malformed digests before downloading the archive;
+runner guide specifies64 hexadecimal characters without the prefix. No firmware
+changes; the existing complete local validation remains running.
+
 # Enlarged idle stack — complete BLE regression passed
 
 On OTA3fde7a03218f8886391c54a3476a56a48592b74c7147460f00a61982a0f13722,

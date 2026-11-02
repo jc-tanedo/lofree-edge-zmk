@@ -29,6 +29,7 @@ RUN apt-get update \
 # against the digest supplied from its official release, then discard the archive.
 RUN : "${RUNNER_VERSION:?Missing build arg RUNNER_VERSION; set build.args in Compose}" \
     && : "${RUNNER_SHA256:?Missing build arg RUNNER_SHA256; set build.args in Compose}" \
+    && { printf '%s\n' "$RUNNER_SHA256" | grep -Eq '^[0-9a-fA-F]{64}$' || { echo 'RUNNER_SHA256 must be exactly64 hexadecimal characters, without sha256: prefix' >&2; exit 1; }; } \
     && { test "$(dpkg --print-architecture)" = amd64 || { echo 'Runner archive requires linux/amd64' >&2; exit 1; }; } \
     && mkdir -p /home/docker/actions-runner \
     && curl --fail --show-error --location --retry 3 \
