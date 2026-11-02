@@ -10,8 +10,13 @@ class Links(HTMLParser):
    if key in ('href','src') and value:self.links.append(value)
 def validate(site,base):
  count=0
+ firmware=(site/'index.html').read_text()
+ if f'src="{base}/firmware-ui/assets/' not in firmware:raise ValueError('Firmware must load the React build for this site base')
  studio=(site/'studio/index.html').read_text()
  if f'src="{base}/edge-shell.' not in studio:raise ValueError('Studio must load the site-root shared module explicitly')
+ for relative in ['assets/edge-illustration.svg','edge-info.json','firmware/manifest.json','studio/Inter.woff2']:
+  if not (site/relative).is_file():raise ValueError('Missing React workspace runtime resource: '+relative)
+  count+=1
  for p in site.rglob('*.html'):
   parser=Links();parser.feed(p.read_text())
   for link in parser.links:

@@ -13,11 +13,12 @@ def check(name,data,kind='source'):
  if kind=='source' and (p.suffix.lower() in {'.bin','.elf','.o','.obj','.a','.so','.hex','.lib'} or len(data)>5_000_000):raise ValueError('Unexpected binary/large source file: '+name)
  if PRIVATE.search(data):raise ValueError('Private identifier/credential in '+name)
  if data.startswith(b'MZ'):raise ValueError('PE executable in '+name)
- if kind=='site' and ('studio-qa' in p.parts or 'node_modules' in p.parts or p.name.endswith('qa.html')):raise ValueError('QA/dependency files in website: '+name)
+ if kind=='site' and ('studio-qa' in p.parts or 'firmware-qa' in p.parts or 'node_modules' in p.parts or p.name.endswith('qa.html')):raise ValueError('QA/dependency files in website: '+name)
 def source_files():
  for p in ROOT.rglob('*'):
   rel=p.relative_to(ROOT)
-  if any(x in EXCLUDED for x in rel.parts) or rel.parts[:2]==('firmware','build') or rel.parts[:3] in [('web','dist','studio'),('web','dist','studio-qa'),('web','dist','firmware')]:continue
+  if any(x in EXCLUDED for x in rel.parts) or rel.parts[:2]==('firmware','build') or rel.parts[:3] in [('web','dist','studio'),('web','dist','studio-qa'),('web','dist','firmware'),('web','dist','firmware-ui'),('web','dist','firmware-qa')]:continue
+  if rel.as_posix()=='web/dist/index.html':continue # Generated React entry; source is web/firmware.
   if p.is_symlink():raise ValueError('Source symlink: '+str(rel))
   if p.is_file():yield rel,p
 

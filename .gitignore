@@ -14,3 +14,8 @@ node_modules/
 .env
 .env.*
 !*.example
+
+# Built React Firmware entry and chunks
+web/dist/index.html
+web/dist/firmware-ui/
+web/dist/firmware-qa/

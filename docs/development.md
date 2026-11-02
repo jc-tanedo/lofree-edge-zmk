@@ -40,3 +40,31 @@ phase, then “Pause action reads” and “Read next action” to observe compl
 responses advancing the determinate bar. The15s timeout must replace both bar
 and skeleton with Retry; released late replies must not revive the old read.
 These controls exist only in studio-qa and cannot access hardware.
+
+## Frontend architecture
+
+Both workspaces use the same pinned React/Vite toolchain from Studio's locked
+dependencies. Firmware uses JSX in `web/firmware/`; Studio uses TypeScript/TSX
+in the pinned upstream staging tree plus `web/studio-extension/`.
+
+Firmware components own the installer, stock key editor, tabs and dialogs.
+`workspace.js` exposes a subscribable device controller with no DOM rendering;
+React reads it through `useSyncExternalStore`. Stock maps are read from the
+keyboard on connection; only pending drafts live in page memory. Protocol,
+image validation and OTA packet modules remain in `web/dist/` unchanged.
+
+The shared banner/navigation remain framework-neutral Web Components in
+`edge-shell.js`, with shared typography/tokens in `edge-design.css`; standalone
+risk/roadmap pages use them too. React does not introduce a second design system.
+
+`tools/build_edge_firmware_ui.py --base ''` builds Firmware only. Packaging calls
+it automatically with the requested site base. Its generated `web/dist/index.html`
+and `web/dist/firmware-ui/` are ignored; corresponding source is `web/firmware/`.
+Build Studio with the same base before packaging. The old imperative page and
+firmware controllers are removed.
+
+`tools/build_edge_firmware_ui.py --preview --base ''` creates synthetic-only
+`firmware-qa`. `tools/build_web_preview.py --site build/site --base /lofree-edge-zmk`
+stages both mock workspaces under `build/qa-site/lofree-edge-zmk/`. Serve only
+that public QA root. QA bundles are excluded from release output by both the
+packager and publication audit. Browser checks must not use a real device.

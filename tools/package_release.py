@@ -13,6 +13,7 @@ def main():
  p=argparse.ArgumentParser(description=__doc__);p.add_argument('--site-base',default='/lofree-edge-zmk');p.add_argument('--site-only',action='store_true');p.add_argument('--site-output',default='build/site');a=p.parse_args()
  base=a.site_base.rstrip('/')
  if base and not re.fullmatch(r'/[a-zA-Z0-9_-]+',base):raise SystemExit('Expected empty base or one project subdirectory')
+ subprocess.run([str(ROOT/'.venv/bin/python'),str(ROOT/'tools/build_edge_firmware_ui.py'),'--base',base],cwd=ROOT,check=True)
  version=(ROOT/'VERSION').read_text().strip()
  if not re.fullmatch(r'0\.\d+\.\d+-alpha\.\d+',version):raise SystemExit('First-publication pipeline accepts 0.x alpha releases only; review stable-release policy before changing this')
  audit_source()
@@ -33,12 +34,12 @@ def main():
   if old.is_dir():shutil.rmtree(old)
   else:old.unlink()
  for f in (ROOT/'web/dist').iterdir():
-  if f.name in ['studio-qa','firmware'] or 'qa.html' in f.name:continue
+  if f.name in ['studio-qa','firmware-qa','firmware'] or 'qa.html' in f.name:continue
   if f.is_dir():shutil.copytree(f,site/f.name)
   else:shutil.copyfile(f,site/f.name)
  # Bundle only fresh production output. Vite root paths must match this artifact.
  studio=(site/'studio/index.html').read_text()
- if f'{base}/studio/assets/' not in studio:raise SystemExit('Rebuild Studio with EDGE_SITE_BASE='+base)
+ if f'src="{base}/studio/assets/' not in studio:raise SystemExit('Rebuild Studio with EDGE_SITE_BASE='+base)
  (site/'version.json').write_text(json.dumps({'version':version})+'\n')
  (site/'.nojekyll').touch()
  stem='lofree-edge-zmk-'+version

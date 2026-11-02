@@ -1,3 +1,31 @@
+# Firmware React migration — UI validation passed
+
+Firmware is now a React JSX workspace using Studio's pinned React/Vite tree.
+Components own installer, stock-key editor, tabs and native confirmation dialogs;
+a DOM-free subscribable controller owns device operations. Original protocol,
+image validation and OTA framing modules remain unchanged. Shared banner/nav,
+design CSS and bundled font remain common with Studio. Old imperative entry,
+app/firmware/tab controllers are removed; generated entry/chunks are ignored.
+
+Hardware-free browser checks pass: verification failure/retry, prominent verified
+connection, fresh risk acknowledgment after cancel/reopen, synthetic transfer
+progress/locked controls/completion, stock auto-read/current maps, reset-selected
+Apply state, unsaved navigation and destructive reset confirmation. No browser
+console errors.60 JavaScript tests pass when run directly, including controller,
+actual React-rendered confirmation markup and bounded transfer notification tests.
+The Node file-level runner in this host did not expose individual results, so
+direct execution was used for the evidence. No device commands or flashing.
+
+Final localhost and hosted builds pass24 asset/runtime-resource/link checks each.
+Hosted browser checks confirm correct script/Studio/image paths, verified image,
+required checkbox and initially-disabled confirmation; no console errors.37 Python
+tests pass; publication tests use the source fallback and actual React-rendered
+ack/reset controls rather than searching generated static HTML for dialogs.
+Publication audit passes201 curated files. Final release-archive refresh is next.
+Installed firmware OTA
+145f81d2… remains unchanged; its functional hardware record does not certify a
+new physical install through this frontend. Release gates remain open.
+
 # Risk-banner actual font mismatch fixed
 
 Identical declared sizes were insufficient: Studio defined bundled Inter.woff2,

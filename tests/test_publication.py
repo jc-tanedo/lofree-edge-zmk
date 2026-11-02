@@ -41,11 +41,12 @@ class PublicationTests(unittest.TestCase):
   with self.assertRaises(ValueError):validate_metadata(*args)
   args=list(self.metadata());args[3]['commit']='different'
   with self.assertRaises(ValueError):validate_metadata(*args)
- def test_canonical_version_and_risk_ack_are_present(self):
+ def test_canonical_version_and_static_risk_fallback_are_present(self):
   from lofree_edge._version import __version__
   self.assertEqual(__version__,(ROOT/'VERSION').read_text().strip())
-  html=(ROOT/'web/dist/index.html').read_text()
-  self.assertIn('id="firmware-risk-ack" required',html)
-  self.assertIn('formnovalidate',html)
+  html=(ROOT/'web/firmware/index.html').read_text()
+  # Dialog/ack behavior is checked against actual React output in the JS suite.
+  self.assertIn('id="local-file-notice"',html)
+  self.assertIn('use at your own risk',html)
   self.assertIn('<edge-risk-notice>',html)
 if __name__=='__main__':unittest.main()

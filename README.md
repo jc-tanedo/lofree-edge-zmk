@@ -74,6 +74,8 @@ EDGE_SITE_BASE=/lofree-edge-zmk sh tools/build_edge_studio_ui.sh
 .venv/bin/python tools/package_release.py --site-base /lofree-edge-zmk
 ```
 
+Firmware and Studio both use React/Vite from the same pinned dependencies. Packaging builds the Firmware workspace automatically; frontend source and build details are in the development guide.
+
 Serve only the built website, never the repository root. Initial build prerequisites are listed in the development guide.
 </details>
 
