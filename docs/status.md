@@ -1,3 +1,15 @@
+# Risk-banner actual font mismatch fixed
+
+Identical declared sizes were insufficient: Studio defined bundled Inter.woff2,
+but Firmware named Inter without loading it and used a system fallback. The
+actual same-link width differed144px vs150px at equal1185px content widths.
+Matching text-size-adjust did not fix it. Shared CSS now declares the existing
+bundled Inter face via relative studio/Inter.woff2; entry cache keys are v8.
+Both pages then measure150px and their1265×134 banner screenshots have zero
+pixel differences (Pillow ImageChops comparison). Prior typography-only check
+missed the fallback and is superseded by this rendered verification. No font
+was downloaded; existing Studio asset reused. No firmware/device changes.
+
 # Shared risk-banner typography
 
 Fresh Firmware/Studio tabs initially reported matching computed13px heading and

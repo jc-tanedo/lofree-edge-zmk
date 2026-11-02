@@ -1,3 +1,6 @@
+/* Use the same bundled Inter face on Firmware and Studio. Relative to this
+ * shared stylesheet, this also resolves under the GitHub Pages project path. */
+@font-face { font-family: Inter; src: url("studio/Inter.woff2") format("woff2"); font-display: fallback; }
 /* Edge / Carbon & Silver. Shared tokens and components for Firmware + Studio. */
 :root {
   --edge-paper: #080809;
