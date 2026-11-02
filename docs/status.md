@@ -1,3 +1,13 @@
+# Shared risk-banner typography
+
+Fresh Firmware/Studio tabs initially reported matching computed13px heading and
+12px body/link sizes; the owner’s reported older-session difference could not
+be reproduced. Shared CSS now explicitly controls family/weight/line-height and
+child inheritance, with the shared stylesheet cache key bumped to v7 on both
+entry points. Browser verification confirms identical computed typography and
+v7 stylesheet on both pages. Banner screenshots are in build/reports/power/.
+Owner’s active page is not reloaded; no device commands or firmware changes.
+
 # Firmware stock-connection status emphasis
 
 Verified stock connection now replaces the Connect action with a green status
