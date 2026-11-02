@@ -11,7 +11,10 @@ Isolated hardware-free browser QA passes: locked/read-only state, initial unknow
 progress, action count advancing1→2, timeout replacing progress with Retry, late
 response ignored and successful retry into live layout. Screenshot:
 build/reports/power/mapping-progress.png (simulated fixture). Both production
-base builds/package audits are being refreshed; owner’s8785 session is untouched.
+base builds and26-link website checks pass; source/history/archive/site audits
+pass for196 curated files. Six existing web tests pass; simulated browser logs
+have no errors. Updated packaged production review UI is at localhost8766;
+owner’s8785 session/frozen snapshot and installed firmware are untouched.
 
 # Alpha.3 power management — remaining hardware gates
 
