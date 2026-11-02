@@ -2,7 +2,7 @@
 import hashlib,json,re,subprocess,sys
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
-CASES=['typing','usb','ble-pair-reconnect','layers-save-power-cycle','fn-media','caps-on-off','backlight','trial-acceptance','retained-image-return','switch-mode-routing','switch-cable-battery','legacy-output-immunity','power-settings-persistence','idle-dim-off','ble-suspend-wake','ble-deep-wake','off-selector-wake','usb-host-suspend','power-current-measurements']
+CASES=['typing','usb','ble-pair-reconnect','layers-save-power-cycle','fn-media','caps-on-off','backlight','trial-acceptance','retained-image-return','switch-mode-routing','switch-cable-battery','legacy-output-immunity','power-settings-persistence','idle-dim-off','ble-suspend-wake','ble-deep-wake','off-selector-wake','usb-host-suspend','power-current-measurements','studio-security-policy','studio-unlock-binding-warnings']
 def validate_metadata(version,tag,release,provenance,commit):
  if provenance.get('dirty',True):raise ValueError('Uncommitted source cannot deploy')
  if release['isDraft']:raise ValueError('Draft release cannot deploy')

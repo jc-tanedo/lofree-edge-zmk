@@ -145,7 +145,7 @@ export function AppHeader(p: AppHeaderProps) {
                 <LockKeyhole size={13} />
                 Locked
               </>
-            ) : readState === "loading" ? "Reading keymap…" : readState === "error" ? "Keymap unavailable" : powerDirty ? "Unsaved power settings" : unsaved ? (
+            ) : readState === "loading" ? "Reading keymap…" : readState === "error" ? "Keymap unavailable" : securityDirty ? "Unsaved security settings" : powerDirty ? "Unsaved power settings" : unsaved ? (
               <>
                 <Circle size={8} />
                 Unsaved changes

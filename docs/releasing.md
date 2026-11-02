@@ -16,3 +16,12 @@ Every release remains used entirely at the user's own risk. Successful testing i
 Before launch, enable Pages via Actions, private vulnerability reporting, and main branch protections requiring CI. Create linked roadmap issues with tools/sync_roadmap_issues.py only after reviewing its dry-run output.
 
 Power-management releases additionally require exact-image evidence for device settings persistence, dim/off timing, connected and deep Bluetooth wake, OFF selector wake, USB host suspend, and measured current. `verify_promotion.py` rejects a release missing any of these markers. No earlier image's wake results or unmeasured battery-life inference satisfies these gates.
+
+## Studio unlock policy gate
+
+For the runtime-policy firmware, exact-image evidence must include default
+locking, confirmed disable/save/reconnect/power-cycle, re-enable/immediate lock
+and physical unlock, plus both missing-unlock-binding warnings. Record
+`hardware:studio-security-policy` and `hardware:studio-unlock-binding-warnings`
+only after those physical/browser checks pass against the matching firmware.
+Compiled tests and simulated-browser checks do not complete these markers.

@@ -48,8 +48,9 @@ def main():
  shutil.copyfile(image,firmware/binary)
  manifest={'format':'lofree-edge-browser-firmware-v1','version':version,'builds':[{'file':binary,'label':'ZMK '+version+' · Experimental BLE + USB Studio','version':version,'board':'lofree_edge','size':len(data),'sha256':sha(image)}]}
  (firmware/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
- for name,doc in [('risk.html','RISK.md'),('roadmap.html','ROADMAP.md')]:
+ for name,doc in [('risk.html','RISK.md'),('roadmap.html','ROADMAP.md'),('security.html','docs/security.md')]:
   text=markdown.markdown((ROOT/doc).read_text(),extensions=['tables'])
+  text=text.replace('href="docs/security.md"','href="security.html"').replace('href="../RISK.md"','href="risk.html"')
   text=text.replace('href="RISK.md"','href="risk.html"').replace('href="ROADMAP.md"','href="roadmap.html"')
   (site/name).write_text('<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Lofree Edge ZMK — '+doc+'</title><link rel="stylesheet" href="edge-design.css"><body class="edge-suite"><edge-risk-notice></edge-risk-notice><main style="max-width:900px;margin:40px auto;padding:0 24px;line-height:1.8"><a href="./">Firmware</a> · <a href="studio/">Studio</a>'+text+'</main><script type="module" src="edge-shell.js"></script></body></html>')
  locks=json.loads((ROOT/'dependencies.lock.json').read_text());license_dir=site/'licenses';license_dir.mkdir()

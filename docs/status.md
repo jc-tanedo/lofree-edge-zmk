@@ -13,7 +13,12 @@ disconnect, reboot persistence, immediate relock, corrupt/future records and
 mapping preservation. Codec and isolated browser disable/cancel/enable/lockout
 warning checks pass; browser logs have no errors. New image not installed or
 hardware-certified. Owner’s accepted145f81d2 image and frozen8785 remain intact.
-Remaining regression, package and exact-image gates are still pending.
+37 Python and60 JavaScript assertions pass. Both site bases pass30 local checks;
+source/history/site/source+website archive audits pass209 curated files. Power
+storage/stack regression and USB SET_IDLE regression pass. Production Studio at
+localhost8766 has the new tab; its original firmware/catalog is preserved.
+Earlier firmware shows an explicit unsupported message (mock checked), and the
+owner’s page was not reloaded. Exact new-image hardware gates are still pending.
 
 # Firmware React migration — UI validation passed
 

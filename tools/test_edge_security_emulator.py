@@ -5,8 +5,20 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 os.environ.setdefault('EDGE_TEST_BUILD','lofree_edge-ble-studio')
 os.environ['EDGE_TEST_SECURITY']='1'
+os.environ['EDGE_TEST_STACKS']='1'
 s=runpy.run_path(str(ROOT/'tools/test_edge_studio_emulator.py'))
 m,u,advance,rpc,pb=(s[k] for k in ('m','u','advance','rpc','pb'))
+import stack_use
+stack_regions=stack_use.stacks(str(ROOT/'firmware/build'/os.environ['EDGE_TEST_BUILD']/'zephyr/zmk.elf'))
+def rpc(request):
+    response=s['rpc'](request)
+    for name,lo,size in stack_regions:
+        memory=m.sram[lo-0x840000+4:lo-0x840000+size]
+        first=next((i for i,b in enumerate(memory) if b!=0xaa),len(memory))
+        spare=size-(len(memory)-first)-4
+        assert spare>=128,(name,spare)
+    return response
+
 def get():
     r=pb.Request();r.core.edge_get_security=True;return rpc(r).core.edge_security
 def set_policy(value,schema=1,status=0):
@@ -93,4 +105,5 @@ for future in (False,True):
     p=get();assert p.require_unlock==1 and p.status==(3 if future else 0)
     if future:assert set_policy(0).status==3
     assert len(s['keymap']().layers)==3
+print('PASS: at least128 bytes observed stack margin through security RPC/fault/reboot tests',flush=True)
 print('PASS: corrupt/future security payload fails closed; future schema cannot be overwritten; mappings retained',flush=True)
