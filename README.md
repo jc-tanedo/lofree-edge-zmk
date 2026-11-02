@@ -54,6 +54,11 @@ Use a desktop browser exposing WebHID for the stock tools and Web Serial for Stu
 
 Studio can edit idle dim/off/Bluetooth sleep timers and relative dim brightness, with settings stored on the keyboard. Each timer supports Never. This work is under validation; use published artifacts until its [exact-image hardware checklist](docs/validation/v0.1.0-alpha.3.md) passes. No battery-life improvement is claimed without measurements. A known [Fn+F12 cold-wake issue](https://github.com/jc-tanedo/lofree-edge-zmk/issues/13) can miss or delay the first volume action after Bluetooth sleep.
 
+The unreleased [Security tab](docs/security.md) beside Power adds a persistent,
+default-on physical-unlock requirement. Disabling it permits Studio software to
+edit without Fn+U. Missing-unlock-binding warnings are included. This requires
+new firmware and separate physical validation; it is not in the released alpha.2.
+
 ![Studio Power settings: idle timers and relative backlight brightness, with the persistent risk warning](docs/images/power-settings.png)
 
 *Interface preview using a simulated connection; this screenshot is not evidence of hardware sleep or current draw.*

@@ -27,7 +27,14 @@ static int load(const char *name, size_t len, settings_read_cb read_cb, void *ar
     if (schema==SCHEMA && value<=1) { require_unlock=value; }
     return 0;
 }
-SETTINGS_STATIC_HANDLER_DEFINE(edge_security,"edge_security",NULL,load,NULL,NULL);
+static int commit(void)
+{
+    /* USB initializes before main() loads settings. Notify an early connected
+     * Studio client when the stored policy makes the effective state unlocked. */
+    if (!require_unlock) { zmk_studio_core_unlock(); }
+    return 0;
+}
+SETTINGS_STATIC_HANDLER_DEFINE(edge_security,"edge_security",NULL,load,commit,NULL);
 static zmk_studio_Response reply(uint32_t status)
 {
     zmk_core_EdgeSecurity s={.schema=SCHEMA,.require_unlock=require_unlock,.status=status};

@@ -206,7 +206,7 @@ export function EdgeSecurity({
             change mappings without a physical unlock, including after
             reconnecting or restarting the keyboard.
           </p>
-          {draft && !hasUnlock && (
+          {dirty && draft && !hasUnlock && (
             <p role="alert" className="edge-inline-error">
               No Unlock Studio binding exists in the current keymap. Enabling
               locking can prevent further editing after this session locks. Add

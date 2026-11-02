@@ -47,6 +47,8 @@ locking; upgrading again reads the saved policy.
 A hash-checked transformation of pinned MIT-licensed Studio core retains upstream
 notifications/authorization and applies the policy in get/set lock-state paths.
 Disabling prevents idle/disconnect relocking; enabling calls upstream lock.
+The settings commit emits an unlock notification when boot loads a disabled
+policy, so a Studio client connected early cannot retain a stale locked view.
 UI saves are confirmed; readback verifies disabling, while enabling returns the
 stored response then requires physical unlock before another secured read.
 
