@@ -6,16 +6,16 @@ def action(name):return 'actions/'+name+'@'+actions[name]['revision']
 setup=f'''      - uses: {action('checkout')}
         with:
           fetch-depth: 0
+      - name: System build tools
+        run: sh tools/ci_prerequisites.sh
+      - name: Free runner disk space
+        run: sh tools/ci_cleanup.sh prepare
       - uses: {action('setup-python')}
         with:
           python-version: '3.12.12'
       - uses: {action('setup-node')}
         with:
           node-version: '22.14.0'
-      - name: System build tools
-        run: sh tools/ci_prerequisites.sh
-      - name: Free runner disk space
-        run: sh tools/ci_cleanup.sh prepare
       - name: Public dependencies
         run: python3 tools/bootstrap.py
       - name: Pinned release compiler

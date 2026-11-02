@@ -11,6 +11,7 @@ if [ "$(id -u)" = 0 ]; then
 else
   elevate() { sudo -n "$@"; }
 fi
+cat /etc/os-release
 command -v apt-get >/dev/null || { echo 'Runner requires Debian/Ubuntu (apt-get).' >&2; exit 1; }
 elevate apt-get update
 elevate env DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
