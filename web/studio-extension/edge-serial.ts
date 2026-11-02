@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
+import {createDiagnostics} from './edge-usb-diagnostics';
 import type {RpcTransport} from '@zmkfirmware/zmk-studio-ts-client/transport/index';
 // Own the port locks so ending an RPC pipeline never closes an already-closed
 // Web Serial stream or abandons the port before releasing its readers/writers.
@@ -42,11 +43,12 @@ export async function connect():Promise<RpcTransport>{
   }
   if(closing)throw Error('Studio left while opening USB.');
  }catch(error){await close(error);throw error;}
+ const diagnostics=createDiagnostics();
  const readable=new ReadableStream<Uint8Array>({
   start(c){control=c;},
-  async pull(c){try{const read=pendingRead||reader.read();pendingRead=undefined;const result=await read;if(closing)return;if(result.done){readClosed=true;c.close();void close().catch(()=>{});}else c.enqueue(result.value);}catch(error){if(!closing){readClosed=true;c.error(error);void close(error).catch(()=>{});}}},
+  async pull(c){try{const read=pendingRead||reader.read();pendingRead=undefined;const result=await read;if(closing)return;if(result.done){readClosed=true;c.close();void close().catch(()=>{});}else {diagnostics.read(result.value);c.enqueue(result.value);}}catch(error){if(!closing){readClosed=true;c.error(error);void close(error).catch(()=>{});}}},
   cancel(reason){readClosed=true;return close(reason);}
  });
- const writable=new WritableStream<Uint8Array>({write:chunk=>writer.write(chunk),close:()=>close(undefined,true),abort:reason=>close(reason)});
+ const writable=new WritableStream<Uint8Array>({write:async chunk=>{diagnostics.write(chunk);await writer.write(chunk);diagnostics.written();},close:()=>close(undefined,true),abort:reason=>close(reason)});
  const info=port.getInfo();return {label:`${info.usbVendorId||0}:${info.usbProductId||0}`,abortController,readable,writable};
 }

@@ -1,3 +1,4 @@
+import {usbReadDiagnostics} from "./edge-usb-diagnostics";
 import { useContext, useEffect, useState } from "react";
 import { call_rpc } from "@zmkfirmware/zmk-studio-ts-client";
 import type { Keymap, PhysicalLayout } from "@zmkfirmware/zmk-studio-ts-client/keymap";
@@ -33,7 +34,7 @@ export function useEdgeKeymapData() {
     const timer = window.setTimeout(() => {
       active = false;
       void publish("edge.keymap.read-state", "error");
-      setLoadingError(`Reading the keyboard timed out while reading ${phase}. Last read progress was ${((Date.now() - lastProgressAt) / 1000).toFixed(1)} seconds ago (${((Date.now() - readStartedAt) / 1000).toFixed(1)} seconds total). Check the USB connection, then retry.`);
+      setLoadingError(`Reading the keyboard timed out while reading ${phase}. Last read progress was ${((Date.now() - lastProgressAt) / 1000).toFixed(1)} seconds ago (${((Date.now() - readStartedAt) / 1000).toFixed(1)} seconds total). Check the USB connection, then retry. ${usbReadDiagnostics()}`);
     }, 15000);
     async function read() {
       try {

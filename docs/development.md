@@ -171,3 +171,10 @@ clean input, a stale response, and a delayed partial frame, plus stream cleanup.
 These tests use synthetic serial ports. The owner's navigation/reconnect test is
 still required; read timeouts now identify mapping/layout/action-list/action-detail
 phase without including key values or device identifiers.
+
+For a later-stage read stall, `edge-usb-diagnostics.ts` reports session-only
+protocol metadata in the timeout error. The missing-response real-client fixture
+checks request/response distinction. No diagnostic history is persisted, and
+summaries contain no request parameters, response values, names or hardware IDs.
+The owner's0/13 action-detail timeout on8796 remains unresolved pending this
+wire-level metadata; the stale-input regression must not be called its resolution.

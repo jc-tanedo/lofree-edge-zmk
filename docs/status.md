@@ -1,3 +1,22 @@
+# Owner reconnect trace — first action detail stalls
+
+Owner retest on8796 still failed: supported actions0/13,13.2s since last progress,
+15.0s total; Retry worked. Thus stale-input handling does not resolve the reported
+later-stage stall. It is not just an overall deadline expiring during progress.
+The exact real-device stall has not been reproduced offline.
+
+A session-only USB diagnostic now reports the last framed request/response method,
+request sequence number, elapsed time, write completion, and received byte count
+in the existing error. It retains no bindings, keyboard names, typed keys, device
+identifiers, or logs in browser storage. Input/output bytes are parsed only for
+protocol metadata, with bounded frame buffers. A real-client missing-response
+fixture verifies that the report distinguishes the sent behavior-detail request
+from the last successful map response. This is instrumentation, not a claimed fix.
+Diagnostic preview prepared on8797; owner pages and firmware remain unchanged.
+Six serial startup/reconnect/diagnostic cases and three lifecycle cases pass.
+Production TypeScript, both30-target website checks and the230-file source/history/
+website audit pass. Browser check confirms the disconnected screen and risk notice.
+
 # Reconnect after leaving drafts — stale CDC input regression
 
 Owner confirms8794 draft edits no longer affect typing and Save applies correctly.
