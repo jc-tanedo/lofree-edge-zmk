@@ -26,6 +26,9 @@ export function mountFirmwarePanel({ begin, end, disconnectExisting, onConnectio
     byId('firmware-install').disabled = running || !image || !connection?.device.opened;
     const connected = verified && connection?.device.opened;
     onConnectionChange(Boolean(connected));
+    byId('firmware-connect').hidden = Boolean(connected);
+    byId('firmware-connection-indicator').hidden = !connected;
+    byId('firmware-connection-step').classList.toggle('is-connected', Boolean(connected));
     byId('firmware-connect').textContent = connected ? '✓ Connected' : 'Connect stock update interface';
     byId('firmware-connect').classList.toggle('connected', Boolean(connected));
     byId('firmware-connect').disabled = running || connected || !navigator.hid || !window.isSecureContext;

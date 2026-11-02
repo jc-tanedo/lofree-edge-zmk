@@ -1,3 +1,12 @@
+# Firmware stock-connection status emphasis
+
+Verified stock connection now replaces the Connect action with a green status
+panel: circled check, prominent “Connected”, and “Stock keyboard verified”.
+Disconnect restores the action and header state. It appears only after interface
+verification. Isolated hardware-free browser visual/disconnect checks pass;
+screenshot build/reports/power/connected-status-card.png. Six web tests pass.
+Owner’s live page is not reloaded and no device commands are sent.
+
 # Studio mapping-read progress and risk banner
 
 Shared Firmware/Studio banner uses “EXPERIMENTAL — USE AT YOUR OWN RISK”.

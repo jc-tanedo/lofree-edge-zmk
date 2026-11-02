@@ -47,10 +47,11 @@
             <select id="firmware-image"><option value="">Choose firmware</option></select>
             <details class="build-details"><summary>Build details &amp; download</summary><p id="firmware-details" class="hint firmware-digest"></p><a id="firmware-download" hidden download>Download selected image ↓</a></details>
           </section>
-          <section class="installer-step" aria-labelledby="connect-update-title">
+          <section id="firmware-connection-step" class="installer-step" aria-labelledby="connect-update-title">
             <p class="step-number">02 / CONNECT</p><h3 id="connect-update-title">Connect in wired mode</h3>
             <p>Using ZMK? Hold <strong>Fn + Space</strong> for 3 seconds, then release to return to stock first.</p>
             <button id="firmware-connect" type="button" class="secondary">Connect stock update interface</button>
+            <div id="firmware-connection-indicator" class="firmware-connection-indicator" role="status" hidden><span class="firmware-connection-check" aria-hidden="true">✓</span><div><strong>Connected</strong><span>Stock keyboard verified</span></div></div>
           </section>
           <section class="installer-step" aria-labelledby="install-build-title">
             <p class="step-number">03 / INSTALL</p><h3 id="install-build-title">Install the build</h3>
