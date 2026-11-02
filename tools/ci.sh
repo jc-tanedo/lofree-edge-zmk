@@ -12,6 +12,7 @@ sh tools/test_edge_power_policy.sh
 node --test web/tests/*.test.js
 PYTHONPATH=src .venv/bin/python -m unittest discover -s tests
 sh tools/build_edge_zmk.sh --ble-studio
+EDGE_TEST_BUILD=lofree_edge-ble-studio .venv/bin/python tools/test_edge_usb_idle_emulator.py
 TC32EMU_SUSPEND_RF=lost EDGE_TEST_BUILD=lofree_edge-ble-studio EDGE_TEST_POWER_SLEEP=1 .venv/bin/python tools/test_edge_ble_delayed_dma.py
 EDGE_TEST_BUILD=lofree_edge-ble-studio .venv/bin/python tools/test_edge_power_states_emulator.py
 EDGE_TEST_BUILD=lofree_edge-ble-studio .venv/bin/python tools/test_edge_bt_deep_entry.py

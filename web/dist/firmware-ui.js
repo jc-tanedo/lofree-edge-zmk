@@ -5,6 +5,7 @@ import { protectFirmwareTransfer, readFirmwareAttempt, saveFirmwareAttempt } fro
 export function mountFirmwarePanel({ begin, end, disconnectExisting }) {
   const byId = id => document.getElementById(id);
   let connection = null;
+  let verified = false;
   let approved = null;
   let image = null;
   let running = false;
@@ -23,7 +24,10 @@ export function mountFirmwarePanel({ begin, end, disconnectExisting }) {
     document.querySelectorAll("[data-workspace-tab]").forEach(tab => { tab.disabled = running; });
     document.querySelector('edge-navigation').inert = running;
     byId('firmware-install').disabled = running || !image || !connection?.device.opened;
-    byId('firmware-connect').disabled = running || !navigator.hid || !window.isSecureContext;
+    const connected = verified && connection?.device.opened;
+    byId('firmware-connect').textContent = connected ? '✓ Connected' : 'Connect stock update interface';
+    byId('firmware-connect').classList.toggle('connected', Boolean(connected));
+    byId('firmware-connect').disabled = running || connected || !navigator.hid || !window.isSecureContext;
     byId('firmware-image').disabled = running;
   };
   const loadImage = async () => {
@@ -44,7 +48,7 @@ export function mountFirmwarePanel({ begin, end, disconnectExisting }) {
       byId('firmware-details').textContent = `${build.size.toLocaleString()} bytes · SHA-256 ${build.sha256}`;
       byId('firmware-download').href = `firmware/${build.file}`;
       byId('firmware-download').hidden = false;
-      status('Image verified. Connect the stock update interface.');
+      status(verified && connection?.device.opened ? 'Image verified. Stock Edge connected; ready to install.' : 'Image verified. Connect the stock update interface.');
     } catch (error) { status(error.message, true); }
     render();
   };
@@ -69,16 +73,19 @@ export function mountFirmwarePanel({ begin, end, disconnectExisting }) {
   byId('firmware-connect').addEventListener('click', async () => {
     if (!begin()) return;
     running = true;
+    verified = false;
     render();
     try {
       await connection?.close();
       await disconnectExisting();
       connection = await EdgeConnection.request(navigator.hid);
       await connection.verifyForFirmwareUpdate();
+      verified = true;
       status('Stock Edge verified. Ready to install the selected firmware.');
     } catch (error) {
       await connection?.close().catch(() => {});
       connection = null;
+      verified = false;
       status(error.message, true);
     } finally { running = false; end(); render(); }
   });
@@ -131,6 +138,7 @@ export function mountFirmwarePanel({ begin, end, disconnectExisting }) {
       unprotect();
       await current.close().catch(() => {});
       connection = null;
+      verified = false;
       running = false;
       end();
       render();
@@ -139,6 +147,7 @@ export function mountFirmwarePanel({ begin, end, disconnectExisting }) {
   navigator.hid?.addEventListener('disconnect', event => {
     if (connection?.device !== event.device) return;
     connection = null;
+    verified = false;
     if (!running) status('Update interface disconnected. Reconnect stock firmware to install.');
     render();
   });

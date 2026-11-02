@@ -57,3 +57,15 @@ weak-pull problem. The corrected deep-only setup selects1M row pull-ups
 The compiled-entry regression fails on the initial binary and passes with the
 correction. No actual current or electrical wake is inferred from that model.
 OFF selector wake and Never reconnect controls worked on the initial image.
+
+## USB startup investigation
+
+The corrected deep-wake image can still have roughly five-second Linux HID
+initialization waits. A payload-free host control capture identifies zero-duration,
+report-zero SET_IDLE requests cancelled after approximately5.25s and5.03s for
+the keyboard/vendor HID interfaces. The pinned HID class rejects this request
+when SOF support is disabled. A reviewed source transformation now accepts this
+change-only mode without enabling periodic reports; nonzero idle remains
+unsupported. The compiled model regression observes the prior rejection and
+the new acceptance, but does not establish silicon stall behavior or eliminate
+the physical delay. The new image requires independent hardware validation.

@@ -1,71 +1,42 @@
-# Corrected deep-key wake candidate — preflight
-
-The initial alpha.3 image remains installed/accepted with Bluetooth sleep set to
-Never. Its [hardware record](validation/v0.1.0-alpha.3-initial.md) is archived.
-Never reconnect and OFF→BT/OFF→ON controls passed, narrowing the failed key wake
-to the deep-entry path. A compiled regression found10k row pull-ups overpowering
-100k column pull-downs (pressed row approximately91% VDD). The new source uses1M
-row pull-ups only for deep entry (approximately9% VDD). The regression passes;
-full clean preflight and fresh exact-SHA hardware tests are pending. The model
-still does not emulate electrical deep wake.
-
-[Fn+F12 cold wake](https://github.com/jc-tanedo/lofree-edge-zmk/issues/13) remains
-an open, lower-priority limitation. No fix or passing media-wake claim is made.
-No publication/deployment is authorized by these test results.
-
-## Initial-candidate investigation
-
-### Initial alpha.3 state
+# Alpha.3 power management — hardware validation in progress
 
 Branch `firmware/power-management`, draft [PR #12](https://github.com/jc-tanedo/lofree-edge-zmk/pull/12).
-Version `0.1.0-alpha.3` is unreleased. Firmware candidate SHA-256
-`3b233eba7abec417b946df30cb474f34de15d3ff82c2b9eb3a48a36a868062fd`
-was installed by the owner and explicitly accepted for continued hardware testing.
-Flash self-test and separate readback passed: confirmed/count 0, retained stock
-integrity valid. Acceptance is not release approval.
+Installed and accepted corrected candidate OTA SHA-256:
+`46cb8d6ca7d1c886a37d456c84ae4c1403f0cf23dc39b9901de45131d6e14f53`.
+Owner-authorized flash self-test and separate accepted/count0 readback passed.
 
-**Deep-wake blocker:** after host Bluetooth was off for90s, re-enabling it and
-pressing multiple keys did not reconnect. USB recovery via ON is being checked.
-Do not publish this candidate or mark deep wake passed.
+Owner checks pass on that exact image: ON typing/media/Caps/backlight/Studio,
+saved maps/layers, 2s/4s/10s/20% settings and dim/off/restore; manual stock
+return/reinstall; connected idle first-key wake and disconnected deep wake on
+USB power and battery; cable insertion respecting BT-only policy; OFF inactivity
+and selector wake with/without USB; full-cycle saved settings/maps/bonds.
+Disconnected deep wake takes a few seconds and consumes the wake key without
+re-pairing. See [installed-image hardware record](validation/v0.1.0-alpha.3-deep-wake.md).
 
-**Hardware validation is incomplete:** the owner reports about one second of
-Bluetooth wake delay. A first-key loss was initially reported, but a later
-single-tap capture produced one letter and two notifications, consistent with
-press/release. That sample does not reproduce first-key loss. Its filter omitted
-timing headers, so it cannot establish latency or link state. A timed warm/idle comparison delivered both taps; its cue-to-report delays
-include human reaction and do not measure firmware latency. Retained sleep is
-expected to keep Bluetooth connected. The subsequent owner check passed:
-Caps ON became dark after idle, and one A promptly restored the indicator and
-one uppercase letter. This supports the scan-sleep/wake path, not measured
-current draw. Earlier first-key loss was not reproduced in these later checks.
-Manual retained-stock return was verified by stock USB identity; the owner
-reinstalled the same candidate and authorized its self-test/acceptance.
-Do not publish before the remaining physical gates are resolved. Agent-side
-Bluetooth queries expose no named Edge and cannot establish host connection state.
+## USB startup delay — candidate fix, not installed
 
-Owner-confirmed ON checks pass: ordinary typing, media, Caps indicator,
-backlight, saved mappings/layers, Power defaults/read/save and configured
-2s/4s/10s/20% dim/off/restore, held-key inhibition and manual-off preservation.
-Power now uses the existing Studio tab bar. Its component stays mounted across
-tab changes so drafts and navigation protection remain intact. Both production
-bases compile; isolated browser tab/draft/guard checks pass. The frozen 8781
-hardware-test installer remains unchanged.
+Owner reported OFF→ON typing/Studio delay. Two cue-based captures measured
+USB visibility at6.854s/2.504s (human reaction included), with typing estimates
+4s/5s. Kernel records show approximately5s HID attachment waits. A filtered
+USB control capture identified SET_IDLE(duration0/report0) on interfaces2/3
+cancelled after5245.682ms/5026.347ms. Private raw metadata stays outside source.
 
-Full local CI and [GitHub CI](https://github.com/jc-tanedo/lofree-edge-zmk/actions/runs/41305111518)
-passed for firmware commit `113357f9f9565ffa35fd0fb6f3ddf6282ef9cd8d`:
-secured settings, failed writes/corrupt/future schemas, PWM/manual-off/held keys,
-persistence, encrypted retained suspend with simulated RF loss, entry-race keys,
-USB-host suspend/resume, BT/OFF deep-entry setup, boot guard/import/diagnostic
-checks, both website bases and independent source/history/archive/site audits.
-Deep wake and current are not modeled. These green checks do not override the
-physical first-key failure. Studio has 332 bytes spare at its observed first-boot
-peak with a 2048-byte allocation; static RAM is 22316/22528, behavior queue 16,
-profiles/layers three. Earlier trimmed stack allocations were rejected by tests.
+Pinned Zephyr rejects SET_IDLE without SOF. New reviewed source staging accepts
+only duration0/report0 change-only mode; periodic idle remains unsupported.
+Compiled regression fails on installed image (STALL), passes after patch.
+The model does not reproduce silicon stall timing. New local build OTA SHA:
+`145f81d269f030e2338f61662f1f8ceeaf1d5499d3f2c34791c6d88ab404131e`
+(121044 bytes, static RAM22316/22528). Broader preflight and new exact-image
+hardware gates remain required. Frozen8783 installer and installed firmware
+are unchanged. No further flash/acceptance authorized yet.
 
-The owner has no current-measurement equipment. Draw, battery improvements and
-the current-measurement release gate remain unverified. See
-[power management](power-management.md) and the [hardware record](validation/v0.1.0-alpha.3.md).
-No release, Pages deployment or acceptance has occurred.
+## Remaining limits
+
+[Fn+F12 cold wake](https://github.com/jc-tanedo/lofree-edge-zmk/issues/13) remains
+open and lower priority. Physical USB-host suspend, broader matrix/modifier
+coverage and remaining checklist cases are pending. No current-measurement
+hardware is available; no power-draw or battery-life improvement is established.
+No release/tag/merge/Pages publication is authorized by these checks.
 
 # Released alpha.2 baseline
 
@@ -103,3 +74,20 @@ Version tags create drafts; publication requires artifact and hardware review. P
 the already-built matching website archive. Vendor inputs remain outside this
 repository; clean public builds require no proprietary files. Preserve upstream
 notices and conspicuous own-risk messaging.
+
+OFF→ON clarification: owner estimates 5–10 seconds, with USB typing and Studio
+returning together. Delay remains unresolved. A private read-only cue/USB
+enumeration probe is prepared to distinguish host enumeration timing from later
+HID readiness; it has not yet reproduced or diagnosed this delay.
+
+Timing probe: USB enumeration 6.854s after the ON cue (human reaction included),
+owner typing estimate 4s. This refines the earlier 5–10s estimate but does not
+establish firmware boot latency or the cause. A read-only uptime query was added
+to the private probe to separate pre-boot delay from later USB readiness.
+
+Second timing capture: USB visible at 2.504s after cue, owner typing estimate
+5s; immediate info returned no status (interface not yet ready). Kernel timing
+shows descriptors→keyboard HID attachment ranging about0.11–5.62s, followed
+by vendor HID attachment roughly5.04–5.18s later. This supports investigating
+USB HID control-request initialization; it does not establish the exact failing
+request or root cause. No firmware fix has been made for startup delay.

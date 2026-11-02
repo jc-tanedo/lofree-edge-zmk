@@ -18,7 +18,7 @@ The first prerelease now has clean builds, package/license audits, hosted-path v
 
 **in progress** · Power and mode handling
 
-Unreleased alpha.3 has device Power settings and owner-tested ON lighting and ordinary battery wake; deep/OFF/host-suspend, final persistence and current validation remain incomplete.
+Unreleased alpha.3 corrected image passes owner ON lighting, battery connected/deep wake, OFF selector wake and persistence checks. USB startup SET_IDLE timeout has a source fix awaiting hardware validation; host suspend, broader row coverage and measured current remain incomplete. Fn cold wake is tracked separately.
 
 **Acceptance:** Measure wired/BLE idle current, validate wake keys and reconnect, and demonstrate no lost saved mappings across repeated sleep/wake cycles.
 
