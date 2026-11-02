@@ -155,7 +155,7 @@ export function EdgeWorkspace(p: Props) {
     if (canAssign && supportsBinding(action.binding, p.behaviors, layers))
       void run(
         () => p.onBinding(action.binding),
-        `${action.label} assigned. Save to keep your changes.`,
+        `${action.label} drafted. Save to apply your changes.`,
       );
   }
   function available(actions: Action[]) {
@@ -373,7 +373,7 @@ export function EdgeWorkspace(p: Props) {
       {map && !hasUnlock && lockingEnabled !== false && <div role="alert" className="edge-inline-error edge-unlock-warning">
         <strong>No Unlock Studio binding in this keymap.</strong>{" "}
         {lockingEnabled === true ? "Locking is enabled." : "Locking may be enabled; its current policy is unavailable."}{" "}
-        Saving is blocked while locking is enabled or its policy is unavailable. Restore an accessible Unlock Studio binding before disconnecting or allowing this session to lock. To save a keymap without one, disable locking in Security before editing. Recovery is not guaranteed.
+        Saving is blocked while locking is enabled or its policy is unavailable. Add an accessible Unlock Studio binding to this draft before saving. To save a keymap without one, disable locking in Security before editing. Recovery is not guaranteed.
       </div>}
       <section className="edge-action-dock" aria-label="Key actions">
         <div className="edge-dock-toolbar">
@@ -588,9 +588,9 @@ export function EdgeWorkspace(p: Props) {
           )}
           <p role="status" className="edge-action-status">
             {busy
-              ? "Updating keyboard…"
+              ? "Updating draft…"
               : notice ||
-                "Edits apply immediately. Save writes changes to device storage."}
+                "Drafts do not affect typing. Save applies them to the keyboard and persists them."}
           </p>
         </div>
         <div

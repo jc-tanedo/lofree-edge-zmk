@@ -34,6 +34,16 @@ A default-on, persistent requirement is implemented with a Security tab beside P
 
 [Tracking issue](https://github.com/jc-tanedo/lofree-edge-zmk/pull/12)
 
+## Draft-only keymap editing
+
+**in progress** · Studio settings
+
+Key and layer edits, imports, Undo/Redo and Discard now stay in temporary browser drafts. Save validates a fresh device baseline, rejects conflicts, applies/persists and verifies. A real draft count replaces the outline icon. Unit, browser and compiled-firmware checks pass; owner validation is pending. No firmware update required.
+
+**Acceptance:** No keymap writes before explicit Save; accurate counts and Undo/Redo; draft-only import/discard; guarded saves and conflict handling; reliable reconnect and navigation; hardware typing changes only after Save.
+
+Tracking issue will be linked after the public repository is created.
+
 ## Fn/media after connected sleep
 
 **needs investigation** · Power and mode handling

@@ -1,5 +1,5 @@
 // Browser-only test fixture. Staged into studio-qa; never in the production build.
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type {
   RpcConnection,
   Request,
@@ -19,6 +19,9 @@ let pauseDetails = false;
 const pendingDetails: Array<() => void> = [];
 const clone = <T,>(v: T): T => structuredClone(v);
 export function PreviewControls() {
+  const [rpcNames,setRpcNames]=useState<string[]>([]);
+  useEffect(()=>{const receive=(event:Event)=>setRpcNames(names=>[...names,(event as CustomEvent<string>).detail]);window.addEventListener('edge-preview-rpc',receive);return()=>window.removeEventListener('edge-preview-rpc',receive);},[]);
+  const writes=rpcNames.filter(n=>['setLayerBinding','setLayerProps','addLayer','removeLayer','restoreLayer','moveLayer','saveChanges','discardChanges'].includes(n)).length;
   const [isLocked, setLocked] = useState(locked);
   const [paused, setPaused] = useState(false);
   const [pausedPower,setPausedPower]=useState(false);
@@ -51,7 +54,7 @@ export function PreviewControls() {
       <button onClick={()=>{failPower=true;}}>Fail next power read</button>
       <button onClick={()=>{legacyPower=!legacyPower;setLegacy(legacyPower);}}>{legacy ? "Enable power support" : "Simulate old firmware"}</button>
       <button onClick={()=>{rejectPower=true;}}>Reject next power save</button>
-      <strong>UI PREVIEW — no keyboard connection</strong>
+      <strong>UI PREVIEW — no keyboard connection</strong><output id="edge-qa-writes">Keymap writes: {writes} · Saves: {rpcNames.filter(n=>n==="saveChanges").length}</output>
       <button
         onClick={() => {
           locked = !locked;
@@ -278,6 +281,7 @@ export function create_rpc_connection({ signal }: { signal?: AbortSignal } = {})
     }),
     request_writable: new WritableStream({
       write(r) {
+        const name=Object.keys(r.keymap||r.core||r.behaviors||{})[0];window.dispatchEvent(new CustomEvent("edge-preview-rpc",{detail:name}));
         const reply = () => responses.enqueue({ requestId: r.requestId, ...handle(r) });
         if ((pauseReads && r.keymap?.getKeymap) || (pausePower && (r.core as any)?.edgeGetPower)) pendingReads.push(reply);
         else if (pauseDetails && r.behaviors?.getBehaviorDetails) pendingDetails.push(reply);

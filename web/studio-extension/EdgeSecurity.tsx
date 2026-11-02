@@ -6,6 +6,7 @@ import { ConnectionContext } from "./rpc/ConnectionContext";
 import { LockStateContext } from "./rpc/LockStateContext";
 import { useConnectedDeviceData } from "./rpc/useConnectedDeviceData";
 import { assertUnlockSaveAllowed } from "./edge-export/unlock-guard.js";
+import { useKeymapDraft } from "./EdgeDraft";
 import { securityRpc } from "./edge-security-rpc";
 import { usePub, useSub } from "./usePubSub";
 
@@ -18,6 +19,7 @@ export function EdgeSecurity({
   busy: boolean;
   hasUnlock: boolean;
 }) {
+  const keymapDraft = useKeymapDraft();
   const { conn } = useContext(ConnectionContext),
     lock = useContext(LockStateContext),
     publish = usePub();
@@ -107,7 +109,7 @@ export function EdgeSecurity({
       busy ||
       state !== "ready" ||
       !dirty ||
-      unsaved !== false ||
+      (unsaved !== false || keymapDraft.count > 0) ||
       cannotEnable
     )
       return;
@@ -215,7 +217,7 @@ export function EdgeSecurity({
               No Unlock Studio binding exists in the current keymap. Enabling locking is blocked. Add an accessible unlock binding first.
             </p>
           )}
-          {unsaved !== false && (
+          {(unsaved !== false || keymapDraft.count > 0) && (
             <p role="status">
               Save or discard mapping changes before changing security settings.
             </p>
@@ -230,7 +232,7 @@ export function EdgeSecurity({
             </button>
             <button
               className="edge-button edge-button-primary"
-              disabled={!dirty || unsaved !== false || cannotEnable}
+              disabled={!dirty || (unsaved !== false || keymapDraft.count > 0) || cannotEnable}
               onClick={() => setConfirm(true)}
             >
               Save security settings
@@ -268,7 +270,7 @@ export function EdgeSecurity({
           </button>
           <button
             className="edge-button edge-button-primary"
-            disabled={!ready || busy || state !== "ready" || unsaved !== false || cannotEnable}
+            disabled={!ready || busy || state !== "ready" || (unsaved !== false || keymapDraft.count > 0) || cannotEnable}
             onClick={save}
           >
             {draft ? "Enable and lock" : "Disable unlock requirement"}

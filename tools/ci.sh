@@ -9,6 +9,7 @@ export PATH="$LLVM_TOOLCHAIN_PATH/bin:$PATH"
 python3 tools/sync_version.py
 python3 tools/render_roadmap.py
 sh tools/test_edge_power_policy.sh
+sh tools/test_edge_studio_client.sh
 node --test web/tests/*.test.js
 PYTHONPATH=src .venv/bin/python -m unittest discover -s tests
 sh tools/build_edge_zmk.sh --ble-studio
@@ -21,6 +22,7 @@ EDGE_TEST_BUILD=lofree_edge-ble-studio .venv/bin/python tools/test_edge_bt_deep_
 EDGE_TEST_BUILD=lofree_edge-ble-studio .venv/bin/python tools/test_edge_power_stacks_emulator.py
 EDGE_TEST_BUILD=lofree_edge-ble-studio .venv/bin/python tools/test_edge_boot_emulator.py
 EDGE_TEST_BUILD=lofree_edge-ble-studio .venv/bin/python tools/test_edge_import_emulator.py
+EDGE_TEST_BUILD=lofree_edge-ble-studio .venv/bin/python tools/test_edge_draft_emulator.py
 EDGE_SWITCH_DIAGNOSTIC=1 sh tools/build_edge_zmk.sh --ble-studio
 EDGE_TEST_BUILD=lofree_edge-ble-studio-switch-diagnostic .venv/bin/python tools/test_edge_switch_inputs_emulator.py
 EDGE_SITE_BASE='' sh tools/build_edge_studio_ui.sh

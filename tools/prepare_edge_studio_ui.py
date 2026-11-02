@@ -15,62 +15,40 @@ shutil.copyfile(ROOT/'web/studio-extension/KeymapExport.tsx', stage/'src/KeymapE
 shutil.copyfile(ROOT/'web/studio-extension/KeymapImport.tsx', stage/'src/KeymapImport.tsx')
 extension = stage/'src/edge-export'
 extension.mkdir(exist_ok=True)
-for name in ('keymap-export.js','keymap-export-symbols.js','keymap-import.js','layout.js','studio-actions.js','unlock-guard.js'):
+for name in ('keymap-export.js','keymap-export-symbols.js','keymap-import.js','layout.js','studio-actions.js','unlock-guard.js','keymap-draft.js'):
     shutil.copyfile(ROOT/'web/dist'/name, extension/name)
 shutil.copyfile(ROOT/'web/studio-extension/keymap-export.d.ts',extension/'keymap-export.d.ts')
 shutil.copyfile(ROOT/'web/studio-extension/keymap-import.d.ts',extension/'keymap-import.d.ts')
 shutil.copyfile(ROOT/'web/studio-extension/unlock-guard.d.ts',extension/'unlock-guard.d.ts')
+shutil.copyfile(ROOT/'web/studio-extension/keymap-draft.d.ts',extension/'keymap-draft.d.ts')
 shutil.copyfile(ROOT/'web/studio-extension/edge-actions.d.ts',extension/'studio-actions.d.ts')
-keyboard = stage/'src/keyboard/Keyboard.tsx'
-text = keyboard.read_text()
-text = 'import { EdgeWorkspace } from "../EdgeWorkspace";\nimport { useSub } from "../usePubSub";\n' + text
-# Replace the unbounded independent reads with one validated, bounded snapshot.
-a = text.index('function useBehaviors()')
-b = text.index('export default function Keyboard()', a)
-text = text[:a] + text[b:]
-a = text.index('  const [\n    layouts,', text.index('export default function Keyboard()'))
-b = text.index('  const [keymapScale', a)
-text = text[:a] + '  const { layouts, selectedPhysicalLayoutIndex, setSelectedPhysicalLayoutIndex, keymap, setKeymap, behaviors, loadingError, readProgress, retry } = useEdgeKeymapData();\n\n' + text[b:]
-text = text.replace('  const behaviors = useBehaviors();', '')
-text = 'import { useEdgeKeymapData } from "../useEdgeKeymapData";\n' + text
-text = text.replace('import React, {', 'import {').replace('  SetStateAction,\n', '').replace('  PhysicalLayout,\n', '')
-for obsolete in ['import { Request } from "@zmkfirmware/zmk-studio-ts-client";', 'import { useConnectedDeviceData } from "../rpc/useConnectedDeviceData";', 'import { LockStateContext } from "../rpc/LockStateContext";', 'import { LockState } from "@zmkfirmware/zmk-studio-ts-client/core";', 'import type { GetBehaviorDetailsResponse } from "@zmkfirmware/zmk-studio-ts-client/behaviors";', 'type BehaviorMap = Record<number, GetBehaviorDetailsResponse>;']:
-    text = text.replace(obsolete, '')
-text = text.replace('selectedPhysicalLayoutIndex, setSelectedPhysicalLayoutIndex, keymap', 'selectedPhysicalLayoutIndex, keymap')
-a = text.index('  useEffect(() => {\n    async function performSetRequest()')
-b = text.index('  let doSelectPhysicalLayout', a)
-text = text[:a] + text[b:]
-
-
-for line in ('import { LayerPicker } from "./LayerPicker";','import { PhysicalLayoutPicker } from "./PhysicalLayoutPicker";','import { Keymap as KeymapComp } from "./Keymap";','import { BehaviorBindingPicker } from "../behaviors/BehaviorBindingPicker";','import { deserializeLayoutZoom, LayoutZoom } from "./PhysicalLayout";','import { useLocalStorageState } from "../misc/useLocalStorageState";'):
-    text = text.replace(line,'')
-a = text.index('  const [keymapScale, setKeymapScale]')
-b = text.index('  const [selectedLayerIndex',a)
-text = text[:a]+'  useSub("edge.keymap.imported", (fresh: Keymap) => setKeymap(fresh));\n\n'+text[b:]
-a = text.index('  let doSelectPhysicalLayout')
-b = text.index('  let doUpdateBinding',a)
-text = text[:a]+text[b:]
-a = text.index('  let selectedBinding = useMemo')
-b = text.index('  const moveLayer',a)
-text = text[:a]+text[b:]
-text = text.replace('  useMemo,','')
-text = text.replace('    setSelectedPhysicalLayoutIndex,\n  ] = useLayouts();','    _setSelectedPhysicalLayoutIndex,\n  ] = useLayouts();')
-text = text.replace('      undoRedo?.(', '      return undoRedo?.(').replace('    undoRedo?.(', '    return undoRedo?.(')
-text = text.replace('console.error("Failed to set binding", resp.keymap?.setLayerBinding);','throw new Error("The keyboard refused this key assignment.");')
-text = text.replace('          } else {\n          }','          } else {\n            throw new Error("The keyboard refused to undo this assignment.");\n          }')
-text = text.replace('console.error("Error moving", resp);','throw new Error("The keyboard refused the layer move.");')
-a = text.index('  return (\n    <div className="grid grid-cols-[auto_1fr]')
-text = text[:a]+'  return <EdgeWorkspace keymap={keymap} layout={layouts?.[selectedPhysicalLayoutIndex]} behaviors={behaviors} selectedLayerIndex={selectedLayerIndex} selectedKeyPosition={selectedKeyPosition} onLayer={setSelectedLayerIndex} onKey={setSelectedKeyPosition} onBinding={doUpdateBinding} onAdd={addLayer} onRemove={removeLayer} onMove={moveLayer} onRename={changeLayerName} loadingError={loadingError} readProgress={readProgress} onRetry={retry}/>;\n}\n'
-keyboard.write_text(text)
+shutil.copyfile(ROOT/'web/studio-extension/EdgeKeyboard.tsx',stage/'src/EdgeKeyboard.tsx')
 app = stage/'src/App.tsx'
-text = app.read_text()
-text = 'import { assertUnlockSaveAllowed } from "./edge-export/unlock-guard.js";\nimport { securityRpc } from "./edge-security-rpc";\n' + text
-anchor = '      let resp = await call_rpc(conn.conn, { keymap: { saveChanges: true } });'
-assert text.count(anchor)==1
-text = text.replace(anchor, '      await assertUnlockSaveAllowed(r => call_rpc(conn.conn!, r), async () => (await securityRpc(conn.conn!)).requireUnlock !== 0);\n'+anchor)
+text = app.read_text().replace('from "@zmkfirmware/zmk-studio-ts-client/transport/serial";', 'from "./edge-serial";')
+text = 'import { EdgeDraftProvider, useKeymapDraft } from "./EdgeDraft";\nimport { securityRpc } from "./edge-security-rpc";\n' + text
+text = text.replace('import Keyboard from "./keyboard/Keyboard";', 'import Keyboard from "./EdgeKeyboard";')
+text = text.replace('if (!conn) {', 'if (!conn.conn) {')
+text = text.replace('      const ac = new AbortController();', '      setLockState(LockState.ZMK_STUDIO_CORE_LOCK_STATE_LOCKED);\n      const ac = new AbortController();')
+text = text.replace('function App() {', 'function App() {\n  const draft = useKeymapDraft(), publish = usePub();')
+a=text.index('  const save = useCallback(');b=text.index('  const resetSettings = useCallback(',a)
+text=text[:a]+'''  const save = useCallback(async () => {
+    if (!conn.conn) return;
+    const actual = await draft.store.save(r => call_rpc(conn.conn!, r), async () => (await securityRpc(conn.conn!)).requireUnlock !== 0);
+    await publish("edge.keymap.imported", actual);
+  }, [conn, draft.store]);
+  const discard = useCallback(async () => {
+    if (!conn.conn) { draft.store.discard(); return; }
+    const actual = (await call_rpc(conn.conn, {keymap:{getKeymap:true}})).keymap?.getKeymap;
+    if (!actual) throw new Error("Could not reload the keyboard. Your draft is still here.");
+    draft.store.load(actual, true);
+  }, [conn, draft.store]);
+'''+text[b:]
+text = text.replace('canUndo={canUndo}', 'canUndo={draft.canUndo}').replace('canRedo={canRedo}', 'canRedo={draft.canRedo}').replace('onUndo={undo}', 'onUndo={async () => draft.store.undo()}').replace('onRedo={redo}', 'onRedo={async () => draft.store.redo()}')
+text = text.replace('      reset();\n      setConn', '      draft.store.clear();\n      reset();\n      setConn')
+text = text.replace('export default App;', 'export default function EdgeApplication() { return <EdgeDraftProvider><App /></EdgeDraftProvider>; }')
 anchor = '  const [doIt, undo, redo, canUndo, canRedo, reset] = useUndoRedo();'
 assert text.count(anchor)==1
-text = text.replace(anchor,anchor+'\n  useSub("edge.keymap.imported", () => reset());')
+text = text.replace(anchor,'  const [doIt, , , , , reset] = useUndoRedo();\n  useSub("edge.keymap.imported", () => reset());')
 anchor = '  const [connectionAbort, setConnectionAbort] = useState(new AbortController());'
 assert text.count(anchor)==1
 text = text.replace(anchor,anchor+'\n  useSub("edge.import.abort", () => { connectionAbort.abort("Import request timed out"); setConn({conn:null}); setConnectionAbort(new AbortController()); });')
@@ -97,7 +75,7 @@ assert text.count(anchor) == 1
 text = text.replace(anchor, '  useSub("edge.keymap.retry", async () => {\n    connectionAbort.abort("Retry keymap read");\n    setConn({conn:null});\n    setConnectionAbort(new AbortController());\n    const usb = TRANSPORTS.find(t => t.label === "USB");\n    if (usb?.connect) {\n      try { onConnect(await usb.connect()); } catch (error) { if (error instanceof Error && error.name !== "NotFoundError") void usePub()("edge.connection.error", "Retry failed: " + error.message); }\n    }\n  });\n\n' + anchor)
 app.write_text(text)
 # Project-owned presentation replaces only staged upstream views.
-for source_name, dest_name in [('EdgeSecurity.tsx','EdgeSecurity.tsx'),('edge-security-rpc.ts','edge-security-rpc.ts'),('EdgePower.tsx','EdgePower.tsx'),('edge-power-rpc.ts','edge-power-rpc.ts'),('useEdgeKeymapData.ts','useEdgeKeymapData.ts'),('EdgeWorkspace.tsx','EdgeWorkspace.tsx'),('EdgeHeader.tsx','AppHeader.tsx'),('EdgeHeaderTypes.ts','EdgeHeaderTypes.ts'),('EdgeConnect.tsx','ConnectModal.tsx'),('EdgeUnlock.tsx','UnlockModal.tsx'),('edge-studio.css','edge-studio.css')]:
+for source_name, dest_name in [('EdgePubSub.ts','usePubSub.ts'),('edge-serial.ts','edge-serial.ts'),('EdgeDraft.tsx','EdgeDraft.tsx'),('EdgeSecurity.tsx','EdgeSecurity.tsx'),('edge-security-rpc.ts','edge-security-rpc.ts'),('EdgePower.tsx','EdgePower.tsx'),('edge-power-rpc.ts','edge-power-rpc.ts'),('useEdgeKeymapData.ts','useEdgeKeymapData.ts'),('EdgeWorkspace.tsx','EdgeWorkspace.tsx'),('EdgeHeader.tsx','AppHeader.tsx'),('EdgeHeaderTypes.ts','EdgeHeaderTypes.ts'),('EdgeConnect.tsx','ConnectModal.tsx'),('EdgeUnlock.tsx','UnlockModal.tsx'),('edge-studio.css','edge-studio.css')]:
     shutil.copyfile(ROOT/'web/studio-extension'/source_name,stage/'src'/dest_name)
 footer=stage/'src/AppFooter.tsx'
 footer.write_text(footer.read_text().replace('<div className="grid justify-center p-1 bg-base-200">','<footer className="grid justify-center p-1 bg-base-200">').replace('    </div>\n  );','    </footer>\n  );'))

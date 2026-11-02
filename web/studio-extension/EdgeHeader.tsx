@@ -6,7 +6,6 @@ import {
   Save,
   ChevronDown,
   Check,
-  Circle,
   Folder,
   X,
   LockKeyhole,
@@ -16,15 +15,18 @@ import { useSub, usePub } from "./usePubSub";
 import { ConnectionContext } from "./rpc/ConnectionContext";
 import { LockStateContext } from "./rpc/LockStateContext";
 import { LockState } from "@zmkfirmware/zmk-studio-ts-client/core";
+import { useKeymapDraft } from "./EdgeDraft";
 import { KeymapExport } from "./KeymapExport";
 import { KeymapImport } from "./KeymapImport";
 import type { AppHeaderProps } from "./EdgeHeaderTypes";
 export function AppHeader(p: AppHeaderProps) {
+  const draft = useKeymapDraft();
   const connection = useContext(ConnectionContext),
     lock = useContext(LockStateContext);
   const [unsaved, setUnsaved] = useConnectedDeviceData<boolean>(
     { keymap: { checkUnsavedChanges: true } },
     (r) => r.keymap?.checkUnsavedChanges,
+    true,
   );
   useSub("rpc_notification.keymap.unsavedChangesStatusChanged", (v) =>
     setUnsaved(v),
@@ -36,13 +38,14 @@ export function AppHeader(p: AppHeaderProps) {
   const [powerDirty,setPowerDirty] = useState(false);
   useSub("edge.power.dirty",setPowerDirty);
   useEffect(() => {
-    document.dispatchEvent(new CustomEvent("edge-unsaved-changes", { detail: !!unsaved || powerDirty || securityDirty }));
+    document.dispatchEvent(new CustomEvent("edge-unsaved-changes", { detail: draft.count > 0 || powerDirty || securityDirty }));
     return () => { document.dispatchEvent(new CustomEvent("edge-unsaved-changes", { detail: false })); };
-  }, [unsaved,powerDirty,securityDirty]);
+  }, [unsaved,draft.count,powerDirty,securityDirty]);
   const [busy, setBusy] = useState(false),
     [error, setError] = useState(""),
     [reset, setReset] = useState(false),
-    [discard, setDiscard] = useState(false);
+    [discard, setDiscard] = useState(false),
+    [disconnecting,setDisconnecting] = useState(false);
   const [readState, setReadState] = useState("idle");
   useSub("edge.keymap.read-state", setReadState);
   const reading = readState === "loading" || readState === "error";
@@ -51,16 +54,16 @@ export function AppHeader(p: AppHeaderProps) {
   const publish = usePub(),
     confirm = useRef<HTMLDialogElement>(null);
   useEffect(() => {
-    if (reset || discard) confirm.current?.showModal();
+    if (reset || discard || disconnecting) confirm.current?.showModal();
     else confirm.current?.close();
-  }, [reset, discard]);
+  }, [reset, discard, disconnecting]);
   useEffect(() => {
     if (
       !connection.conn ||
       lock !== LockState.ZMK_STUDIO_CORE_LOCK_STATE_UNLOCKED
     ) {
       setReset(false);
-      setDiscard(false);
+      setDiscard(false);setDisconnecting(false);
     }
   }, [connection, lock]);
   useEffect(() => {
@@ -123,7 +126,7 @@ export function AppHeader(p: AppHeaderProps) {
               <div className="edge-menu-panel">
                 <button
                   disabled={busy}
-                  onClick={() => void run(p.onDisconnect)}
+                  onClick={() => { if(draft.count) setDisconnecting(true); else void run(p.onDisconnect); }}
                 >
                   Disconnect
                 </button>
@@ -147,12 +150,11 @@ export function AppHeader(p: AppHeaderProps) {
                 <LockKeyhole size={13} />
                 Locked
               </>
-            ) : readState === "loading" ? "Reading keymap…" : readState === "error" ? "Keymap unavailable" : securityDirty ? "Unsaved security settings" : powerDirty ? "Unsaved power settings" : unsaved ? (
+            ) : readState === "loading" ? "Reading keymap…" : readState === "error" ? "Keymap unavailable" : securityDirty ? "Unsaved security settings" : powerDirty ? "Unsaved power settings" : draft.count > 0 ? (
               <>
-                <Circle size={8} />
-                Unsaved changes
+                {draft.count} unsaved {draft.count === 1 ? "change" : "changes"}
               </>
-            ) : (
+            ) : unsaved ? "Unsaved device changes" : unsaved === undefined ? "Checking saved state…" : (
               <>
                 <Check size={14} />
                 All changes saved
@@ -179,7 +181,7 @@ export function AppHeader(p: AppHeaderProps) {
           </button>
           <button
             className="edge-button edge-button-primary edge-save-button"
-            disabled={!ready || !unsaved || saveBlocked}
+            disabled={!ready || (!unsaved && !draft.count) || saveBlocked || draft.uncertain}
             title={saveBlocked ? "Add an Unlock Studio binding or disable the unlock requirement in Security before saving." : undefined}
             onClick={() => { if (!saveBlocked) void run(p.onSave); }}
           >
@@ -205,7 +207,7 @@ export function AppHeader(p: AppHeaderProps) {
                 Install firmware →
               </a>
               <button
-                disabled={!ready || !unsaved}
+                disabled={!ready || !draft.count}
                 onClick={() => setDiscard(true)}
               >
                 Discard unsaved changes…
@@ -228,22 +230,22 @@ export function AppHeader(p: AppHeaderProps) {
         aria-labelledby="edge-confirm-heading"
         onCancel={() => {
           setReset(false);
-          setDiscard(false);
+          setDiscard(false);setDisconnecting(false);
         }}
         onClose={() => {
           setReset(false);
-          setDiscard(false);
+          setDiscard(false);setDisconnecting(false);
         }}
       >
         <div className="edge-dialog-heading">
           <h2 id="edge-confirm-heading">
-            {reset ? "Restore default keymap?" : "Discard unsaved changes?"}
+            {reset ? "Save default keymap?" : disconnecting ? "Discard draft and disconnect?" : "Discard unsaved changes?"}
           </h2>
         </div>
         <p>
           {reset
             ? "This removes your saved key and layer customizations and restores the firmware’s default keymap. Export a backup first if you want to restore your current settings later."
-            : "All changes since your last save will be lost. Your saved keymap will be loaded from the keyboard."}
+            : disconnecting ? "Disconnecting discards this browser draft. No draft changes will be sent to the keyboard." : "Discard this browser draft and reload the keyboard’s current mapping. The keyboard will not be changed."}
         </p>
         <div className="edge-dialog-actions">
           <button
@@ -251,7 +253,7 @@ export function AppHeader(p: AppHeaderProps) {
             className="edge-button"
             onClick={() => {
               setReset(false);
-              setDiscard(false);
+              setDiscard(false);setDisconnecting(false);
             }}
           >
             Cancel
@@ -260,13 +262,13 @@ export function AppHeader(p: AppHeaderProps) {
             className="edge-button edge-button-danger"
             disabled={!ready}
             onClick={() => {
-              const action = reset ? p.onResetSettings : p.onDiscard;
+              const action = reset ? p.onResetSettings : disconnecting ? async () => {draft.store.discard();await p.onDisconnect?.();} : p.onDiscard;
               setReset(false);
-              setDiscard(false);
+              setDiscard(false);setDisconnecting(false);
               void run(action);
             }}
           >
-            {reset ? "Restore defaults" : "Discard changes"}
+            {reset ? "Save defaults" : disconnecting ? "Discard and disconnect" : "Discard draft"}
           </button>
         </div>
       </dialog>

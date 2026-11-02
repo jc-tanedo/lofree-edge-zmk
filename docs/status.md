@@ -1,3 +1,21 @@
+# Draft-only keymap editing and real change count — local validation in progress
+
+Owner requested no keymap writes until Save. Draft assignment, layers, imports,
+Undo/Redo and Discard now stay in page memory; Save checks a fresh device baseline,
+rejects conflicts, applies/persists and verifies. Counts represent changed key
+assignments and layer changes. No localStorage mapping authority. UI guards remain.
+The installed accepted3fde7a03 image is unchanged; no new flash is needed.
+
+A compiled-image probe confirmed previous live edits survived reconnect in RAM
+with unchanged flash; Discard restored the saved map. Separate serial teardown
+regression reproduced a closed-stream exception before port.close; the own adapter
+passes normal close/abort/pagehide tests. Stable emitter subscriptions fix a lost
+Reading-state update. Draft tests pass, and the JS draft Save pipeline passed
+against compiled3fde7a03 for reorder/rename/key changes/layer remove/add/readback.
+Synthetic browser checks show zero writes on edit/Undo/Redo/import/Discard and
+one save only after explicit Save. Navigation confirms leaving discards the browser draft with zero keymap writes; actual counts and Save/readback pass in the browser. Local validation passes: 73 JavaScript cases, 37 Python tests, three serial lifecycle cases, compiled-image draft integration, both website bases (30 targets each), and the 228-file source/history/site audit. Production preview is available on port8794; owner validation is pending. The numeric counter tracks differences from the initial device map, not edit clicks.
+The active owner8792 page and frozen8789 installer have not been replaced.
+
 # UI follow-up during accepted3fde7a03 hardware validation
 
 Owner requested an inset missing-unlock warning and prevention of unsafe saves.

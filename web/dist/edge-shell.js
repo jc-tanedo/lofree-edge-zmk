@@ -43,7 +43,7 @@ if (!customElements.get('edge-navigation')) customElements.define('edge-navigati
   const dialog = document.createElement('dialog');
   dialog.className = 'edge-dialog edge-leave-dialog';
   dialog.setAttribute('aria-labelledby', 'edge-leave-heading');
-  dialog.innerHTML = '<div class="edge-dialog-heading"><h2 id="edge-leave-heading">Leave without saving?</h2></div><p>Your changes have not been saved to the keyboard. Save before leaving to keep them after a restart.</p><div class="edge-dialog-actions"><button type="button" class="edge-button" autofocus>Stay here</button><button type="button" class="edge-button edge-button-danger">Leave page</button></div>';
+  dialog.innerHTML = '<div class="edge-dialog-heading"><h2 id="edge-leave-heading">Leave without saving?</h2></div><p>Your browser draft has not been applied to the keyboard. Leaving discards the draft. Save first to apply and keep your changes.</p><div class="edge-dialog-actions"><button type="button" class="edge-button" autofocus>Stay here</button><button type="button" class="edge-button edge-button-danger">Leave page</button></div>';
   const [stay, leave] = dialog.querySelectorAll('button');
   stay.addEventListener('click', () => dialog.close());
   leave.addEventListener('click', () => {

@@ -15,16 +15,15 @@ after reconnect/reboot. It does not enable Bluetooth Studio: the physical ON
 position remains required. Enabling the requirement locks the current session
 immediately. Save/discard keymap edits before changing policy.
 
-Studio warns when the current keymap has no direct Unlock Studio binding and
+Studio warns when the browser draft has no direct Unlock Studio binding and
 locking is enabled or its policy is unavailable. The warning is inset from the
 window edges. Keymap Save is disabled in this state; Undo/Discard remain available
 to restore the binding. To deliberately save a keymap without an unlock binding,
 disable protection before editing it. Security cannot enable protection without a
 direct unlock binding. Save/discard map edits before changing the policy.
 
-The save handler reads the current device map before persistence and checks the
-device policy if no unlock binding exists. Imports check their target before
-applying changes and check the live map again before saving. An unknown policy
+The draft Save handler reads the current device map, rejects changes made by another client since the draft began, and checks the
+device policy if no unlock binding exists. Imports stage browser drafts without device writes; Save checks their target and the live device again before applying changes. An unknown policy
 fails closed for a missing binding. These are web-UI guards, not new firmware
 restrictions: another client can bypass them. Presence checks do not prove that a
 layer/key is physically reachable or detect unlocks hidden in custom macros.

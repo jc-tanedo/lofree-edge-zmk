@@ -29,7 +29,7 @@ Press Fn+U on the keyboard, or your remapped Studio Unlock action. The overlay b
 
 ![Studio layer and key-action workspace — isolated UI preview, not a connected physical device](images/studio-keymap.png)
 
-Select a layer and key, choose its action, then **Save**. Edits take effect immediately; Save writes them to persistent storage. Three total layers are available. Use Files to export a .keymap and info.json for [Keymap Editor](https://nickcoutsos.github.io/keymap-editor/), or import the edited .keymap after reviewing its assignments. Import saves and reads back without rebuilding firmware.
+Select a layer and key, choose its action, then **Save**. Edits remain in a temporary browser draft and do not change typing. Save rereads the device, checks for external changes, then applies and persists the draft. Undo/Redo and Discard do not write to the keyboard. The header counts changed key assignments and layer changes. Leaving the page discards the browser draft. Three total layers are available. Use Files to export a .keymap and info.json for [Keymap Editor](https://nickcoutsos.github.io/keymap-editor/), or import the edited .keymap after reviewing its assignments. Import stages a draft; press the main Save button to apply and persist it without rebuilding firmware.
 
 ## Accept a tested trial
 

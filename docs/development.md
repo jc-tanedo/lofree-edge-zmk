@@ -127,3 +127,30 @@ enabling without a direct unlock binding. This is a client guard, not firmware
 enforcement. `web/tests/unlock-guard.test.js` covers enabled/disabled/unknown policy,
 restoration, live readback and import preflight. The isolated preview includes a
 “Load QA import without unlock” fixture; it cannot access hardware.
+
+## Browser-only keymap drafts
+
+`KeymapDraft` owns an in-memory draft and undo/redo snapshots for the current page;
+there is no mapping cache in browser storage. `EdgeKeyboard` replaces upstream
+live-write editing. Assignment, layer add/remove/reorder/rename, import staging,
+Undo and Redo issue no writes. The header counts changed assignments and layer
+changes against the fresh device baseline. Page exit discards local drafts.
+Discard reads the current device and resets the draft without a write. Power and
+Security keep their own explicit Save controls; confirmed Save defaults is an
+explicit destructive save. Legacy unsaved RAM edits from another client are shown
+as unsaved device changes, separately from the browser draft count.
+
+Save rereads the device, compares it with the baseline, validates layer references
+and the unlock guard, applies the target, saves, and verifies readback. New layer
+IDs are mapped to allocated device IDs, including behavior references. Firmware
+has no atomic bulk-keymap transaction: a failed Save can leave partial active
+changes or uncertain persistence. The UI retains the draft, reports uncertainty,
+and requires a fresh device read before retrying. No automatic overwrite occurs
+when another client has changed the map.
+
+The pinned serial adapter failed a real-RPC-pipeline regression by closing an
+already-closed WritableStream before port.close. `edge-serial.ts` owns/relinquishes
+port locks and closes exactly once on pipeline completion, abort, or pagehide.
+Fresh connections start locked. The adapted MIT emitter hook subscribes once per
+topic with a current callback, avoiding lost read-state notifications during draft
+rerenders. Tests cover both lifecycle and native draft application.

@@ -12,7 +12,7 @@ if not (stage/'node_modules').exists():
 shutil.copyfile(ROOT/'web/tests/studio-preview.tsx',stage/'src/EdgePreview.tsx')
 shutil.copyfile(ROOT/'web/tests/fixtures/edge-compiled-keymap.json',stage/'src/preview-keymap.json')
 p=stage/'src/App.tsx';s=p.read_text().replace('import { create_rpc_connection } from "@zmkfirmware/zmk-studio-ts-client";','import { create_rpc_connection, PreviewControls } from "./EdgePreview";')
-s=s.replace('import { connect as serial_connect } from "@zmkfirmware/zmk-studio-ts-client/transport/serial";','')
+s=s.replace('import { connect as serial_connect } from "@zmkfirmware/zmk-studio-ts-client/transport/serial";','').replace('import { connect as serial_connect } from "./edge-serial";','')
 a=s.index('const TRANSPORTS:')
 b=s.index('async function listen_for_notifications',a)
 s=s[:a]+'const TRANSPORTS: TransportFactory[] = [{label:"USB",connect:async()=>({} as RpcTransport)}];\n\n'+s[b:]
