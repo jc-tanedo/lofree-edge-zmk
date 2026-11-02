@@ -36,7 +36,8 @@ Thank you to the authors and maintainers below. Links identify the actual source
 - [pyelftools](https://github.com/eliben/pyelftools), [PyYAML](https://github.com/yaml/pyyaml) and the locked Python build dependencies support the build tools; exact versions are in requirements-build.lock.
 - [HIDAPI](https://github.com/libusb/hidapi) and [Python HIDAPI bindings](https://github.com/apmorton/pyhidapi): optional USB diagnostics and explicit trial acceptance.
 - [Python-Markdown](https://github.com/Python-Markdown/markdown): rendering local risk/roadmap pages.
-- [GitHub Actions and Pages](https://docs.github.com/en/actions): automation and hosting infrastructure.
+- [GitHub Actions and Pages](https://docs.github.com/en/actions) and the [Actions runner](https://github.com/actions/runner): automation, hosting and self-hosted job execution.
+- [Docker CLI](https://github.com/docker/cli), [Docker Compose](https://github.com/docker/compose) and [Ubuntu / Canonical](https://ubuntu.com/containers): runner image builds, container management and the Ubuntu 24.04 build environment. These are development infrastructure, not keyboard firmware components.
 
 - [7-Zip](https://www.7-zip.org/): installer extraction during private investigation.
 - [BlueZ / btmon](https://github.com/bluez/bluez): Bluetooth pairing/transport diagnostics on [CachyOS](https://cachyos.org/). Raw captures and bond material are not published.

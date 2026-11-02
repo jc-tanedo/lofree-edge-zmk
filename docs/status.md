@@ -1,3 +1,11 @@
+# Replacement runners executing CI
+
+Owner rebuilt/recreated the runners; API verified three online Linux/X64 runners.
+CI41471171660 on c64d76a passed system prerequisites, scoped cleanup and pinned
+Python setup; dependency/compiler/native validation is in progress. No extra run
+was started. Runner/Docker/Compose/Ubuntu links were verified and development-tool
+attribution updated. The same local full CI remains active; no hardware writes.
+
 # Runner digest format clarified
 
 Owner's next build supplied a sha256: prefix plus an extra trailing non-hex
