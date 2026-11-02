@@ -1,3 +1,18 @@
+# Enlarged idle stack — complete BLE regression passed
+
+On OTA3fde7a03218f8886391c54a3476a56a48592b74c7147460f00a61982a0f13722,
+the full delayed-DMA/lost-RF connected-sleep regression passed pairing, encrypted
+wake/reconnect, mode routing/legacy-output immunity and >=128B stack guards.
+Full-suite idle spare was212B; the narrowed same264B scheduler path independently
+left180B. Security RPC/fault/reboot and USB SET_IDLE tests also passed. Remaining
+Power/deep-entry/boot/import and package/site audits are still running in the same
+local tools/ci.sh process, report build/reports/idle448-full-ci.log. Static RAM
+22420/22528B,108B linker headroom. These are emulator checks, not hardware tests.
+
+Runner Docker/Compose provisioning is still pending owner-side. No new image is
+hardware-approved or installed. No push of the new firmware commits, merge, tag,
+release or Pages deployment. Installed accepted145f81d2 remains unchanged.
+
 # Runner build-argument feedback and narrowed stack validation
 
 Owner's Docker build stops before download with silent test guards. Missing build
