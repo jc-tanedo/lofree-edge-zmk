@@ -85,7 +85,8 @@ The short regression must keep at least128B observed margin in every stack.
 ## Actions disk cleanup
 
 CI, draft releases and Pages target registered `self-hosted`, `Linux`, `X64`
-runners. Provision Debian/Ubuntu with apt access as root or passwordless sudo;
+runners. See the [runner Dockerfile and rebuild guide](../tools/runner/README.md).
+Provision Ubuntu24.04 with apt access as root or passwordless sudo;
 `ci_prerequisites.sh` installs required system packages, while setup actions pin
 Python/Node and the compiler lock pins LLVM. Runners must have enough disk for
 the full compiler and build. Only run trusted repository changes on these runners.
@@ -97,3 +98,22 @@ System SDK removal is restricted to GitHub-hosted runners. Local invocations and
 mismatched workspaces are rejected/skipped. Use `prepare|finish --dry-run` with
 explicit Actions environment variables to inspect targets without deleting them.
 No published releases/artifacts are deleted.
+
+## Connected-wake idle stack
+
+The full BLE delayed-DMA/sleep regression reached264B of idle-stack use through
+`arch_cpu_idle` rescheduling, `slice_reset`, `z_add_timeout`, and
+`sys_clock_set_timeout` integer division. A384B stack left116B after its4B
+sentinel, failing the unchanged128B minimum. This was reproduced in the complete
+suite and a narrowed encrypted reconnect/connected-wake probe; an unconnected
+forced-suspend probe did not reach the same scheduler path.
+
+The combined build now reserves448B for idle. No other stack is reduced and the
+minimum guard is unchanged. Recheck linker RAM usage and all native stack tests
+on each new binary; the margin is observed coverage, not proof of every path.
+Use the full CI BLE test to reproduce independently of ignored diagnostic fixtures:
+
+```sh
+TC32EMU_SUSPEND_RF=lost EDGE_TEST_BUILD=lofree_edge-ble-studio \
+  EDGE_TEST_POWER_SLEEP=1 .venv/bin/python tools/test_edge_ble_delayed_dma.py
+```

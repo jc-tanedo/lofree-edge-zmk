@@ -1,3 +1,42 @@
+# Idle-stack cause isolated — enlarged-stack validation pending
+
+Both complete BLE tracing and a narrowed synthetic bonded reconnect/wake probe
+reproduce264B idle depth: wake rescheduling -> slice_reset -> clock timeout ->
+integer division. This is real native stack demand, not the boot security event
+or a watermark artifact. The384B allocation leaves116B after its sentinel.
+Combined-build idle is now448B; the128B minimum guard is unchanged and no other
+stack shrinks. New image/linker/full emulator validation is pending. D7 remains
+withheld, installed145f81d2 unchanged; no hardware commands.
+
+# Runner Dockerfile prepared
+
+Owner supplied their Dockerfile; its FROM is already24.04 but the running image
+was20.04 and its label stale. tools/runner/Dockerfile preserves docker user,
+runner directory and external start.sh, installs build prerequisites and sudo,
+corrects the label, checks the runner archive against a required supplied digest,
+and removes apt/archive leftovers. Rebuild/recreate instructions preserve existing
+registration configuration. Exact Python/Node/LLVM pins remain unchanged.
+Docker build has not been run: existing start.sh and selected runner version/digest
+were not supplied, and local Docker daemon access is unavailable. Owner must
+rebuild/recreate runners before CI can exercise the new environment.
+
+The first diagnostic wrapper reached pairing but stopped before power checks due
+to its own missing tools import path. That wrapper path is corrected and its same
+full test is rerunning; this is not evidence for a firmware fix. No keyboard writes.
+
+# Self-hosted execution — provisioning required
+
+Routing was exercised by CI41467710109 and41467874827. The registered image is
+Ubuntu20.04, running unprivileged without sudo. setup-python cannot obtain pinned
+Python3.12.12 there; prerequisite installation also cannot proceed. Requested
+Ubuntu24.04 and root/passwordless-sudo provisioning from the owner. Do not relax
+Python/toolchain pins or treat these failed runs as validation. Workspace cleanup
+ran successfully even after setup failure. Installed firmware remains unchanged.
+
+A local shortened suspend probe keeps212B idle margin and does not reproduce the
+full BLE test's116B result. Full connected-path emulator-side SP tracing is running;
+no firmware fix has been assumed. Its report is build/reports/ble-idle-calltrace.log.
+
 # Resumed — self-hosted Actions routing
 
 CI, draft release and Pages now target the registered self-hosted/Linux/X64 labels.

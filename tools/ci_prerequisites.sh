@@ -9,6 +9,10 @@ fi
 if [ "$(id -u)" = 0 ]; then
   elevate() { "$@"; }
 else
+  command -v sudo >/dev/null || {
+    echo "Runner provisioning required: install sudo with passwordless access, or run as root." >&2
+    exit 1
+  }
   elevate() { sudo -n "$@"; }
 fi
 cat /etc/os-release
