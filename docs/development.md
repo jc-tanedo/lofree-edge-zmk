@@ -154,3 +154,20 @@ port locks and closes exactly once on pipeline completion, abort, or pagehide.
 Fresh connections start locked. The adapted MIT emitter hook subscribes once per
 topic with a current callback, avoiding lost read-state notifications during draft
 rerenders. Tests cover both lifecycle and native draft application.
+
+## Serial reconnect input synchronization
+
+CDC close/open can retain a previous response in firmware TX. A compiled-image
+probe reproduced this on3fde7a03. Starting the pinned RPC client directly over old
+bytes fails its request-ID check (partial old frames can also fail decoding).
+The owned serial adapter consumes old input before creating the RPC pipeline:
+150ms with no bytes, with a1500ms continuous-input limit. A pending raw read is
+carried into the live stream instead of cancelling the port. Continuous input or
+disconnection fails connection explicitly. This adds at least150ms to USB open;
+it is not a guarantee against every device/host failure.
+
+`sh tools/test_edge_studio_client.sh` covers real-client info/keymap reads with
+clean input, a stale response, and a delayed partial frame, plus stream cleanup.
+These tests use synthetic serial ports. The owner's navigation/reconnect test is
+still required; read timeouts now identify mapping/layout/action-list/action-detail
+phase without including key values or device identifiers.

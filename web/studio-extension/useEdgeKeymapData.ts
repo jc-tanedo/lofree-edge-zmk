@@ -27,22 +27,27 @@ export function useEdgeKeymapData() {
     if (!conn || lock !== LockState.ZMK_STUDIO_CORE_LOCK_STATE_UNLOCKED) return;
     setReadProgress({ label: "Reading key mappings…" });
     void publish("edge.keymap.read-state", "loading");
+    let phase = "key mappings", lastProgressAt = Date.now();
+    const readStartedAt = lastProgressAt;
+    const markPhase = (label: string) => { phase = label; lastProgressAt = Date.now(); };
     const timer = window.setTimeout(() => {
       active = false;
       void publish("edge.keymap.read-state", "error");
-      setLoadingError("Reading the keyboard timed out. Check the USB connection, then retry.");
+      setLoadingError(`Reading the keyboard timed out while reading ${phase}. Last read progress was ${((Date.now() - lastProgressAt) / 1000).toFixed(1)} seconds ago (${((Date.now() - readStartedAt) / 1000).toFixed(1)} seconds total). Check the USB connection, then retry.`);
     }, 15000);
     async function read() {
       try {
         const map = (await call_rpc(conn!, { keymap: { getKeymap: true } })).keymap?.getKeymap;
         if (!active) return;
         if (!map?.layers?.length || map.layers.some(layer => !layer.bindings?.length)) throw new Error("The keyboard returned an incomplete keymap.");
+        markPhase("the physical layout");
         setReadProgress({ label: "Reading the physical layout…" });
         const layout = (await call_rpc(conn!, { keymap: { getPhysicalLayouts: true } })).keymap?.getPhysicalLayouts;
         if (!active) return;
         const index = layout?.activeLayoutIndex || 0;
         if (!layout?.layouts?.[index]?.keys?.length) throw new Error("The keyboard did not return its physical layout.");
         if (map.layers.some(layer => layer.bindings.length !== layout.layouts[index].keys.length)) throw new Error("The keyboard returned an incomplete keymap.");
+        markPhase("the supported action list");
         setReadProgress({ label: "Reading the supported action list…" });
         const ids = (await call_rpc(conn!, { behaviors: { listAllBehaviors: true } })).behaviors?.listAllBehaviors?.behaviors;
         if (!active) return;
@@ -52,6 +57,7 @@ export function useEdgeKeymapData() {
         let completed = 3;
         setReadProgress({ label: `Reading supported actions · 0 of ${ids.length}`, completed, total });
         for (const behaviorId of ids) {
+          markPhase(`supported actions (${completed - 3} of ${ids.length} complete)`);
           const result = (await call_rpc(conn!, { behaviors: { getBehaviorDetails: { behaviorId } } })).behaviors?.getBehaviorDetails;
           if (!active) return;
           if (!result || result.id !== behaviorId) throw new Error("The keyboard returned incomplete action definitions.");

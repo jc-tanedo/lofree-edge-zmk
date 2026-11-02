@@ -1,3 +1,27 @@
+# Reconnect after leaving drafts — stale CDC input regression
+
+Owner confirms8794 draft edits no longer affect typing and Save applies correctly.
+However, leaving four unsaved drafts through Firmware and reconnecting still timed
+out reading mappings. The earlier stream-cleanup fix did not resolve this report.
+
+An offline probe against accepted compiled3fde7a03 demonstrated old response bytes
+remaining across CDC DTR close/open while a large response was in flight. The real
+pinned RPC client regression failed with “Mismatch request IDs” on stale input.
+The serial adapter now drains pre-session input until150ms quiet, bounded to1500ms,
+before creating the RPC client. It preserves the pending reader for new replies;
+no mapping or settings write is involved. Clean, stale-frame and delayed partial
+frame tests pass, alongside normal/abort/pagehide teardown tests. Timeout messages
+now identify the read phase. This is a tested cause of reconnect failures, but the
+owner's exact intermittent timeout still requires a hardware/browser retest.
+Owner clarified the failure occurs near60% after returning via Studio link, and
+Retry recovers. That later-stage symptom is not yet reproduced; do not equate the
+stale-input regression with confirmed resolution. The diagnostic timeout also
+reports time since last progress to distinguish a stalled request from the
+existing15s total read deadline. Separate review is prepared on8796. Five serial
+startup/reconnect cases and three cleanup cases pass; production TypeScript and
+both website bases pass.
+No firmware, accepted boot state, saved mappings or owner pages were changed.
+
 # Draft-only keymap editing and real change count — local validation in progress
 
 Owner requested no keymap writes until Save. Draft assignment, layers, imports,
