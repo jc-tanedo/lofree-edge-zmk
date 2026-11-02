@@ -1,3 +1,11 @@
+# USB startup candidate installed — baseline pending
+
+Owner installed frozen OTA145f81d269f030e2338f61662f1f8ceeaf1d5499d3f2c34791c6d88ab404131e.
+Read-only info confirms trial boot1, unconfirmed, slot B, retained-image size/CRC
+valid. Do not restart/move selector during initial checks; acceptance is separate.
+Shared warning-banner source now reads “EXPERIMENTAL — USE AT YOUR OWN RISK”
+per owner request, across Firmware and Studio. Frozen8785 snapshot is unchanged.
+
 # USB startup candidate — preflight passed, ready for hardware handoff
 
 GitHub CI [run41368704446](https://github.com/jc-tanedo/lofree-edge-zmk/actions/runs/41368704446)
