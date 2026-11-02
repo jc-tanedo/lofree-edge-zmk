@@ -1,32 +1,42 @@
-# Optional physical unlock — corrected startup validation in progress
+# Optional Studio unlock — local checks passed; hardware pending
 
-Security tab added beside Power. Device-owned default-on unlock policy, secured
-get/set RPCs, independent CRC-protected settings record, fail-closed corruption
-and future-schema handling. Enabling immediately locks; disabling bypasses
-idle/disconnect relock. ON-only Studio restriction remains. Explicit confirmation
-for policy changes; save/discard pending maps first. UI warns when the last
-unlock binding is removed with locking on, and before enabling without one.
-See [technical/user details](security.md).
+Branch `firmware/power-management`, draft [PR #12](https://github.com/jc-tanedo/lofree-edge-zmk/pull/12).
+Security tab is beside Power. The persistent device policy defaults to requiring
+physical unlock. Disabling requires confirmation; enabling immediately locks.
+Both handlers retain upstream secured authorization. The independent CRC-protected
+record fails closed on corruption/future schema and does not reset maps/bonds or
+Power. Studio remains ON-only. Missing direct unlock-binding warnings cover the
+current live map and enable confirmation; save/discard map edits before policy
+changes. See [security details](security.md).
 
-Initial compiled security emulator passed authorization, validation, storage errors,
-disconnect, reboot persistence, immediate relock, corrupt/future records and
-mapping preservation. Codec and isolated browser disable/cancel/enable/lockout
-warning checks pass; browser logs have no errors. New image not installed or
-hardware-certified. Owner’s accepted145f81d2 image and frozen8785 remain intact.
-A final disabled-policy startup run exposed a main-stack sentinel failure in
-synchronous boot notification. A sub-second compiled regression reproduces it;
-the locked control passes. Queuing on the existing work queue fixes that short
-repro without larger stacks; policy changes are busy until boot sync finishes.
-Full corrected-image tests are running. Corrected OTA d7e477c8… (121860 bytes)
-is not frozen/installed/hardware-certified. Earlier passing logs are not exact
-image certification for this correction.
+Corrected OTA SHA-256:
+`d7e477c8db047a108c3a1b91a13b3b335e6fab2ab3996df8c7581a8f4d0333c7`
+(121860 bytes), firmware source commit3a93287. Not installed, frozen for physical
+test, or hardware-certified. The owner’s accepted145f81d2 image and frozen8785
+are unchanged. Earlier hardware passes do not certify this changed binary.
 
-37 Python and60 JavaScript assertions pass. Both site bases pass30 local checks;
-source/history/site/source+website archive audits pass209 curated files. Power
-storage/stack regression and USB SET_IDLE regression pass. Production Studio at
-localhost8766 has the new tab; its original firmware/catalog is preserved.
-Earlier firmware shows an explicit unsupported message (mock checked), and the
-owner’s page was not reloaded. Exact new-image hardware gates are still pending.
+Local corrected-image security tests pass secured get/set, invalid values,
+storage failure/retry, disconnect/reboot persistence, immediate relock, corrupt
+and future records, map/layer preservation and >=128B observed stack margin.
+Power storage/all-reset stack and USB SET_IDLE regressions pass. A synchronous
+boot notification overflow was reproduced twice with a sub-second test; a locked
+control passed. Queueing notification on the existing work queue fixes it without
+larger stacks; boot-sync busy guards re-enable. The full corrected tests pass.
+
+37 Python tests,60 JavaScript assertions and both codec checks pass. Both site
+bases pass30 local asset/navigation checks. Source/history/site/source+website
+archive audits pass210 curated files; package refresh completed on3a93287.
+Isolated browser checks pass cancel/disable/enable/immediate lock, both missing
+binding warnings, and older-firmware unsupported messaging; no console errors.
+Screenshot: build/reports/power/security-tab-preview.png (synthetic transport).
+
+Production review Studio at localhost8766 includes Security; the installer’s
+existing firmware/catalog is preserved. Save edits before manually refreshing.
+No owner tab was reloaded and no real keyboard commands were sent. Old firmware
+shows an explicit unsupported message. Exact-image policy/warning hardware
+markers are now mandatory for promotion. Current measurement gate and Fn/media
+cold-wake limitation remain. Latest security CI is pending; earlier React-only
+CI run41454323494 passed on18ebd38. No merge/tag/release/Pages deployment.
 
 # Firmware React migration — UI validation passed
 
