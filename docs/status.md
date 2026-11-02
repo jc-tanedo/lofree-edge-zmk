@@ -1,3 +1,37 @@
+# Resumed — self-hosted Actions routing
+
+CI, draft release and Pages now target the registered self-hosted/Linux/X64 labels.
+System prerequisites support root or passwordless sudo on Debian/Ubuntu.
+Cleanup on self-hosted runners is limited to known transient paths under the
+verified checkout; system SDK removal remains GitHub-hosted only. Shell syntax,
+dry-run targets and environment/workspace guards checked locally. Runner execution
+is pending. No keyboard writes or firmware changes; the idle-stack guard failure
+below remains unresolved and d7e477c8 must not be installed.
+
+# Restart handoff (historical)
+
+Owner requested a restart break. Installed accepted145f81d2 firmware is unchanged;
+no device operation/flash is running. Branch firmware/power-management, last
+pushed commitbb3176a; documentation handoff is intentionally uncommitted.
+
+Latest CI41462078397: pre-build disk cleanup, pinned compiler installation and
+always-run final cleanup all passed. Validation failed on the BLE connected
+sleep idle-stack guard: size384, used264, spare116B < required128B. Exact local
+reproduction also fails; log build/reports/security-ble-idle-margin-red.log.
+Command: TC32EMU_SUSPEND_RF=lost EDGE_TEST_BUILD=lofree_edge-ble-studio
+EDGE_TEST_POWER_SLEEP=1 .venv/bin/python tools/test_edge_ble_delayed_dma.py
+(on one shell line). Do not lower the guard or offer the d7e477c8 candidate for
+hardware installation. Static RAM currently22356/22528B; no stack change made.
+Earlier security/Power/USB-only passes did not cover this full BLE stack path.
+
+Owner now requests self-hosted Actions runners. API confirmed three online Linux
+X64 runners with labels self-hosted/Linux/X64. Workflow switch is NOT implemented
+yet: all three workflows still use ubuntu-24.04. Current cleanup deliberately
+skips self-hosted runners. Next: switch routing, retain SDK deletion only for
+GitHub-hosted machines, scope any self-hosted cleanup to this job workspace,
+and support the registered runners' prerequisites. No runner SDKs were changed.
+Resume idle-stack diagnosis after respecting that new steering; no fix assumed.
+
 # Actions disk cleanup — CI rerun pending
 
 CI run41460825158 failed during pinned compiler extraction because the hosted

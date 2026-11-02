@@ -1,15 +1,19 @@
 #!/bin/sh
 # SPDX-License-Identifier: GPL-3.0-or-later
-# Only ephemeral GitHub-hosted Linux runners; never clean a developer machine.
+# Actions only; self-hosted cleanup is confined to this repository workspace.
 set -eu
 mode=${1:-}
 dry_run=${2:-}
 case "$mode" in prepare|finish) ;; *) echo 'Usage: ci_cleanup.sh prepare|finish [--dry-run]' >&2; exit 2;; esac
 case "$dry_run" in ''|--dry-run) ;; *) echo 'Unknown option' >&2; exit 2;; esac
-if [ "${GITHUB_ACTIONS:-}" != true ] || [ "${RUNNER_ENVIRONMENT:-}" != github-hosted ] || [ "${RUNNER_OS:-}" != Linux ]; then
-  echo 'Cleanup skipped: requires a GitHub-hosted Linux Actions runner.'
+if [ "${GITHUB_ACTIONS:-}" != true ] || [ "${RUNNER_OS:-}" != Linux ]; then
+  echo 'Cleanup skipped: requires Linux Actions.'
   exit 0
 fi
+case "${RUNNER_ENVIRONMENT:-}" in
+  github-hosted|self-hosted) ;;
+  *) echo 'Cleanup skipped: unrecognized runner environment.'; exit 0 ;;
+esac
 root=$(CDPATH= cd -- "$(dirname "$0")/.." && pwd -P)
 workspace=$(CDPATH= cd -- "${GITHUB_WORKSPACE:?Missing GITHUB_WORKSPACE}" && pwd -P)
 if [ "$root" = / ] || [ "$root" != "$workspace" ]; then
@@ -19,13 +23,13 @@ fi
 remove() {
   if [ "$dry_run" = --dry-run ]; then
     printf 'Would remove: %s\n' "$*"
-  elif [ "$mode" = prepare ]; then
+  elif [ "$mode" = prepare ] && [ "$RUNNER_ENVIRONMENT" = github-hosted ]; then
     sudo rm -rf -- "$@"
   else
     rm -rf -- "$@"
   fi
 }
-if [ "$mode" = prepare ]; then
+if [ "$mode" = prepare ] && [ "$RUNNER_ENVIRONMENT" = github-hosted ]; then
   # This project uses LLVM/Python/Node, not the large bundled mobile/.NET/Haskell SDKs.
   remove /usr/local/lib/android /usr/share/dotnet /opt/ghc /usr/local/.ghcup /opt/hostedtoolcache/CodeQL
   if [ "$dry_run" != --dry-run ]; then sudo apt-get clean; fi

@@ -13,7 +13,9 @@ setup=f'''      - uses: {action('checkout')}
         with:
           node-version: '22.14.0'
       - name: System build tools
-        run: sudo apt-get update && sudo apt-get install -y device-tree-compiler protobuf-compiler ninja-build libtinfo6 zstd
+        run: sh tools/ci_prerequisites.sh
+      - name: Free runner disk space
+        run: sh tools/ci_cleanup.sh prepare
       - name: Public dependencies
         run: python3 tools/bootstrap.py
       - name: Pinned release compiler
@@ -29,7 +31,7 @@ permissions:
   contents: read
 jobs:
   validate:
-    runs-on: ubuntu-24.04
+    runs-on: [self-hosted, Linux, X64]
     steps:
 '''+setup+'''      - name: Build, tests and publication audits
         run: sh tools/ci.sh
@@ -44,7 +46,7 @@ jobs:
   release:
     permissions:
       contents: write
-    runs-on: ubuntu-24.04
+    runs-on: [self-hosted, Linux, X64]
     steps:
 '''+setup+'''      - name: Verify version and main ancestry
         run: |
@@ -81,12 +83,14 @@ jobs:
       contents: read
       pages: write
       id-token: write
-    runs-on: ubuntu-24.04
+    runs-on: [self-hosted, Linux, X64]
     steps:
       - uses: '''+action('checkout')+'''
         with:
           ref: ${{ github.event.release.tag_name || inputs.tag }}
           fetch-depth: 0
+      - name: System tools
+        run: sh tools/ci_prerequisites.sh
       - name: Download existing release; never rebuild
         env:
           GH_TOKEN: ${{ github.token }}
@@ -105,5 +109,12 @@ jobs:
       - name: Deploy exact released website
         id: deployment
         uses: '''+action('deploy-pages')+'''\n'''
+cleanup='''      - name: Clean transient build storage
+        if: ${{ always() }}
+        run: sh tools/ci_cleanup.sh finish
+'''
+ci+=cleanup
+release+=cleanup
+pages+=cleanup.replace('build storage', 'deployment storage')
 for name,s in [('ci.yml',ci),('release.yml',release),('pages.yml',pages)]:
  p=ROOT/'.github/workflows'/name;p.parent.mkdir(parents=True,exist_ok=True);p.write_text(s)

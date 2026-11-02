@@ -21,12 +21,14 @@ jobs:
       contents: read
       pages: write
       id-token: write
-    runs-on: ubuntu-24.04
+    runs-on: [self-hosted, Linux, X64]
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           ref: ${{ github.event.release.tag_name || inputs.tag }}
           fetch-depth: 0
+      - name: System tools
+        run: sh tools/ci_prerequisites.sh
       - name: Download existing release; never rebuild
         env:
           GH_TOKEN: ${{ github.token }}

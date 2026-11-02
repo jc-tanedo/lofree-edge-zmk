@@ -84,12 +84,16 @@ The short regression must keep at least128B observed margin in every stack.
 
 ## Actions disk cleanup
 
-CI and draft-release jobs free unused preinstalled Android/.NET/Haskell/CodeQL
-SDKs and apt cache before downloading dependencies/compiler. All three workflows
-run cleanup with `always()` after their final build/upload/deployment step.
-Transient compiler downloads, dependencies, build staging and deployment copies
-are removed; release/site artifacts and reports are retained until runner disposal.
-`ci_cleanup.sh` refuses system/workspace cleanup outside a matching GitHub-hosted
-Linux workspace, so normal local and self-hosted invocations are skipped. Use
-`prepare|finish --dry-run` with the explicit hosted-runner environment to inspect
-targets without deleting anything. No published releases/artifacts are deleted.
+CI, draft releases and Pages target registered `self-hosted`, `Linux`, `X64`
+runners. Provision Debian/Ubuntu with apt access as root or passwordless sudo;
+`ci_prerequisites.sh` installs required system packages, while setup actions pin
+Python/Node and the compiler lock pins LLVM. Runners must have enough disk for
+the full compiler and build. Only run trusted repository changes on these runners.
+
+All three workflows run cleanup with `always()` after their final step.
+Self-hosted prepare/finish remove only known transient paths within the matching
+checked-out repository workspace. Release/site artifacts and reports are retained.
+System SDK removal is restricted to GitHub-hosted runners. Local invocations and
+mismatched workspaces are rejected/skipped. Use `prepare|finish --dry-run` with
+explicit Actions environment variables to inspect targets without deleting them.
+No published releases/artifacts are deleted.
