@@ -10,7 +10,7 @@ A project-specific additive core RPC extension uses the existing Studio connecti
 
 Schema 1 defaults: dim after 30 s, off after 120 s, sleep after 900 s, dim to 20%. Every deadline is measured from last key activity; zero is Never. Active deadlines must be ordered; range 0–86400 seconds; dim 0–100%. Dimming multiplies requested brightness and never turns on manually disabled lighting. Physical held positions, nonzero HID reports, queued behavior work and writes inhibit Bluetooth sleep. Settings are one versioned CRC-protected TLSR settings-log value; save only on explicit user action and read back after saving. Unknown newer schemas are not overwritten. Power defaults affect no keymap or bond.
 
-ON retains USB/Studio and uses lighting timers. BT uses retained suspend while its encrypted link is ready; while advertising it uses pad-wake deep sleep after the configured timeout (pairing gets at least 60 s). USB power in BT does not suppress its policy. OFF enters selector-only deep sleep after a 20 s startup holdoff. USB-host suspend in ON inhibits lighting and uses pad/core/timer wake with remote-wake requests only when the host permits it. On corrected image46cb8d6c, the owner validated BT connected/deep wake and OFF selector wake on USB power/battery; physical USB-host suspend remains pending. Deep wake reboots and consumed the wake key; connected retained suspend delivered the tested first A promptly. A later USB startup candidate has no physical passes yet. Selector policy remains authoritative.
+ON retains USB/Studio and uses lighting timers. BT uses retained suspend while its encrypted link is ready; while advertising it uses pad-wake deep sleep after the configured timeout (pairing gets at least 60 s). USB power in BT does not suppress its policy. OFF enters selector-only deep sleep after a 20 s startup holdoff. USB-host suspend in ON inhibits lighting and uses pad/core/timer wake with remote-wake requests only when the host permits it. On exact image145f81d2 (see the hardware record), the owner validated connected/deep Bluetooth wake, six ordinary wake rows, OFF selector wake, USB host suspend/resume, persistence and held-modifier transitions. Deep wake reboots and consumes its wake key; connected retained suspend delivered the tested ordinary first taps promptly. Fn/media cold wake remains a known exception. Selector policy remains authoritative.
 
 ## Stock reference and source boundary
 
@@ -24,7 +24,7 @@ The first memory reduction was rejected by compiled stack-sentinel tests. Captur
 
 The new build uses 22316/22528 bytes of static RAM. Every reset in the power/storage tests is now preceded by a watermark check, and the final state is checked too. The gate requires at least 128 bytes spare in each observed stack. These checks and the complete regression suite must pass on the revised image before hardware handoff.
 
-Required remaining coverage: compiled timer/PWM boundaries, held keys/deferred actions, version/corrupt record/write failure, locked RPCs, persistence, RF-loss resume, deep wake/trial guard, OFF/selector/cable states, browser loading/error/retry and dirty navigation, old firmware fallback, exact-SHA hardware tests and measured current. No battery-life claim before measurements. Measured battery reporting remains [issue #4](https://github.com/jc-tanedo/lofree-edge-zmk/issues/4).
+Regression coverage includes compiled timer/PWM boundaries, held keys/deferred actions, version/corrupt record/write failure, locked RPCs, persistence, RF-loss resume, deep-entry/trial guard, OFF/selector/cable states, browser loading/error/retry and dirty navigation, and old firmware fallback. Exact-SHA functional hardware results are recorded separately. Measured current remains an unmet release gate. No battery-life claim before measurements. Measured battery reporting remains [issue #4](https://github.com/jc-tanedo/lofree-edge-zmk/issues/4).
 
 ## Validation so far
 
@@ -69,3 +69,13 @@ change-only mode without enabling periodic reports; nonzero idle remains
 unsupported. The compiled model regression observes the prior rejection and
 the new acceptance, but does not establish silicon stall behavior or eliminate
 the physical delay. The new image requires independent hardware validation.
+
+## Final functional test state
+
+Owner-tested OTA SHA-256:
+`145f81d269f030e2338f61662f1f8ceeaf1d5499d3f2c34791c6d88ab404131e`.
+Self-test/acceptance and the available-equipment functional sequences pass as
+recorded in [the hardware record](validation/v0.1.0-alpha.3.md). Everyday
+defaults30s dim/120s off/900s Bluetooth sleep/20% were restored and read back.
+No actual current, battery-life, broad-host or full Fn cold-wake claim follows.
+Publication remains gated; no release or Pages deployment has occurred.
