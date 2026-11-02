@@ -76,3 +76,8 @@ See [security.md](security.md) for policy, additive RPC fields and schema.
 editing dependencies. `test_edge_security_emulator.py` uses compiled firmware
 and synthetic flash only. Security warnings inspect the live current keymap
 across all layers, including unsaved changes; they are not browser-cached maps.
+
+`test_edge_security_boot_emulator.py` is a fast regression at the settings-commit
+call site. It injects only the decoded disabled-policy value before settings
+load; the full security emulator separately reads actual synthetic flash records.
+The short regression must keep at least128B observed margin in every stack.

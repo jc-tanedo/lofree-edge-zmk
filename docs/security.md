@@ -47,8 +47,10 @@ locking; upgrading again reads the saved policy.
 A hash-checked transformation of pinned MIT-licensed Studio core retains upstream
 notifications/authorization and applies the policy in get/set lock-state paths.
 Disabling prevents idle/disconnect relocking; enabling calls upstream lock.
-The settings commit emits an unlock notification when boot loads a disabled
-policy, so a Studio client connected early cannot retain a stale locked view.
+The settings commit queues an unlock notification on the existing system work
+queue when boot loads a disabled policy, so an early Studio client cannot retain
+a stale locked view. A changed policy returns busy while this boot work is
+pending/running, preventing a late boot unlock from racing re-enable.
 UI saves are confirmed; readback verifies disabling, while enabling returns the
 stored response then requires physical unlock before another secured read.
 
@@ -61,3 +63,13 @@ preservation of saved mappings/layers. All flash inputs are synthetic.
 Browser QA uses a transport that cannot access real hardware. Physical tests
 against the new exact OTA are required separately; earlier power hardware
 results do not certify this changed binary.
+
+### Startup stack regression
+
+Calling the upstream unlock/event encoder synchronously from settings commit
+exhausted the768-byte main stack on a disabled-policy boot. The fast compiled
+`test_edge_security_boot_emulator.py` reproduced the sentinel failure twice; the
+locked-policy control passed. Deferring to the existing1536-byte work queue
+passed without enlarging stacks (observed main spare364B, work-queue spare548B
+in the short startup scenario). Full RPC/storage runs measure additional paths;
+this short test alone does not certify all stack use or hardware.

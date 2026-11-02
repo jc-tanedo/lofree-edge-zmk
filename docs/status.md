@@ -1,4 +1,4 @@
-# Optional physical unlock — implementation under validation
+# Optional physical unlock — corrected startup validation in progress
 
 Security tab added beside Power. Device-owned default-on unlock policy, secured
 get/set RPCs, independent CRC-protected settings record, fail-closed corruption
@@ -8,11 +8,19 @@ for policy changes; save/discard pending maps first. UI warns when the last
 unlock binding is removed with locking on, and before enabling without one.
 See [technical/user details](security.md).
 
-Compiled security emulator passes authorization, validation, storage errors,
+Initial compiled security emulator passed authorization, validation, storage errors,
 disconnect, reboot persistence, immediate relock, corrupt/future records and
 mapping preservation. Codec and isolated browser disable/cancel/enable/lockout
 warning checks pass; browser logs have no errors. New image not installed or
 hardware-certified. Owner’s accepted145f81d2 image and frozen8785 remain intact.
+A final disabled-policy startup run exposed a main-stack sentinel failure in
+synchronous boot notification. A sub-second compiled regression reproduces it;
+the locked control passes. Queuing on the existing work queue fixes that short
+repro without larger stacks; policy changes are busy until boot sync finishes.
+Full corrected-image tests are running. Corrected OTA d7e477c8… (121860 bytes)
+is not frozen/installed/hardware-certified. Earlier passing logs are not exact
+image certification for this correction.
+
 37 Python and60 JavaScript assertions pass. Both site bases pass30 local checks;
 source/history/site/source+website archive audits pass209 curated files. Power
 storage/stack regression and USB SET_IDLE regression pass. Production Studio at

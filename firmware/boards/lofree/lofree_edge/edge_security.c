@@ -2,6 +2,7 @@
 #include <errno.h>
 #include <string.h>
 #include <zephyr/settings/settings.h>
+#include <zephyr/kernel.h>
 #include <zephyr/sys/atomic.h>
 #include <zephyr/sys/byteorder.h>
 #include <zephyr/sys/crc.h>
@@ -27,11 +28,16 @@ static int load(const char *name, size_t len, settings_read_cb read_cb, void *ar
     if (schema==SCHEMA && value<=1) { require_unlock=value; }
     return 0;
 }
+static void sync_boot_policy(struct k_work *work)
+{
+    if (!require_unlock) { zmk_studio_core_unlock(); }
+}
+K_WORK_DEFINE(boot_policy_work,sync_boot_policy);
 static int commit(void)
 {
-    /* USB initializes before main() loads settings. Notify an early connected
-     * Studio client when the stored policy makes the effective state unlocked. */
-    if (!require_unlock) { zmk_studio_core_unlock(); }
+    /* Event encoding exceeds the small main/settings-load stack. Notify an
+     * early Studio client from the existing work queue, not the boot caller. */
+    if (!require_unlock) { k_work_submit(&boot_policy_work); }
     return 0;
 }
 SETTINGS_STATIC_HANDLER_DEFINE(edge_security,"edge_security",NULL,load,commit,NULL);
@@ -50,6 +56,8 @@ static zmk_studio_Response edge_set_security(const zmk_studio_Request *req)
     if (future_schema) { return reply(3); }
     if (p->schema!=SCHEMA || p->require_unlock>1 || p->status) { return reply(1); }
     if (p->require_unlock==require_unlock) { return reply(0); }
+    /* Do not let a delayed boot unlock race a newly enabled requirement. */
+    if (k_work_busy_get(&boot_policy_work)) { return reply(2); }
     if (!atomic_cas(&writing,0,1)) { return reply(2); }
     uint8_t record[RECORD_SIZE];
     sys_put_le32(SCHEMA,record); sys_put_le32(p->require_unlock,record+4);
