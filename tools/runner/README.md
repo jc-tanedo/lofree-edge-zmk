@@ -47,3 +47,30 @@ The Docker build context should contain only runner configuration. Exclude token
 `.env`, registration files, logs, caches and repository workspaces with your
 `.dockerignore`. Never bake registration tokens into the image. The Dockerfile
 only copies `scripts/start.sh`; confirm that script reads credentials at runtime.
+
+## Build arguments from `.env`
+
+Compose interpolates `.env` into its configuration; `environment` and `env_file`
+only configure the running container. They do not supply Dockerfile build args.
+Merge this block into your existing runner service (retain its startup settings):
+
+```yaml
+services:
+  runner:
+    build:
+      context: .
+      args:
+        RUNNER_VERSION: ${RUNNER_VERSION:?Set RUNNER_VERSION in .env}
+        RUNNER_SHA256: ${RUNNER_SHA256:?Set RUNNER_SHA256 in .env}
+```
+
+```dotenv
+RUNNER_VERSION=REPLACE_WITH_RUNNER_VERSION
+RUNNER_SHA256=REPLACE_WITH_OFFICIAL_LINUX_X64_SHA256
+```
+
+Run `docker compose build runner` before stopping existing runner containers.
+Replace `runner` with your existing service name. Missing values now produce a
+specific error in Compose and in the Dockerfile, before any archive download.
+Do not paste full `docker compose config` output into a public issue: it can
+include interpolated registration credentials.

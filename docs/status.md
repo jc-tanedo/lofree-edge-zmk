@@ -1,3 +1,17 @@
+# Runner build-argument feedback and narrowed stack validation
+
+Owner's Docker build stops before download with silent test guards. Missing build
+args are the leading explanation; architecture is the other early guard. Dockerfile
+now names each missing argument or unsupported architecture explicitly. Runner
+guide includes .env -> Compose build.args wiring; runtime env_file is insufficient.
+Shell syntax and both missing-argument diagnostics pass locally. Full Docker image
+build remains owner-side pending selected runner version/digest and external script.
+
+New OTA3fde7a03218f8886391c54a3476a56a48592b74c7147460f00a61982a0f13722
+passes narrowed encrypted connected wake with the same264B peak and180B idle spare.
+The complete local CI is still running; full security RPC/fault/reboot tests passed.
+No candidate handoff, keyboard write, merge or publication.
+
 # Idle-stack cause isolated — enlarged-stack validation pending
 
 Both complete BLE tracing and a narrowed synthetic bonded reconnect/wake probe

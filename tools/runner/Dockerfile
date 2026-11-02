@@ -27,8 +27,9 @@ RUN apt-get update \
 
 # Retain the existing runner path and start.sh contract. Verify the runner archive
 # against the digest supplied from its official release, then discard the archive.
-RUN test -n "${RUNNER_VERSION}" && test -n "${RUNNER_SHA256}" \
-    && test "$(dpkg --print-architecture)" = amd64 \
+RUN : "${RUNNER_VERSION:?Missing build arg RUNNER_VERSION; set build.args in Compose}" \
+    && : "${RUNNER_SHA256:?Missing build arg RUNNER_SHA256; set build.args in Compose}" \
+    && { test "$(dpkg --print-architecture)" = amd64 || { echo 'Runner archive requires linux/amd64' >&2; exit 1; }; } \
     && mkdir -p /home/docker/actions-runner \
     && curl --fail --show-error --location --retry 3 \
        "https://github.com/actions/runner/releases/download/v${RUNNER_VERSION}/actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz" \
