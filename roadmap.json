@@ -13,7 +13,7 @@
     "title": "Sleep and power management",
     "status": "in progress",
     "milestone": "Power and mode handling",
-    "limitation": "Unreleased alpha.3 candidate passes owner lighting/settings, battery connected/deep wake, OFF selector wake, persistence, USB startup and CachyOS host-resume checks. Broader row/modifier coverage and measured current remain incomplete. Fn cold wake is tracked separately; no battery-life savings claim.",
+    "limitation": "Unreleased alpha.3 passes available-equipment owner functional checks on one Edge/CachyOS: settings/lighting, six ordinary wake rows, connected/deep wake, OFF, persistence, USB startup, host resume and held-modifier transitions. Defaults restored. Measured-current release gate is blocked by unavailable equipment; Fn/media cold wake is separately deferred. No measured power or battery-life claim.",
     "acceptance": "Measure wired/BLE idle current, validate wake keys and reconnect, and demonstrate no lost saved mappings across repeated sleep/wake cycles.",
     "issue": "https://github.com/jc-tanedo/lofree-edge-zmk/issues/2"
   },

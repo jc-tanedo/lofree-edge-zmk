@@ -11,7 +11,8 @@ Owner passes: ON typing/media/Caps/backlight/Studio, saved maps/layers and idle
 lighting; manual stock return/reinstall; BT reconnect and USB isolation; connected
 first-A and disconnected deep wake on battery; cable insertion policy; OFF
 inactivity and selector wake on USB/battery; full-cycle maps/layers/bonds/power
-settings persistence. Short test settings remain2s dim/4s off/10s sleep/20%.
+settings persistence. Short test values2s/4s/10s/20% were used during validation;
+owner restored defaults30s/120s/900s/20% and verified reconnect readback.
 
 SET_IDLE change-only compatibility fix passes repeated OFF30s→ON: owner reports
 prompt typing/Studio on both cycles; kernel descriptor→HID attachment gaps are
@@ -25,8 +26,10 @@ and all-timers Never controls also pass; short test values restored afterward.
 
 Physical USB-host suspend/resume passes on CachyOS without unplugging; owner
 resumed using host controls and verified typing/media/indicators/Studio/settings.
-Edge-initiated remote wake is untested. Broader row/modifier coverage,
-legacy-output immunity, and everyday timer restoration remain pending. Fn/media cold wake
+Battery connected wake passes six sampled rows (Esc/1/Q/A/Z/Left Ctrl);
+held Shift across both transport directions releases correctly. Exact-image
+compiled tests establish legacy output-action immunity. Edge-initiated remote
+wake is untested. Everyday defaults have been restored and read back. Fn/media cold wake
 [issue13](https://github.com/jc-tanedo/lofree-edge-zmk/issues/13) is open and lower
 priority. Deep wake consumes its first key. Current is unmeasured: owner has no
 suitable instrument, so no battery-life/current savings are established.
@@ -51,8 +54,8 @@ publication is authorized by these observations.
 Physical-switch implementation is complete on `firmware/physical-mode-switch`,
 Merged PR #10 / closed issue #3. Exact alpha.2 OTA SHA-256
 `ee74d5411891418eb6b08621c2fc21175bbecbe70c65511476aac11c5326297e`
-passed owner hardware validation on one Edge/CachyOS host and is installed and
-accepted (count 0). See [the validation record](validation/v0.1.0-alpha.2.md).
+passed owner hardware validation on one Edge/CachyOS host and was previously
+installed/accepted before the alpha.3 tests. See [the validation record](validation/v0.1.0-alpha.2.md).
 ON enables USB/Studio only; BT enables BLE with USB power only; OFF suppresses
 input/radio/lighting/data. Three profiles remain. Mode movement briefly restarts
 firmware; saved maps/layers/bonds survive. Legacy output actions are ignored.
@@ -99,4 +102,3 @@ shows descriptors→keyboard HID attachment ranging about0.11–5.62s, followed
 by vendor HID attachment roughly5.04–5.18s later. This supports investigating
 USB HID control-request initialization; it does not establish the exact failing
 request or root cause. No firmware fix has been made for startup delay.
-

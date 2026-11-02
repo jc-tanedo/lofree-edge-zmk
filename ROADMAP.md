@@ -18,7 +18,7 @@ The first prerelease now has clean builds, package/license audits, hosted-path v
 
 **in progress** · Power and mode handling
 
-Unreleased alpha.3 candidate passes owner lighting/settings, battery connected/deep wake, OFF selector wake, persistence, USB startup and CachyOS host-resume checks. Broader row/modifier coverage and measured current remain incomplete. Fn cold wake is tracked separately; no battery-life savings claim.
+Unreleased alpha.3 passes available-equipment owner functional checks on one Edge/CachyOS: settings/lighting, six ordinary wake rows, connected/deep wake, OFF, persistence, USB startup, host resume and held-modifier transitions. Defaults restored. Measured-current release gate is blocked by unavailable equipment; Fn/media cold wake is separately deferred. No measured power or battery-life claim.
 
 **Acceptance:** Measure wired/BLE idle current, validate wake keys and reconnect, and demonstrate no lost saved mappings across repeated sleep/wake cycles.
 
