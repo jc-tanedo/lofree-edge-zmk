@@ -1,3 +1,19 @@
+# Unified installer final review packages audited
+
+Final review source4f39240 rebuild retains tested identity-firmware SHA
+fc46a4706cb92a0c70c5a3fa0cebcfe46c3331b38b18d276a11274141ac3484d.
+Review package provenance clean/matches4f39240.250-file source/history/source+
+website archive/site audit and30 hosted-link checks pass (auto-install-review
+reports). Previous localhost30-link and hosted browser navigation/risk checks
+pass. Targeted final installer tests pass, including removed-approval refusal;
+all web test files and49 Python tests previously pass. Normal+diagnostic native
+identity/no-flash-write/stack/OTA protocol tests use matching compiled bytes.
+No new hardware install. Registry empty pending physical exact-image testing;
+current accepted5b532244 and frozen8804 remain untouched. No CI push/publication.
+Next: finish current power/mode gates, then freeze/test identity-capable firmware
+and the actual unified browser path before adding exact SHA approval. Do not
+mark new image hardware-tested from synthetic evidence or auto-approve it.
+
 # Unified installer local verification complete; no hardware update
 
 Implementation64ea25f plus explicit removed-approval resume error. All web test
