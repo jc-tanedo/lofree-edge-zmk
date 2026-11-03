@@ -1,3 +1,28 @@
+# Browser-sized identity fix frozen; one focused firmware update required
+
+Physical schema1 report10 succeeds at requested16B and fails EPIPE at67B.
+Chromium uses maxfeature+1=67B, explaining Failed to receive the feature report.
+New schema2 advertises/returns67B with51zero padding, reusing existing scratch.
+No endpoint-driver or unrelated behavior changes. Browser/catalog require2.
+All web test files,13 direct acceptance tests and49 Python tests pass. Compiled
+native67B identity/no-write/stack and actual OTA test/confirm/readback pass.
+Rebuild from2d419a3 reproduces tested OTA:
+afa70869c44ad586ab02ae543652acf7d54125a8bd2c99a18e5b9688d251ef69 (122180B).
+
+Frozen build/hardware-tests/alpha3-browser-identity-afa70869-2d419a3,8809/server74582.
+252-file source/history/source+website archive/site audits and30-link checks pass.
+Browser verifies exactservedSHA, schema2 automatic LOCAL TEST policy, risk notice,
+Finalize label/description and freshuncheckedack/disabledconfirm. Agent cancelled
+without any HID commands. Publicregistry remains empty; no release approval.
+
+Current hardware is still unacceptedfc46a470,USB/ON,retained integrityvalid at last
+readonlyinfo. Owner must Fn+Space3s/release stockreturn, verify USB identity, then
+one update via8809 to fix browser-sized read. This local test performs automatic
+verification/self-test/acceptance after fresh owner riskack; permission after
+restart may require Finalize Installation. No repeated BT/power/Security or read
+stress requested. After success only readaccepted/count0/67B identity/retained
+status. Do not run CLIconfirm or additional acceptance without owner approval.
+
 # Browser-sized identity read fails on schema1; fixed-size schema2 under test
 
 Owner8808 error: Failed to receive the feature report. Readonly info still
