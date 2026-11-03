@@ -291,3 +291,20 @@ valid RPC. These cases are synthetic and are never sent by the physical probe.
 They validate frame boundaries, not the intermittent physical decoder defect.
 Until repeated physical read probes pass, this remains a hypothesis experiment
 and must not be promoted as a reliability fix.
+
+Physical trial047100b6: first50 complete coalesced map/layout/action cycles
+(802 requests) and500 coalesced action-list cycles (502 requests) pass with
+zero decode failures and matching sent/UART/consumed fingerprints. These
+results support the complete-frame approach on one Edge/CachyOS host; they
+do not establish a precise compiler/callback root cause or release readiness.
+Fragmented delivery and browser navigation remain separate checks.
+
+The same trial also passes30 fragmented full cycles (482 requests). Total1786
+requests, no timeouts/decode failures, buffers empty and fingerprints match at
+every snapshot. Port closed; no settings writes, acceptance or restarts.
+
+Owner browser checks on the same047100b6 image also pass: initial settings load,
+five Firmware→Studio full reads without Retry, and two four-key unsaved-draft
+leave/reconnect sequences. Counts, no pre-Save typing changes, discarded drafts
+and saved-map readback behave as intended. Diagnostics-disabled firmware is a
+different image and requires its own validation; this diagnostic is unaccepted.

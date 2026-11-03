@@ -48,7 +48,7 @@ Tracking issue will be linked after the public repository is created.
 
 **in progress** · Studio settings
 
-Physical read-only probes reproduce zero-response requests with matching sent/UART/decoder byte fingerprints and a zero-tag decode error at EOF. A bounded complete-frame decoder passes local compiled checks but awaits exact-image hardware validation; reliable reads remain unresolved.
+Instrumented complete-frame candidate passes1786 physical read-only requests, five browser reconnects and two unsaved-draft leave/reconnect sequences on one Edge/CachyOS host. Diagnostics-disabled candidate validation and wider coverage remain pending; precise callback/compiler root cause is not established.
 
 **Acceptance:** Repeated initial connections, full action reads and navigation/reconnect succeed under host backpressure; complete frames and bounded disconnect handling pass regression tests; exact-image hardware validation passes.
 

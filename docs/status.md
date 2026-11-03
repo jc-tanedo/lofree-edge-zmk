@@ -1,3 +1,58 @@
+# Complete-frame browser reproduction passes; stock return pending
+
+Owner confirms exact047100b6: initial mappings/Power/Security load, five
+Firmware→Studio reconnect/full reads without Retry, then two four-key draft/
+leave/reconnect sequences pass. Draft counts increase, drafts do not affect
+physical typing, leaving discards them, saved mappings reload. Combined with
+1786 automatic requests, the previously failing read/navigation pattern has not
+recurred on this Edge/CachyOS host. Precise callback/compiler cause remains
+unproven; results do not certify a different binary.
+
+No acceptance or settings saves requested. Current image is still the
+unconfirmed diagnostic, USB/ON. Ask owner to leave Studio idle/disconnected and
+Fn+Space3s/release for manual stock return; verify stock identity afterward.
+Then prepare the diagnostics-disabled production candidate and its independent
+local/exact-SHA gates before installation. Do not accept this diagnostic, merge,
+push CI, publish or claim release readiness from these results alone.
+
+# Complete-frame physical read stress passes; browser checks pending
+
+Owner confirms047100b6 baseline typing/Fn/Caps/backlight and Fn+U, Studio closed.
+Read-only probes on exact047100b6690d9fbce41dcd171224089934c3c5826ae3d22a650af319c09be280:
+- 50 coalesced full map/layout/action cycles:802 requests, zero decode failures,
+  expected/UART/RPC fingerprint694883712.
+- 500 coalesced action-list cycles:502 requests, zero decode failures,
+  fingerprint1490866167.
+- 30 fragmented full cycles:482 requests, zero decode failures,
+  fingerprint1163474970.
+All1786 requests complete; no timeout/send failure; RX/TX rings empty at each
+snapshot. Private logs frame-{full,small,fragment}*.json/jsonl under
+private/analysis/logs/studio. No follow-up requests before after snapshots.
+Serial port closed/termios restored. No save/flash/acceptance/restart/mode change.
+Trial remains unconfirmed; keep USB/ON. Browser initial/navigation/draft-leave
+reconnect checks now needed. Results support complete-frame decoding on one
+physical device but do not establish exact callback/compiler root cause or
+release readiness. No acceptance planned for this short experiment.
+
+# Complete-frame experiment installed; awaiting baseline/unlock
+
+Owner installed frozen047100b6 from8803. Read-only info: slotB/trial1,
+unconfirmed, retained-image size/CRC checks pass. Feature9 schema2 available,
+zero ingress/decode/egress counters, FNV seeds2166136261, transport present1.
+No acceptance/settings writes. Ask owner ON typing/Fn/Caps/backlight baseline,
+Fn+U once, all Studio tabs closed. Then before/after schema2 snapshots around
+controlled read-only coalesced/full-read stress. Keep USB/ON; no restart/modes.
+
+# Complete-frame experiment: stock verified; awaiting owner install
+
+Owner confirmed Fn+Space return. Read-only USB identity05ac:0256
+EDGE84@Lofree verified. Frozen OTA047100b6690d9fbce41dcd171224089934c3c5826ae3d22a650af319c09be280
+unchanged; localhost8803 manifest reachable and selects complete-frame candidate.
+No device writes/acceptance. Provide browser installation handoff with fresh risk
+acknowledgment, USB/ON unchanged. After completion read trial/retained integrity
+and feature9 availability before owner baseline/unlock. No acceptance planned.
+Do not query keyboard while owner flashes.
+
 # Complete-frame candidate frozen; ready for stock-return handoff
 
 Source7e700c5 rebuild reproduces OTA047100b6690d9fbce41dcd171224089934c3c5826ae3d22a650af319c09be280.
