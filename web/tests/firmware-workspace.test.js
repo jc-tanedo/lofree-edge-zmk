@@ -355,3 +355,20 @@ test("reload exposes interrupted verification without executing acceptance", asy
   assert.equal(accepts, 0);
   restored.dispose();
 });
+
+test("removed catalog approval refuses resumption visibly", async () => {
+  const f = await fixture({
+    automatic: true,
+    installedDevice: async () => ({}),
+    accept: async () => {
+      throw Error("Disconnected");
+    },
+  });
+  await f.workspace.loadCatalog();
+  await f.workspace.connectUpdate();
+  await f.workspace.install(true);
+  f.builds[0].installation.mode = "trial";
+  await f.workspace.resumeInstallation(true);
+  assert.match(f.workspace.getSnapshot().firmwareStatus, /not approved/);
+  f.workspace.dispose();
+});

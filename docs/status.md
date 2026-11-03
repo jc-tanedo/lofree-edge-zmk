@@ -1,3 +1,23 @@
+# Unified installer local verification complete; no hardware update
+
+Implementation64ea25f plus explicit removed-approval resume error. All web test
+files and49 Python tests pass; final targeted installer tests also pass.
+Normal new identity firmware fc46a4706cb92a0c70c5a3fa0cebcfe46c3331b38b18d276a11274141ac3484d
+rebuild matches compiled-test bytes. Normal and diagnostic native identity /
+no-write/stack/OTA acceptance protocol tests pass on synthetic flash only.
+Both website bases build and30-link checks pass;250-file source/history/source+
+website archive audits pass on64ea25f. Browser synthetic success/interruption/
+fresh-confirmation/no-reflash resume checks pass; final hosted-subpath Firmware→
+Studio navigation and risk notices pass. Final controller-only error refinement
+requires review-package refresh, below. Frozen8804 and physical accepted5b532244
+remain unchanged. No real device commands, GitHub CI push, merge or release.
+
+Registry remains empty: no build receives automatic policy before exact-SHA
+hardware review of the new identity firmware and automatic-install path. New
+firmware is necessary; user should not flash old8804 expecting this behavior.
+Current hardware remains USB/ON on accepted5b532244; its mode/power gates remain
+open. UI implementation is ready for review; physical installation test pending.
+
 # Unified Install Firmware implemented; physical gate pending
 
 Owner authorized one user-facing Install Firmware flow, automatic verification/

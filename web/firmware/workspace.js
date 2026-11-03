@@ -329,13 +329,15 @@ export function createWorkspace({
       const build = state.builds.find(
         (b) => b.sha256 === attempt?.sha256 && b.file === attempt?.file,
       );
-      if (
-        !acknowledged ||
-        !verificationPending(attempt) ||
-        !automaticInstall(build) ||
-        !begin()
-      )
+      if (!acknowledged || !verificationPending(attempt)) return;
+      if (!automaticInstall(build)) {
+        status(
+          "Installation needs attention. This image is not approved for automatic completion in the current catalog. It was not accepted.",
+          true,
+        );
         return;
+      }
+      if (!begin()) return;
       const unprotect = protectFirmwareTransfer(target);
       try {
         await finishInstallation(attempt, build, true);
