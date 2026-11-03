@@ -11,7 +11,7 @@ shutil.copytree(ROOT/'web/firmware',app)
 modules=stage/'node_modules'
 if not modules.exists():modules.symlink_to(ROOT/'.deps/zmk-studio/node_modules',target_is_directory=True)
 (stage/'dist').mkdir(exist_ok=True)
-for name in ['webhid.js','firmware.js','firmware-session.js','protocol.js','profile.js','keymap.js','layout.js']:
+for name in ['webhid.js','firmware.js','firmware-acceptance.js','firmware-session.js','protocol.js','profile.js','keymap.js','layout.js']:
  shutil.copyfile(ROOT/'web/dist'/name,stage/'dist'/name)
 if a.preview:
  shutil.copyfile(app/'preview.jsx',app/'main.jsx')

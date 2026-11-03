@@ -1,3 +1,75 @@
+# Unified Install Firmware implemented; physical gate pending
+
+Owner authorized one user-facing Install Firmware flow, automatic verification/
+self-test/acceptance for validated builds, and retained development trial mode.
+Implemented React/controller integration with phase status, persistent interrupted
+verification metadata, fresh-confirmation Continue installation (no reflash),
+independent acceptance readback and no automatic write retries. Failed checks
+cannot report completion. Reload never executes acceptance by itself.
+
+Catalog defaults to trial. Exact SHA/version entries in
+firmware/validated-builds.json opt into automatic policy; registry deliberately
+empty pending hardware review. New readonly feature10 identifies running image
+size/storedCRC/slot with bounded reads, no flash writes/new static buffer. It is
+not cryptographic attestation or a fresh full-image integrity scan. Host SHA256,
+OTA/boot checks, retained integrity and storage self-test are separate checks.
+Older firmware lacks feature10 and stays on development trial workflow.
+
+Local JavaScript tests (all10 files) and49 Python tests pass. Normal and optional
+I/O-diagnostic firmware builds/image checks pass; compiled identity/no-write/
+>=128B observed stack and actual HID version/test/confirm/readback tests pass on
+synthetic flash only. BrowserOS Neo synthetic QA verifies risk confirmation,
+completion, interrupted verification, fresh-ack resume without upload; no real
+keyboard accessed. Both site bases build; final archive audits pending refresh.
+Current physical keyboard stays accepted5b532244, USB/ON, owner baseline/full-cycle
+persistence passed. Remaining prior mode/power checks and new identity-firmware
+hardware/install validation are still open. Frozen8804 untouched. No new flash,
+acceptance, GitHub CI push, merge or release. Synthetic QA at8805 cannot use USB.
+
+# Accepted normal candidate full-cycle persistence passes
+
+Owner confirms exact5b532244: OFF/unplug5s/reconnect/ON, prompt USB typing,
+Fn/media/Caps/backlight, Studio unlock and saved map/layers/Power/Security all
+pass. Remains USB/ON. Accepted/count0 was read back before this cycle; no new
+agent hardware query/write performed. Exact-image BT/mode/power/security
+functional sequences remain pending. Owner proposes unified Install Firmware
+flow with internal self-test/acceptance; discussing UX, not yet authorization
+or implementation. Keep automatic health verification and failed-install
+handling explicit; diagnostic/trial workflow must remain available for testing.
+
+# Normal complete-frame candidate accepted after explicit owner approval
+
+Owner explicitly authorized self-test/acceptance of exact5b532244. CLI flash test
+passes (bond-log sector erase/write/readback); confirm changes count1→0 and sets
+confirmed. Separate info readback: accepted/count0,slotB,retained size/CRC valid.
+No reboot/mode change. USB/ON, Studio idle. Exact-image mode/power/security/
+persistence hardware checks remain pending; no publication/merge/CI push.
+
+Owner asked regular-user acceptance: currently CLI-only, documented in
+user-guide.md#accept-a-tested-trial; browser installs trial but has no acceptance
+control. Explain tools/edge_ota.py confirm --accept-risk performs both operations.
+Do not silently auto-accept or implement unrequested UI changes. Next full power
+cycle/USB/settings persistence, then BT/mode and power/security checks.
+
+# Normal candidate reinstalled; acceptance approval pending
+
+Owner confirms reinstall of frozen5b532244 from8804. Read-only info verifies
+slotB/fresh trial1/unconfirmed, retained-image size/CRC checks pass. Prior exact
+image ON baseline,1786 physical reads, browser reconnect/draft checks and manual
+stock return all pass. No acceptance/self-test performed after reinstall.
+Ask separate informed approval for flash self-test and acceptance to permit
+repeated mode/power/persistence checks; those exact-image hardware gates remain
+pending. Keep USB/ON and Studio idle. No automatic acceptance, CI push or release.
+
+# Normal candidate manual stock return verified; same-image reinstall pending
+
+Owner reports Fn+Space restart USB/ON. Read-only USB enumeration verifies stock
+05ac:0256 EDGE84@Lofree. Frozen5b53224452589907eeafd485b294800023bbf5114746f1feebb9230e8cc8ff5b
+checksum unchanged; localhost8804 manifest available, diagnostics-disabled label.
+No device writes or acceptance. Give same-candidate browser reinstall handoff
+with fresh risk acknowledgment, USB/ON. After completion verify fresh trial1/
+unconfirmed and retained integrity; acceptance remains separate approval.
+
 # Normal complete-frame browser checks pass; manual stock return pending
 
 Owner confirms normal5b532244: initial saved map/Power/Security load, five

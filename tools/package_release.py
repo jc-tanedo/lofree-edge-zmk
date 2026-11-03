@@ -9,6 +9,14 @@ def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
 def tar_files(path,files):
  with tarfile.open(path,'w:gz') as t:
   for p,name in files:t.add(p,arcname=name,recursive=False)
+def installation_policy(data,version,registry):
+ if registry.get('format')!='lofree-edge-validated-builds-v1' or not isinstance(registry.get('builds'),list):raise ValueError('Invalid hardware approval registry')
+ digest=hashlib.sha256(data).hexdigest()
+ approved=[b for b in registry['builds'] if b.get('sha256')==digest and b.get('version')==version]
+ if not approved:return {'mode':'trial'}
+ if len(approved)!=1 or approved[0].get('identityReport')!=1:raise ValueError('Invalid or duplicate image approval')
+ return {'mode':'automatic','identityReport':1,'hardwareValidatedSha256':digest,'crc32':int.from_bytes(data[-4:],'little')}
+
 def main():
  p=argparse.ArgumentParser(description=__doc__);p.add_argument('--site-base',default='/lofree-edge-zmk');p.add_argument('--site-only',action='store_true');p.add_argument('--site-output',default='build/site');a=p.parse_args()
  base=a.site_base.rstrip('/')
@@ -47,6 +55,9 @@ def main():
  firmware=site/'firmware';firmware.mkdir()
  shutil.copyfile(image,firmware/binary)
  manifest={'format':'lofree-edge-browser-firmware-v1','version':version,'builds':[{'file':binary,'label':'ZMK '+version+' · Experimental BLE + USB Studio','version':version,'board':'lofree_edge','size':len(data),'sha256':sha(image)}]}
+ # Only exact images explicitly approved after hardware review auto-complete.
+ approvals=json.loads((ROOT/'firmware/validated-builds.json').read_text())
+ manifest['builds'][0]['installation']=installation_policy(data,version,approvals)
  (firmware/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
  for name,doc in [('risk.html','RISK.md'),('roadmap.html','ROADMAP.md'),('security.html','docs/security.md')]:
   text=markdown.markdown((ROOT/doc).read_text(),extensions=['tables'])

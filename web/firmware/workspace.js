@@ -1,5 +1,11 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Device operations are independent of React and never write without an action.
+import {
+  automaticInstall,
+  verificationPending,
+  findInstalledDevice,
+  verifyAndAccept,
+} from "../dist/firmware-acceptance.js";
 import { EdgeConnection } from "../dist/webhid.js";
 import { flashFirmware, validateFirmware } from "../dist/firmware.js";
 import {
@@ -19,6 +25,8 @@ export function createWorkspace({
   target = window,
   storage,
   flash = flashFirmware,
+  installedDevice = (choose) => findInstalledDevice(hid, choose),
+  accept = verifyAndAccept,
 } = {}) {
   if (storage === undefined) {
     try {
@@ -147,6 +155,19 @@ export function createWorkspace({
       if (generation === imageGeneration) status(error.message, true);
     }
   }
+  async function finishInstallation(attempt, build, choose = false) {
+    attempt.state = "verifying";
+    saveFirmwareAttempt(storage, attempt);
+    patch({ lastAttempt: null, progress: null });
+    status("Restarting and reconnecting to the keyboard…");
+    const device = await installedDevice(choose);
+    await accept(device, build, (text) => status(text));
+    attempt.state = "complete";
+    delete attempt.error;
+    saveFirmwareAttempt(storage, attempt);
+    patch({ lastAttempt: null, progress: 1 });
+    status("Installation complete. Firmware verified and ready to use.");
+  }
   const onDisconnect = (event) => {
     if (state.connection?.device === event.device) {
       const current = state.connection;
@@ -247,6 +268,7 @@ export function createWorkspace({
         sha256: approved.sha256,
         completed: 0,
         total: Math.floor(image.length / 16) + 1,
+        automatic: automaticInstall(approved),
       };
       saveFirmwareAttempt(storage, attempt);
       patch({ lastAttempt: null, progress: 0 });
@@ -270,21 +292,61 @@ export function createWorkspace({
         });
         attempt.state = "restart-requested";
         saveFirmwareAttempt(storage, attempt);
-        status(
-          "Transfer complete; restart requested. For Studio builds, connect over USB and press Fn+U to unlock.",
-        );
+        await current.close().catch(() => {});
+        if (automaticInstall(approved)) {
+          await finishInstallation(attempt, approved);
+        } else {
+          attempt.state = "trial";
+          saveFirmwareAttempt(storage, attempt);
+          status(
+            "Transfer complete. Development trial installed; automatic rollback remains enabled. Follow the build’s test instructions before acceptance.",
+          );
+        }
       } catch (error) {
-        attempt.state = "failed";
+        attempt.state =
+          attempt.state === "verifying" ||
+          (attempt.automatic && attempt.completed === attempt.total)
+            ? "needs-attention"
+            : "failed";
         attempt.error = error.message;
         saveFirmwareAttempt(storage, attempt);
+        patch({ lastAttempt: { ...attempt } });
         status(
-          `${error.message} Reconnect and verify the running firmware before retrying.`,
+          attempt.state === "needs-attention"
+            ? `Installation needs attention. ${error.message} Continue installation to verify its status; do not reflash yet.`
+            : `${error.message} Reconnect and verify the running firmware before retrying.`,
           true,
         );
       } finally {
         unprotect();
         await current.close().catch(() => {});
         patch({ updateConnection: null, verified: false });
+        end();
+      }
+    },
+    async resumeInstallation(acknowledged) {
+      const attempt = readFirmwareAttempt(storage);
+      const build = state.builds.find(
+        (b) => b.sha256 === attempt?.sha256 && b.file === attempt?.file,
+      );
+      if (
+        !acknowledged ||
+        !verificationPending(attempt) ||
+        !automaticInstall(build) ||
+        !begin()
+      )
+        return;
+      const unprotect = protectFirmwareTransfer(target);
+      try {
+        await finishInstallation(attempt, build, true);
+      } catch (error) {
+        attempt.state = "needs-attention";
+        attempt.error = error.message;
+        saveFirmwareAttempt(storage, attempt);
+        patch({ lastAttempt: { ...attempt } });
+        status(`Installation needs attention. ${error.message}`, true);
+      } finally {
+        unprotect();
         end();
       }
     },

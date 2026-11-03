@@ -4,6 +4,7 @@ import { createWorkspace } from "./workspace.js";
 import { hasPendingChanges } from "../dist/keymap.js";
 import StockTools from "./StockTools.jsx";
 import FirmwareInstaller from "./FirmwareInstaller.jsx";
+import { automaticInstall } from "../dist/firmware-acceptance.js";
 import ConfirmDialog from "./ConfirmDialog.jsx";
 
 export default function App({ workspace: supplied }) {
@@ -13,6 +14,7 @@ export default function App({ workspace: supplied }) {
     workspace.getSnapshot,
     workspace.getSnapshot,
   );
+  const [resume, setResume] = useState(false);
   const [installOpen, setInstallOpen] = useState(false),
     [ack, setAck] = useState(false),
     [restoreOpen, setRestoreOpen] = useState(false);
@@ -77,7 +79,8 @@ export default function App({ workspace: supplied }) {
     changeTab(view);
     document.getElementById(`tab-${view}`).focus();
   };
-  const beginInstall = () => {
+  const beginInstall = (resume = false) => {
+    setResume(resume);
     setAck(false);
     setInstallOpen(true);
   };
@@ -162,7 +165,8 @@ export default function App({ workspace: supplied }) {
           workspace={workspace}
           updateConnected={updateConnected}
           supported={supported}
-          onInstall={beginInstall}
+          onInstall={() => beginInstall(false)}
+          onResume={() => beginInstall(true)}
         />
         <StockTools
           s={s}
@@ -182,7 +186,10 @@ export default function App({ workspace: supplied }) {
           const allowed = value === "install" && ack;
           setInstallOpen(false);
           setAck(false);
-          if (allowed) void workspace.install(true);
+          if (allowed)
+            void (resume
+              ? workspace.resumeInstallation(true)
+              : workspace.install(true));
         }}
       >
         <form method="dialog">
@@ -192,17 +199,26 @@ export default function App({ workspace: supplied }) {
             </span>
             <div>
               <p className="eyebrow">FIRMWARE INSTALLATION</p>
-              <h2 id="firmware-confirm-title">Install this build?</h2>
+              <h2 id="firmware-confirm-title">
+                {resume ? "Finish installation?" : "Install this build?"}
+              </h2>
             </div>
           </div>
           <p id="firmware-confirm-details">
-            {s.approved &&
-              `${s.approved.label} (${s.approved.size.toLocaleString()} bytes)`}
+            {resume
+              ? `Finish ${s.lastAttempt?.file} · SHA-256 ${s.lastAttempt?.sha256}`
+              : s.approved &&
+                `${s.approved.label} (${s.approved.size.toLocaleString()} bytes)`}
           </p>
           <div className="restore-impact">
             <strong>Keep the USB cable connected.</strong>
             <span id="firmware-confirm-description">
-              This replaces the inactive firmware and restarts the keyboard.
+              {resume
+                ? "This verifies the installed firmware and completes installation without uploading again. "
+                : "This replaces the inactive firmware and restarts the keyboard. "}
+              {resume || automaticInstall(s.approved)
+                ? "Successful verification runs a flash storage self-test and makes the firmware persistent, ending automatic rollback. "
+                : "This development build stays in trial mode; repeated restarts may return it to stock. "}
               Stock firmware is retained. Firmware can make the keyboard
               unusable or lose settings. Recovery may require external
               programming hardware and may fail. Backups and retained stock
@@ -231,7 +247,7 @@ export default function App({ workspace: supplied }) {
               className="danger"
               disabled={!ack}
             >
-              Install and restart
+              {resume ? "Continue installation" : "Install Firmware"}
             </button>
           </div>
         </form>

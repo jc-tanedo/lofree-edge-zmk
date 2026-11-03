@@ -143,3 +143,13 @@ The supported web installer currently returns to stock for its USB update interf
 **Acceptance:** Document feasibility, flash/slot and settings constraints; if implemented, validate image checks, interruption behavior, explicit consent, unconfirmed trials, retained recovery and exact-SHA hardware updates before release.
 
 [Tracking issue](https://github.com/jc-tanedo/lofree-edge-zmk/issues/14)
+
+## Verified one-step firmware installation
+
+**in progress** · Release hardening
+
+Unified Install Firmware flow and read-only image identity implemented; local synthetic browser/compiled checks pass. New exact-image hardware validation and approval registry entry are pending. Unlisted development builds remain trials.
+
+**Acceptance:** Validated exact builds upload/reconnect/verify/self-test/accept/readback in one flow; interruptions offer verification-only resume; trial builds never auto-accept; exact-SHA physical install/recovery/persistence tests pass.
+
+Tracking issue will be linked after the public repository is created.

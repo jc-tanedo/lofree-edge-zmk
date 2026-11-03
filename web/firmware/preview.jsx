@@ -11,6 +11,7 @@ async function mountPreview() {
   let current,
     failVerify = false,
     failFlash = false,
+    failAcceptance = false,
     continueFlash;
   let map = remapKey(
     factoryMap(),
@@ -62,6 +63,20 @@ async function mountPreview() {
       current = connection;
       return connection;
     },
+    storage: {
+      getItem: (key) => sessionStorage.getItem("qa-" + key),
+      setItem: (key, value) => sessionStorage.setItem("qa-" + key, value),
+    },
+    installedDevice: async () => ({}),
+    accept: async (_device, _build, phase) => {
+      phase("Verifying installed firmware…");
+      if (failAcceptance) {
+        failAcceptance = false;
+        throw new Error("Synthetic reconnect interruption");
+      }
+      phase("Testing firmware storage…");
+      phase("Finishing installation…");
+    },
     fetcher: async (file) =>
       file.endsWith("manifest.json")
         ? {
@@ -75,6 +90,12 @@ async function mountPreview() {
                   size: 36,
                   sha256: hash,
                   board: "lofree_edge",
+                  installation: {
+                    mode: "automatic",
+                    hardwareValidatedSha256: hash,
+                    identityReport: 1,
+                    crc32: 123,
+                  },
                 },
               ],
             }),
@@ -112,6 +133,13 @@ async function mountPreview() {
             }}
           >
             Fail next verification
+          </button>{" "}
+          <button
+            onClick={() => {
+              failAcceptance = true;
+            }}
+          >
+            Fail next completion
           </button>{" "}
           <button
             onClick={() => {

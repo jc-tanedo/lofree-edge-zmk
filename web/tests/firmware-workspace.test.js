@@ -5,7 +5,14 @@ import { factoryMap, remapKey, hasPendingChanges } from "../dist/keymap.js";
 import { KEY_LAYOUT } from "../dist/layout.js";
 import { telinkCrc32 } from "../dist/firmware.js";
 
-async function fixture({ verify, flash, fetcher } = {}) {
+async function fixture({
+  verify,
+  flash,
+  fetcher,
+  automatic = false,
+  accept,
+  installedDevice,
+} = {}) {
   const image = new Uint8Array(36).fill(0xa5);
   image.set([75, 78, 76, 84], 8);
   const view = new DataView(image.buffer);
@@ -21,6 +28,14 @@ async function fixture({ verify, flash, fetcher } = {}) {
     board: "lofree_edge",
     sha256,
   }));
+  if (automatic)
+    for (const build of builds)
+      build.installation = {
+        mode: "automatic",
+        hardwareValidatedSha256: build.sha256,
+        identityReport: 1,
+        crc32: 123,
+      };
   const hid = new EventTarget(),
     target = new EventTarget(),
     entries = new Map();
@@ -61,6 +76,8 @@ async function fixture({ verify, flash, fetcher } = {}) {
     hid,
     secure: true,
     request,
+    ...(accept ? { accept } : {}),
+    ...(installedDevice ? { installedDevice } : {}),
     target,
     storage,
     flash:
@@ -221,4 +238,120 @@ test("large transfers keep UI notifications bounded without dropping final progr
     `UI received ${notifications} updates for 10000 blocks`,
   );
   f.workspace.dispose();
+});
+
+test("automatic install completes only after verification; trial never calls acceptance", async () => {
+  let checks = 0;
+  const f = await fixture({
+    automatic: true,
+    installedDevice: async () => ({}),
+    accept: async () => {
+      checks++;
+    },
+  });
+  await f.workspace.loadCatalog();
+  await f.workspace.connectUpdate();
+  await f.workspace.install(false);
+  assert.equal(checks, 0);
+  await f.workspace.install(true);
+  assert.equal(checks, 1);
+  assert.match(
+    f.workspace.getSnapshot().firmwareStatus,
+    /Installation complete/,
+  );
+  f.workspace.dispose();
+  const trial = await fixture({
+    installedDevice: async () => {
+      throw Error("Should not connect");
+    },
+  });
+  await trial.workspace.loadCatalog();
+  await trial.workspace.connectUpdate();
+  await trial.workspace.install(true);
+  assert.match(
+    trial.workspace.getSnapshot().firmwareStatus,
+    /Development trial/,
+  );
+  trial.workspace.dispose();
+});
+test("interrupted verification resumes with fresh acknowledgment and never reflashes", async () => {
+  let checks = 0,
+    selected = [];
+  const f = await fixture({
+    automatic: true,
+    installedDevice: async (choose) => {
+      selected.push(choose);
+      return {};
+    },
+    accept: async () => {
+      if (!checks++) throw Error("Disconnected");
+    },
+  });
+  await f.workspace.loadCatalog();
+  await f.workspace.connectUpdate();
+  await f.workspace.install(true);
+  assert.equal(f.workspace.getSnapshot().lastAttempt.state, "needs-attention");
+  const writes = f.writes;
+  await f.workspace.resumeInstallation(false);
+  assert.equal(checks, 1);
+  await f.workspace.resumeInstallation(true);
+  assert.equal(checks, 2);
+  assert.equal(f.writes, writes);
+  assert.deepEqual(selected, [false, true]);
+  assert.match(
+    f.workspace.getSnapshot().firmwareStatus,
+    /Installation complete/,
+  );
+  f.workspace.dispose();
+});
+
+test("lost END delivery after all block acknowledgments offers verification, not an automatic reflash", async () => {
+  const f = await fixture({
+    automatic: true,
+    flash: async (_c, _i, _b, progress) => {
+      progress(3, 3);
+      throw Error("Restart confirmation lost");
+    },
+  });
+  await f.workspace.loadCatalog();
+  await f.workspace.connectUpdate();
+  await f.workspace.install(true);
+  assert.equal(f.workspace.getSnapshot().lastAttempt.state, "needs-attention");
+  f.workspace.dispose();
+});
+
+test("reload exposes interrupted verification without executing acceptance", async () => {
+  const f = await fixture({
+    automatic: true,
+    installedDevice: async () => ({}),
+    accept: async () => {
+      throw Error("Disconnected");
+    },
+  });
+  await f.workspace.loadCatalog();
+  await f.workspace.connectUpdate();
+  await f.workspace.install(true);
+  const attempt = f.workspace.getSnapshot().lastAttempt;
+  f.workspace.dispose();
+  let accepts = 0;
+  const restored = createWorkspace({
+    hid: new EventTarget(),
+    secure: true,
+    target: new EventTarget(),
+    storage: {
+      getItem: () =>
+        JSON.stringify({
+          ...attempt,
+          format: "lofree-edge-firmware-attempt-v1",
+        }),
+    },
+    accept: async () => {
+      accepts++;
+    },
+  });
+  restored.start();
+  assert.equal(restored.getSnapshot().lastAttempt.state, "needs-attention");
+  await new Promise((resolve) => setTimeout(resolve, 0));
+  assert.equal(accepts, 0);
+  restored.dispose();
 });

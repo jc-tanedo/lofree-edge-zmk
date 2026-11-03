@@ -38,6 +38,9 @@ static int edge_switch_inputs_init(void)
 SYS_INIT(edge_switch_inputs_init, APPLICATION, 90);
 #endif
 static const uint8_t feature_desc[] = {
+    0x06,0x00,0xff, 0x09,0x0a, 0xa1,0x01, 0x85,0x0a,
+    0x15,0x00, 0x26,0xff,0x00, 0x75,0x08, 0x95,0x0f,
+    0x09,0x0a, 0xb1,0x02, 0xc0,
 #if IS_ENABLED(CONFIG_LOFREE_EDGE_STUDIO_IO_DIAGNOSTICS)
     0x06,0x00,0xff, 0x09,0x09, 0xa1,0x01, 0x85,0x09,
     0x15,0x00, 0x26,0xff,0x00, 0x75,0x08, 0x95,0x42,
@@ -85,6 +88,24 @@ static int keyboard_set(const struct device *dev, struct usb_setup_packet *setup
 static int vendor_get(const struct device *dev, struct usb_setup_packet *setup,
                       int32_t *len, uint8_t **data)
 {
+    if (setup->wValue == 0x030a) {
+        uint32_t slot;
+        uint8_t size[4], crc[4];
+        /* Fixed header/trailer reads only: do not scan128KB in the USB handler.
+         * This identifies the running image; OTA/boot checks establish integrity. */
+        if (tlsr_slot_running_checked(&slot) ||
+            tlsr_slot_read(slot + TLSR_SLOT_SIZE_WORD, size, sizeof(size))) { return -EIO; }
+        uint32_t length=sys_get_le32(size);
+        if (length < 36 || length > TLSR_SLOT_SIZE || (length & 15U) != 4U ||
+            tlsr_slot_read(slot + length - 4U, crc, sizeof(crc))) { return -EIO; }
+        memset(stock_window, 0, 16);
+        stock_window[0]=10; stock_window[1]='E'; stock_window[2]='I'; stock_window[3]=1;
+        memcpy(&stock_window[4], size, sizeof(size));
+        memcpy(&stock_window[8], crc, sizeof(crc));
+        sys_put_le32(slot, &stock_window[12]);
+        *data=stock_window; *len=16;
+        return 0;
+    }
 #if IS_ENABLED(CONFIG_LOFREE_EDGE_STUDIO_IO_DIAGNOSTICS)
     if (setup->wValue == 0x0309) {
         /* Reuse the existing67-byte feature scratch buffer; no extra RAM. */

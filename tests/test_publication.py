@@ -5,7 +5,20 @@ ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'tools'))
 from audit_publication import check
 from verify_promotion import validate_metadata,CASES
+from package_release import installation_policy
 class PublicationTests(unittest.TestCase):
+ def test_only_exact_hardware_approved_image_auto_completes(self):
+  import hashlib
+  data=b'candidate-image\x12\x34\x56\x78';digest=hashlib.sha256(data).hexdigest()
+  registry={'format':'lofree-edge-validated-builds-v1','builds':[]}
+  self.assertEqual(installation_policy(data,'1',registry),{'mode':'trial'})
+  registry['builds']=[{'sha256':digest,'version':'1','identityReport':1}]
+  self.assertEqual(installation_policy(data,'1',registry)['mode'],'automatic')
+  self.assertEqual(installation_policy(data+b'x','1',registry)['mode'],'trial')
+  self.assertEqual(installation_policy(data,'2',registry)['mode'],'trial')
+  registry['builds']*=2
+  with self.assertRaises(ValueError):installation_policy(data,'1',registry)
+
  def test_private_inputs_and_credentials_are_rejected(self):
   for name,data in [('private/input.txt',b'x'),('app.exe',b'MZ'),('capture.pcap',b'x'),('ok.txt',b'github_pat_'+b'a'*35)]:
    with self.subTest(name=name),self.assertRaises(ValueError):check(name,data)

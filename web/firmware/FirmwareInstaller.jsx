@@ -1,11 +1,13 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 import React from "react";
+import { verificationPending } from "../dist/firmware-acceptance.js";
 export default function FirmwareInstaller({
   s,
   workspace,
   updateConnected,
   supported,
   onInstall,
+  onResume,
 }) {
   return (
     <div
@@ -110,7 +112,7 @@ export default function FirmwareInstaller({
             <p className="step-number">03 / INSTALL</p>
             <h3 id="install-build-title">Install the build</h3>
             <p>
-              Keep USB connected until the transfer completes. Installation
+              Keep USB connected until installation completes. Installation
               requires confirmation.
             </p>
             <button
@@ -140,6 +142,21 @@ export default function FirmwareInstaller({
           >
             {s.firmwareStatus}
           </p>
+          {verificationPending(s.lastAttempt) && (
+            <div role="status">
+              <p>
+                Installation needs attention. Reconnect in ON mode to verify and
+                finish without uploading again.
+              </p>
+              <button
+                type="button"
+                disabled={s.busy || !supported}
+                onClick={onResume}
+              >
+                Continue installation
+              </button>
+            </div>
+          )}
           {s.lastAttempt &&
             ["preflight", "transferring", "failed"].includes(
               s.lastAttempt.state,
@@ -163,8 +180,10 @@ export default function FirmwareInstaller({
             stock from ZMK.
           </p>
           <p className="hint">
-            These are trial builds. Repeated unconfirmed restarts can return the
-            keyboard to stock automatically.
+            Validated builds reconnect, verify and finish installation
+            automatically. Development builds remain trials; repeated
+            unconfirmed restarts can return them to stock. The browser may ask
+            permission for the new USB interface.
           </p>
           <p className="hint">
             Hold Fn + Space for 3 seconds to return to stock. The physical Fn +

@@ -320,3 +320,34 @@ Firmware→Studio reads without Retry, and two unsaved-four-key-draft leave/reco
 sequences. The tested read/navigation symptom is resolved in this observed
 workload; precise streaming decoder cause and wider hardware coverage remain
 unproven. Recovery, acceptance and power/mode gates are separate.
+
+## Unified firmware installation
+
+`firmware-acceptance.js` owns bounded ZMK reconnect, health/self-test/confirm and
+independent acceptance readback. Commands are VERSION(ff00), FLASH_TEST(ff07),
+CONFIRM(ff03), VERSION; no overwrite unlock or reboot commands. Writes are never
+retried automatically. A timeout, refused test, identity mismatch or missing
+retained image prevents completion. A lost confirmation can be resumed: readback
+of an already accepted image avoids repeating the flash self-test.
+
+Feature10 is a read-only16-byte identity: report ID10, `EI`, schema1, LE32 image
+size, stored trailer CRC32 and running slot. It uses fixed bounded reads after
+running-slot consistency checks, not a whole-flash scan in the USB callback.
+It reuses the existing feature scratch buffer. Identity is not cryptographic
+attestation or a fresh integrity scan. Downloaded images are SHA256-checked;
+OTA/boot checks and the retained-image/self-test checks remain separate gates.
+
+Packaging defaults to `installation.mode=trial`. Only exact SHA/version entries
+with identityReport1 in `firmware/validated-builds.json` receive automatic policy.
+That registry is deliberately empty until new images pass hardware review.
+Never approve a diagnostic or infer approval from a successful upload. Changing
+this registry changes website/source artifacts; rebuild and compare firmware
+bytes before applying existing exact-SHA evidence.
+
+The browser may require permission for the newly enumerated ZMK HID interface.
+Automatic discovery uses granted devices only and rejects ambiguity. Continue
+installation opens a user-initiated chooser and performs verification without
+uploading again. Session metadata stores image identifiers/progress, never risk
+consent or mappings. Reload does not trigger acceptance: resumption requires a
+fresh confirmation and a matching approved catalog entry. Development trial
+installs never call the acceptance path. Simulated preview cannot access USB.

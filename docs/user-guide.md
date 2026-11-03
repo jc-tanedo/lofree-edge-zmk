@@ -35,7 +35,9 @@ Select a layer and key, choose its action, then **Save**. Edits remain in a temp
 
 **This writes flash and ends automatic trial rollback. Entirely at your own risk.** First verify typing, BLE, layers/save, indicators and retained-image return for the exact image. Keep the editor idle. Do not confirm an untested image or an image without a valid retained recovery slot.
 
-The first alpha uses an explicit command-line acceptance step. Install the pinned public dependencies using the development guide. On Linux, install the system HIDAPI library as well (`libhidapi-hidraw0` on Debian/Ubuntu, `hidapi` on Arch). Use the pinned Python `hid` package, not the incompatible `hidapi` package, in a clean virtual environment. Then:
+Validated builds with automatic installation reconnect, verify the running image, run the storage self-test and finish acceptance under the **Install Firmware** action. Keep USB connected until **Installation complete**. If browser permission is needed or verification is interrupted, choose **Continue installation**; it verifies without uploading again. A failed check never reports completion. Automatic checks do not test every key, Bluetooth or lighting.
+
+Development builds remain unconfirmed trials. Older firmware without the image-identity report also stays on the trial workflow. These builds use an explicit command-line acceptance step after their required hardware tests. Install the pinned public dependencies using the development guide. On Linux, install the system HIDAPI library as well (`libhidapi-hidraw0` on Debian/Ubuntu, `hidapi` on Arch). Use the pinned Python `hid` package, not the incompatible `hidapi` package, in a clean virtual environment. Then:
 
 ```sh
 .venv/bin/python -m pip install -r requirements-device.lock

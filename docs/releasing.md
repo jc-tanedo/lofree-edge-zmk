@@ -25,3 +25,13 @@ and physical unlock, plus both missing-unlock-binding warnings. Record
 `hardware:studio-security-policy` and `hardware:studio-unlock-binding-warnings`
 only after those physical/browser checks pass against the matching firmware.
 Compiled tests and simulated-browser checks do not complete these markers.
+
+## Automatic installation approval
+
+Builds default to trial installation. After exact-SHA hardware review, add the
+firmware SHA256/version and `identityReport: 1` to `firmware/validated-builds.json`.
+Only those exact binaries get automatic browser verification/self-test/acceptance.
+Rebuild packages and recheck source/site archives and browser flow; verify the
+firmware hash is unchanged. The registry does not waive any release gates.
+Keep diagnostics and untested development candidates unlisted. New identity
+firmware requires a fresh exact-SHA hardware test before registry approval.
