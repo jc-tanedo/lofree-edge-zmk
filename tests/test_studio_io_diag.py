@@ -10,6 +10,10 @@ class IoDiag(unittest.TestCase):
   result=module.parse(bytes([9,1,0])+struct.pack('<16I',*range(16)))
   self.assertEqual(result['last_request_id'],5);self.assertEqual(result['rx_ring_used'],12)
   self.assertEqual(set(result),set(module.FIELDS))
+ def test_schema2_integrity_and_error(self):
+  result=module.parse(bytes([9,2,0])+struct.pack('<16I',*range(16)))
+  self.assertEqual(result['rx_stream_fnv32'],0);self.assertEqual(result['rpc_stream_fnv32'],2)
+  self.assertEqual(result['decode_error_code'],11);self.assertEqual(result['decode_error_framing'],0)
  def test_rejects_incomplete_and_wrong_feature(self):
   for data in (b'',bytes(67),bytes([8,1,0])+bytes(64)):
    with self.assertRaises(ValueError):module.parse(data)

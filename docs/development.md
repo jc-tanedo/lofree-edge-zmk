@@ -255,3 +255,20 @@ last-request fields. Instrumentation can affect timing; no reproduction under
 instrumentation would not establish a fix. The existing scratch buffer is reused;
 48B static counter storage is diagnostic-only. New-image stack and hardware gates
 remain mandatory. Opt-out image must remain byte-identical to the tested base.
+
+### I/O schema2: byte integrity and decode error
+
+Schema2 replaces fields0/2 with FNV-1a32 of all UART-received and RPC-consumed
+framed bytes, seeded2166136261. Field11 packs the last decode error category in
+bits0..7 and framing state before reset in bits8..15. No new RAM is allocated.
+The host reader supports both schemas and prints static error names. Source
+`edge_studio_io_diag.c` defines the category order. `--initial-fnv` seeds the
+read-only probe's expected cumulative fingerprint; compare a successful control
+run first, then capture before/failure/after without any follow-up RPC. Expected,
+UART and consumed fingerprints distinguish integrity from decode handling.
+
+Fingerprints are not anonymization: keep logs private and do not edit mappings
+or use other Studio clients during this diagnostic. HID typing is not part of
+the hashed stream. Native tests compare a known encoded request end-to-end and
+inject malformed bytes ONLY in the emulator to verify the error classification.
+This remains instrumentation, not a fix for the intermittent physical rejection.

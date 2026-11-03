@@ -35,10 +35,12 @@ static bool rpc_tx_marker(uint8_t marker, void *user_data) {
     }}'''
         text=replace(text,old,new)
     text=replace(text, '#include "msg_framing.h"', '#include "msg_framing.h"\n#include "edge_studio_io_diag.h"')
+    text=replace(text, '                if (studio_framing_process_byte(&rpc_framing_state, buffer[i])) {', '                EDGE_IO_HASH(2, buffer[i]);\n                if (studio_framing_process_byte(&rpc_framing_state, buffer[i])) {')
+    text=replace(text, '        rpc_framing_state = FRAMING_STATE_IDLE;', '#if IS_ENABLED(CONFIG_LOFREE_EDGE_STUDIO_IO_DIAGNOSTICS)\n        if (!status) { edge_studio_io_decode_error(PB_GET_ERROR(&stream), rpc_framing_state); }\n#endif\n        rpc_framing_state = FRAMING_STATE_IDLE;')
     text=replace(text, '        if (status) {\n            zmk_studio_Response resp', '        if (status) {\n            EDGE_IO_ADD(3, 1); EDGE_IO_SET(5, req.request_id);\n            zmk_studio_Response resp')
     text=replace(text, '            LOG_DBG("Decode failed");', '            EDGE_IO_ADD(4, 1);\n            LOG_DBG("Decode failed");')
     text=replace(text, '    pb_ostream_t stream = pb_ostream_for_tx_buf(user_data);', '    EDGE_IO_ADD(6, 1);\n    if (resp->which_type == zmk_studio_Response_request_response_tag) { EDGE_IO_SET(7, resp->type.request_response.request_id); }\n    pb_ostream_t stream = pb_ostream_for_tx_buf(user_data);')
-    text=replace(text, '    if (!status) {', '    if (!status) {\n        EDGE_IO_ADD(9, 1);')
+    text=replace(text, '    if (!status) {\n#if !IS_ENABLED', '    if (!status) {\n        EDGE_IO_ADD(9, 1);\n#if !IS_ENABLED')
     text=replace(text, '    selected_transport->tx_notify(&rpc_tx_buf, 1, true, user_data);', '    selected_transport->tx_notify(&rpc_tx_buf, 1, true, user_data);\n    EDGE_IO_ADD(8, 1);')
     text += '''
 #if IS_ENABLED(CONFIG_LOFREE_EDGE_STUDIO_IO_DIAGNOSTICS)

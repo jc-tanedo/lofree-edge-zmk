@@ -25,6 +25,10 @@ def chunks(payload,mode):
     parts.append(bytes([0xad]));parts=[p for p in parts if p]
     return [b''.join(parts)] if mode=='coalesced' else parts
 
+def stream_fnv(seed,data):
+    for byte in data:seed=((seed^byte)*16777619)&0xffffffff
+    return seed
+
 class Frames:
     def __init__(self):self.frame=None;self.escaped=False
     def feed(self,data):
@@ -99,10 +103,13 @@ def allowed(request):
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--mode',choices=['fragmented','coalesced'],required=True)
+    parser.add_argument('--initial-fnv',type=lambda s:int(s,0),help='Seed from a schema2 diagnostic snapshot, for byte-integrity comparison')
     parser.add_argument('--followup-after-timeout',action='store_true',help='After the first missing reply, send one read-only device-info query on the same connection')
+    parser.add_argument('--only',choices=['all','action-list','device-info'],default='all')
     parser.add_argument('--cycles',type=int,default=10);parser.add_argument('--gap-ms',type=float,default=.2)
     parser.add_argument('--output',type=Path,required=True);args=parser.parse_args()
-    if not 1<=args.cycles<=100 or not 0<=args.gap_ms<=10:parser.error('cycles1..100; gap-ms0..10')
+    if not 1<=args.cycles<=1000 or not 0<=args.gap_ms<=10:parser.error('cycles1..1000; gap-ms0..10')
+    if args.initial_fnv is not None and not 0<=args.initial_fnv<=0xffffffff:parser.error('initial-fnv must be uint32')
     output=args.output.resolve()
     if output.is_relative_to(ROOT):parser.error('Keep logs outside the public repository')
     pb=protobuf();path=choose_port();output.parent.mkdir(parents=True,exist_ok=True)
@@ -114,16 +121,18 @@ def main():
             port=Port(path);deadline=time.monotonic()+1.5
             while port.read(.15):
                 if time.monotonic()>deadline:raise RuntimeError('Previous serial input did not settle')
-            decoder=Frames();sequence=0;followup_attempted=False
+            decoder=Frames();sequence=0;followup_attempted=False;expected_fnv=args.initial_fnv
             def rpc(request):
-                nonlocal sequence,followup_attempted
+                nonlocal sequence,followup_attempted,expected_fnv
                 name=allowed(request);request.request_id=sequence;sequence+=1
                 parts=chunks(request.SerializeToString(),args.mode);start=time.monotonic();received=0
                 emit(event='request',id=request.request_id,operation=name,parts=[len(p) for p in parts])
                 for i,part in enumerate(parts):
                     port.write(part,3)
                     if i<len(parts)-1 and args.gap_ms:time.sleep(args.gap_ms/1000)
-                emit(event='write_complete',id=request.request_id)
+                if expected_fnv is not None:
+                    expected_fnv=stream_fnv(expected_fnv,b''.join(parts))
+                emit(event='write_complete',id=request.request_id,expected_rx_fnv=expected_fnv)
                 deadline=start+3
                 while time.monotonic()<deadline:
                     data=port.read(deadline-time.monotonic());received+=len(data)
@@ -146,14 +155,17 @@ def main():
             read('core','get_device_info')
             if read('core','get_lock_state').core.get_lock_state!=1:raise RuntimeError('Studio is locked; physical Fn+U is required')
             for cycle in range(args.cycles):
-                read('keymap','get_keymap');read('keymap','get_physical_layouts')
-                ids=read('behaviors','list_all_behaviors').behaviors.list_all_behaviors.behaviors
-                if not ids:raise RuntimeError('Empty action list')
-                for behavior in ids:
-                    request=pb.Request();request.behaviors.get_behavior_details.behavior_id=behavior
-                    if rpc(request).behaviors.get_behavior_details.id!=behavior:raise RuntimeError('Action response mismatch')
+                if args.only=='device-info':read('core','get_device_info')
+                elif args.only=='action-list':read('behaviors','list_all_behaviors')
+                else:
+                    read('keymap','get_keymap');read('keymap','get_physical_layouts')
+                    ids=read('behaviors','list_all_behaviors').behaviors.list_all_behaviors.behaviors
+                    if not ids:raise RuntimeError('Empty action list')
+                    for behavior in ids:
+                        request=pb.Request();request.behaviors.get_behavior_details.behavior_id=behavior
+                        if rpc(request).behaviors.get_behavior_details.id!=behavior:raise RuntimeError('Action response mismatch')
                 emit(event='cycle_complete',cycle=cycle+1)
-                print(f'{args.mode}: read cycle{cycle+1}/{args.cycles} passed',flush=True)
+                if args.only=='all' or (cycle+1)%25==0:print(f'{args.mode}: {args.only} cycle{cycle+1}/{args.cycles} passed',flush=True)
             emit(event='passed',cycles=args.cycles)
         except Exception as error:
             emit(event='failed',error=type(error).__name__)

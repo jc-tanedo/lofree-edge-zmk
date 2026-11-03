@@ -1,3 +1,70 @@
+# Schema2 diagnostic local gates passed; not installed
+
+Exact diagnostic SHA256 07a90b8374ffad79c3ca65e66af05191497afdeb09885e4f2ceefe8073499d34.
+Pinned build/image/CRC, native checksum/error classification, mapping persistence,
+Security/fault/reboot and startup stack gates pass (observed margins >=128B).
+48 Python tests and source/history audit pass. Final diagnostics-disabled build
+remains byte-identical to bdb42bcd. Freeze/archive/site/browser checks remain before
+hardware handoff. No CI push. Physical keyboard remains unconfirmed schema1 d2954ee5,
+USB/ON, Studio closed; no acceptance or additional flash performed.
+
+# Diagnostic proves decode failure; integrity/error schema2 under local test
+
+Physical d2954ee5 probe1:21 requests/216 encoded bytes; UART RX increased216 with
+zero RX drops, decode_ok+20/decode_failed+1, last decoded/replied#19, failed#20
+(action list), no TX failure, both rings empty. Small-only test also fails without
+large responses: request147 lost,1202/1202 sent bytes accounted, one decode failure.
+No retry/follow-up preceded the after-counter snapshots. This isolates rejection
+before dispatch, but byte counts do not establish byte integrity.
+
+Schema2 reuses diagnostic fields0/2/11 (no additional RAM): UART-stream and
+RPC-consumed-stream FNV32 fingerprints plus decoder error category/framing state
+before reset. Counters otherwise retain offsets. No raw payloads, typed keys,
+mappings or addresses are stored. Use only controlled read-only probes; checksums
+are fingerprints, not anonymization. Python probe logs an expected cumulative
+fingerprint when seeded from the before snapshot. Schema1 remains readable by the
+host tool. Diagnostic2 builds/image-checks. Native test caught that release configuration
+disables nanopb error strings; enabled them only for this diagnostic (normal
+image remains unchanged), and rerunning checksum/error, Security and startup
+stack gates. No hardware update has occurred. No new firmware installed; current hardware stays unconfirmed
+d2954ee5, USB/ON, Studio closed. No acceptance or CI push.
+
+# Counter diagnostic installed; awaiting unlock/baseline
+
+Owner confirmed install from8801. Read-only info reports trial1/unconfirmed/slotB
+and valid retained size/CRC. Feature9 returns schema1, zero initial counters and
+transport-present1. No writes or acceptance performed. Ask owner for ON typing/
+Fn/Caps/backlight baseline and Fn+U once, keeping Studio tabs closed, USB/ON.
+Then get a feature9 baseline, run automatic read-only probe without follow-up,
+and get feature9 immediately after the first failure before any Retry/new RPC.
+Installed trial is d2954ee5; frozen artifact unchanged. No CI push/release/merge.
+
+# Counter diagnostic: stock verified; awaiting install
+
+Owner confirmed manual return from failed bdb42bcd to stock. Read-only USB identity
+05ac:0256 EDGE84@Lofree verified; frozen d2954ee5 image checksum unchanged. Give the
+8801 browser install steps only after server availability check. Do not query the
+keyboard while the owner installs. Then read trial info and feature9 counters.
+No counter diagnostic installed or accepted yet; old framing trial was not accepted.
+
+# Studio I/O diagnostic frozen and locally cleared for handoff
+
+Source5a7ceca rebuilt clean with identical diagnostic bytes d2954ee59fcfa16d94e458c8d6e4db40c80657a7fc11bf6bb06ea844e5fd3e39.
+Frozen site/artifacts/checklist: build/hardware-tests/alpha3-studio-io-d2954ee5-5a7ceca.
+Local pinned image/instruction/CRC, feature9 correlation/read-only, map Save/reset,
+Security/storage/fault/reboot and startup stack tests pass; observed margin>=128B.
+47 Python tests and245-file source/history/source+website archive/site audits pass.
+BrowserOS Neo verifies catalog, served SHA, both risk notices and same-tab Studio.
+Server8801/session12098 serves the immutable trial snapshot. No CI push per owner
+local-development preference; this is a diagnostic trial, not a release or fix.
+
+Owner may now return to stock (keepUSB/ON; Fn+Space3s/release), then verify stock
+identity before installation steps. Current keyboard remains unconfirmed bdb42bcd,
+boot1; all automated probes were read-only. Do not accept the failed framing trial.
+After diagnostic install: verify trial info, obtain physical unlock once if needed,
+close Studio, sample feature9, run probe until a failure without follow-up, sample
+feature9 before any Retry. No acceptance planned during this short USB diagnostic.
+
 # Automated physical read reproduction; diagnostic counter build under test
 
 Corrected capture2 shows request#8 sent as1+11 bytes, both OUT completions status0,

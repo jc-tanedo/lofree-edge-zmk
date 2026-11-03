@@ -5,8 +5,11 @@
 extern volatile uint32_t edge_studio_io_counts[12];
 #define EDGE_IO_ADD(index, value) (edge_studio_io_counts[index] += (uint32_t)(value))
 #define EDGE_IO_SET(index, value) (edge_studio_io_counts[index] = (uint32_t)(value))
+#define EDGE_IO_HASH(index, byte) do { edge_studio_io_counts[index] = (edge_studio_io_counts[index] ^ (uint8_t)(byte)) * 16777619U; } while (0)
+void edge_studio_io_decode_error(const char *error, unsigned int framing);
 uint32_t edge_studio_io_runtime(unsigned int index);
 #else
 #define EDGE_IO_ADD(index, value) do { } while (0)
 #define EDGE_IO_SET(index, value) do { } while (0)
+#define EDGE_IO_HASH(index, byte) do { } while (0)
 #endif

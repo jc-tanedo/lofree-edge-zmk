@@ -89,7 +89,7 @@ static int vendor_get(const struct device *dev, struct usb_setup_packet *setup,
     if (setup->wValue == 0x0309) {
         /* Reuse the existing67-byte feature scratch buffer; no extra RAM. */
         memset(stock_window, 0, sizeof(stock_window));
-        stock_window[0]=9; stock_window[1]=1;
+        stock_window[0]=9; stock_window[1]=2;
         for (unsigned int i=0; i<16; i++) {
             uint32_t value=i<12 ? edge_studio_io_counts[i] : edge_studio_io_runtime(i);
             sys_put_le32(value, &stock_window[3+i*4]);

@@ -23,6 +23,7 @@ config LOFREE_EDGE_MODE_SWITCH
 config LOFREE_EDGE_STUDIO_IO_DIAGNOSTICS
     bool "Read-only Studio receive/dispatch/transmit counters"
     depends on BOARD_LOFREE_EDGE && ZMK_STUDIO && UART_INTERRUPT_DRIVEN
+    depends on !NANOPB_NO_ERRMSG
     default n
     help
       Diagnostic builds only. Expose bounded protocol counters via HID feature9.
