@@ -1,3 +1,19 @@
+# Schema2 diagnostic frozen; ready for stock return
+
+Source9a840c0 clean rebuild reproduces07a90b8374ffad79c3ca65e66af05191497afdeb09885e4f2ceefe8073499d34.
+Frozen build/hardware-tests/alpha3-studio-io-v2-07a90b83-9a840c0;
+localhost8802/session33206. 245-file source/history/source+website archive/site
+audits pass. Browser verifies served SHA, selected diagnostic, persistent risk
+notices on both pages and same-tab Studio navigation. Native checks/48Python
+and diagnostics-disabled byte identity already pass. No CI push or release.
+
+Physical hardware still unconfirmed schema1 d2954ee5, USB/ON; no acceptance.
+Ask owner Fn+Space3s/release stock return; verify stock identity before install.
+Schema2 is instrumentation, not a fix. After install/unlock/Studio closed, run a
+short successful fingerprint control, then before/after snapshots around the
+first failed read-only probe seeded with initial FNV. No follow-up before snapshot.
+Compare expected bytes versus UART/RPC fingerprints and decoder error category.
+
 # Schema2 diagnostic local gates passed; not installed
 
 Exact diagnostic SHA256 07a90b8374ffad79c3ca65e66af05191497afdeb09885e4f2ceefe8073499d34.
