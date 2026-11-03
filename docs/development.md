@@ -178,3 +178,26 @@ checks request/response distinction. No diagnostic history is persisted, and
 summaries contain no request parameters, response values, names or hardware IDs.
 The owner's0/13 action-detail timeout on8796 remains unresolved pending this
 wire-level metadata; the stale-input regression must not be called its resolution.
+
+## Studio response framing under backpressure
+
+`stage_edge_rpc.py` derives a reviewed change from the checksum-pinned Studio
+RPC source. Both raw framing markers must be inserted successfully: ignoring a
+full TX ring can lose EOF after a successful encode, leaving the host awaiting a
+complete response. Markers now notify/drain and retry for at most50ms; permanent
+blockage returns an error. The existing payload timeout is unchanged.
+
+`python3 tools/test_edge_rpc_framing.py --upstream` reproduces the missing-EOF bug
+in the actual upstream response functions with a host transport seam. Without
+that flag it tests the staged source across128-byte ring boundaries and permanent
+blockage. The payload encoder/transport are controlled fixtures; this is not a
+hardware test or proof of the reported intermittent action-detail stall.
+`EDGE_BUILD_DIR` permits an isolated firmware build without replacing a frozen
+candidate; keep that path inside the workspace. New binaries require native and
+exact-SHA hardware validation before distribution or installation.
+
+`test_edge_rpc_framing_emulator.py` checks a one-shot failed EOF insertion at the
+compiled ring_buf_put call site, then requires a complete action-detail reply.
+It uses synthetic flash/USB and fault injection, not host timing evidence. CI runs
+this check inside its existing Security emulator pass via EDGE_TEST_RPC_FRAMING=1,
+avoiding another full firmware boot/test pass.

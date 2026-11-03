@@ -1,3 +1,36 @@
+# Action-detail stall: bounded response-marker fix under validation
+
+Owner reproduced the failure before making any edits on8797:7/13 action details,
+last sent behaviors.getBehaviorDetails#13/write complete, last complete response#12,
+3898 received bytes,12.9s without progress. Retry works. Draft navigation is not
+required; increasing the overall15s deadline is not justified by this trace.
+
+An actual-source C transport seam reproduces a firmware framing defect: with the
+128-byte TX ring full after a127-byte encoded payload, send_response ignored a
+failed EOF insertion, returned success and emitted an incomplete frame. Command
+`python3 tools/test_edge_rpc_framing.py --upstream` fails at that boundary. The
+hash-pinned Edge staging hook now retries raw SOF/EOF insertion with bounded
+backpressure, returns an error after50ms of continuous blockage, and preserves
+upstream input. The patched seam passes10 boundary sizes plus blocked-transport
+termination. This defect explains a possible missing response; the owner's exact
+hardware request#13 has not yet been reproduced offline or shown fixed.
+
+A separate original3fde7a03 native probe passed three complete reconnect/read cycles
+with one-byte OUT fragmentation and8ms IN polling. That does not reproduce the
+reported stall. The framing candidate builds in a separate directory, passes image/
+instruction/OTA checks, and keeps static RAM22420/22528B. Native Studio enumeration, keymap/layer Save/reset persistence and disabled-policy
+startup regressions pass. The security/storage/fault/reboot regression passes with >=128B observed stack
+margin. The original compiled image times out on an action-detail request when
+one EOF insertion is forced to fail; the patched compiled image completes the
+same fault-injected response in2ms. The fixture resolves the RPC object’s local
+helper rather than a same-named CDC helper after LLVM specialization. Host-boundary,
+compiled normal/fault cases,37 Python tests and source/history audit pass. Full CI
+and physical stress tests remain pending. Provisional local OTA SHA-256:
+bdb42bcd8daaf025f28b57501e5e020188ea175b979e58bd95c6973b116d60de.
+This is not a frozen clean-commit candidate or a hardware-tested artifact. No installer/catalog was replaced and nothing was flashed;
+accepted3fde7a03 and its build remain unchanged. Current candidate is not approved
+for hardware handoff, merge or release; exact-SHA gates remain required.
+
 # Owner reconnect trace — first action detail stalls
 
 Owner retest on8796 still failed: supported actions0/13,13.2s since last progress,

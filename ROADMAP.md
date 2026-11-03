@@ -38,9 +38,19 @@ A default-on, persistent requirement is implemented with a Security tab beside P
 
 **in progress** · Studio settings
 
-Key and layer edits, imports, Undo/Redo and Discard now stay in temporary browser drafts. Save validates a fresh device baseline, rejects conflicts, applies/persists and verifies. A real draft count replaces the outline icon. Unit, browser and compiled-firmware checks pass; owner validation is pending. No firmware update required.
+Owner verified browser drafts do not affect typing and Save applies correctly. Local counts, Undo/Redo, import/discard and conflict guards are implemented. An intermittent action-read timeout also occurs before edits; reliable reads/reconnect remain under investigation. No firmware update is required for draft semantics.
 
 **Acceptance:** No keymap writes before explicit Save; accurate counts and Undo/Redo; draft-only import/discard; guarded saves and conflict handling; reliable reconnect and navigation; hardware typing changes only after Save.
+
+Tracking issue will be linked after the public repository is created.
+
+## Studio read and USB framing reliability
+
+**in progress** · Studio settings
+
+Intermittent action-detail reads can stall despite completed USB writes; Retry recovers. A missing-EOF defect in the firmware response writer is reproduced at a full TX ring, and an isolated fix is under native validation. Hardware resolution is not yet demonstrated.
+
+**Acceptance:** Repeated initial connections, full action reads and navigation/reconnect succeed under host backpressure; complete frames and bounded disconnect handling pass regression tests; exact-image hardware validation passes.
 
 Tracking issue will be linked after the public repository is created.
 

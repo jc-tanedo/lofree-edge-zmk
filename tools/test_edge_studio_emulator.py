@@ -195,3 +195,7 @@ reloaded = keymap()
 assert len(reloaded.layers) == 3 and reloaded.layers[2].name == 'Custom'
 assert reloaded.layers[0].bindings[45] == reloaded.layers[0].bindings[79]
 print('PASS: mappings and layer state read back from keyboard flash after a full reset')
+
+if os.environ.get('EDGE_TEST_RPC_FRAMING'):
+    from test_edge_rpc_framing_emulator import check
+    check(globals())

@@ -10,11 +10,12 @@ python3 tools/sync_version.py
 python3 tools/render_roadmap.py
 sh tools/test_edge_power_policy.sh
 sh tools/test_edge_studio_client.sh
+.venv/bin/python tools/test_edge_rpc_framing.py
 node --test web/tests/*.test.js
 PYTHONPATH=src .venv/bin/python -m unittest discover -s tests
 sh tools/build_edge_zmk.sh --ble-studio
 EDGE_TEST_BUILD=lofree_edge-ble-studio .venv/bin/python tools/test_edge_security_boot_emulator.py
-EDGE_TEST_BUILD=lofree_edge-ble-studio .venv/bin/python tools/test_edge_security_emulator.py
+EDGE_TEST_RPC_FRAMING=1 EDGE_TEST_BUILD=lofree_edge-ble-studio .venv/bin/python tools/test_edge_security_emulator.py
 EDGE_TEST_BUILD=lofree_edge-ble-studio .venv/bin/python tools/test_edge_usb_idle_emulator.py
 TC32EMU_SUSPEND_RF=lost EDGE_TEST_BUILD=lofree_edge-ble-studio EDGE_TEST_POWER_SLEEP=1 .venv/bin/python tools/test_edge_ble_delayed_dma.py
 EDGE_TEST_BUILD=lofree_edge-ble-studio .venv/bin/python tools/test_edge_power_states_emulator.py

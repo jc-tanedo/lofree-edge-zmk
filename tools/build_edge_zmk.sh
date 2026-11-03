@@ -64,6 +64,7 @@ if [ "${EDGE_SWITCH_DIAGNOSTIC:-0}" = 1 ]; then
  BUILD="$ROOT/firmware/build/lofree_edge-ble-studio-switch-diagnostic"
  CONFIGS="$CONFIGS;$ROOT/firmware/lofree_edge/switch-diagnostic.conf"
 fi
+BUILD="${EDGE_BUILD_DIR:-$BUILD}"
 export SOURCE_DATE_EPOCH=${SOURCE_DATE_EPOCH:-$(git -C "$ROOT" log -1 --format=%ct 2>/dev/null || echo 0)}
 cmake -S "$ZMK/app" -B "$BUILD" -GNinja \
  -DZephyr_DIR="$ZEPHYR_BASE/share/zephyr-package/cmake" \
