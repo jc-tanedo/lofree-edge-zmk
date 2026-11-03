@@ -48,7 +48,7 @@ Tracking issue will be linked after the public repository is created.
 
 **in progress** · Studio settings
 
-Instrumented complete-frame candidate passes1786 physical read-only requests, five browser reconnects and two unsaved-draft leave/reconnect sequences on one Edge/CachyOS host. Diagnostics-disabled candidate validation and wider coverage remain pending; precise callback/compiler root cause is not established.
+Both instrumented and normal complete-frame candidates pass1786 physical requests each, plus browser reconnect/draft checks on one Edge/CachyOS host. Normal-image recovery/power checks and wider coverage remain pending. Precise streaming decoder root cause is not established.
 
 **Acceptance:** Repeated initial connections, full action reads and navigation/reconnect succeed under host backpressure; complete frames and bounded disconnect handling pass regression tests; exact-image hardware validation passes.
 

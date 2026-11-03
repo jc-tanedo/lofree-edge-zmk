@@ -308,3 +308,15 @@ five Firmware→Studio full reads without Retry, and two four-key unsaved-draft
 leave/reconnect sequences. Counts, no pre-Save typing changes, discarded drafts
 and saved-map readback behave as intended. Diagnostics-disabled firmware is a
 different image and requires its own validation; this diagnostic is unaccepted.
+
+Diagnostics-disabled candidate5b53224452589907eeafd485b294800023bbf5114746f1feebb9230e8cc8ff5b
+passes its own1786/1786 physical read-only requests (50 complete coalesced cycles,
+500 action-list cycles and30 complete fragmented cycles), without timeouts.
+It exposes no diagnostic fingerprints, so this result establishes reply/read
+behavior only. Browser/recovery/power validation remains separate.
+
+Owner normal-image browser checks also pass: initial settings load, five full
+Firmware→Studio reads without Retry, and two unsaved-four-key-draft leave/reconnect
+sequences. The tested read/navigation symptom is resolved in this observed
+workload; precise streaming decoder cause and wider hardware coverage remain
+unproven. Recovery, acceptance and power/mode gates are separate.

@@ -1,3 +1,47 @@
+# Normal complete-frame browser checks pass; manual stock return pending
+
+Owner confirms normal5b532244: initial saved map/Power/Security load, five
+Firmware→Studio reconnect/full reads without Retry, and two four-key unsaved
+mapping draft/leave/reconnect sequences pass. Counts rise, typing remains saved,
+leaving discards drafts, and saved mappings reload. Combined with1786 automatic
+read replies, previously failing read/navigation pattern is not reproduced on
+this exact normal binary and one Edge/CachyOS host.
+
+Still unconfirmed trial; USB/ON. No acceptance or permanent keymap writes from
+these tests. Next disconnect Studio, Fn+Space3s/release for manual stock return;
+verify stock USB identity before same frozen8804 candidate reinstall. Acceptance
+requires separate approval after trial/retained integrity read. Exact-image
+mode/power/security/persistence checks remain pending; no CI push/merge/release.
+
+# Normal complete-frame candidate: physical read stress passes
+
+Owner confirms5b532244 baseline typing/Fn/Caps/backlight, Fn+U and Studio closed.
+Read-only Linux probes on exact5b53224452589907eeafd485b294800023bbf5114746f1feebb9230e8cc8ff5b:
+50 coalesced full cycles802/802 replies,500 action-list cycles502/502,
+30 fragmented full cycles482/482. Total1786/1786 replies, zero timeouts.
+Normal build lacks feature9 diagnostic fingerprints, so no decoder-counter claim
+is made. Private normal-frame-{full,small,fragment}.jsonl logs record operation,
+sequence/timing/counts only. Port closed and termios restored; no settings saves,
+acceptance, firmware writes, restart or mode changes. Trial remains unconfirmed.
+
+Next owner browser initial settings load, five Firmware→Studio read reconnects,
+and two unsaved-four-key-draft leave/reconnect checks on8804. Keep USB/ON, avoid
+restarts. Then manual stock return/reinstall and separate acceptance handoff
+before repeated power/mode/persistence testing. No CI push/merge/publication.
+
+# Normal complete-frame candidate installed; baseline pending
+
+Owner installed5b532244 from8804. Read-only info: slotB/trial1/unconfirmed,
+retained-image size/CRC checks pass. No acceptance/settings writes. Owner asks
+for plain-language explanation: old decoder interpreted streaming arrivals;
+new decoder receives a complete bounded frame before protobuf interpretation.
+Matching fingerprints previously isolated rejection rather than lost USB bytes;
+exact low-level callback/compiler cause remains unproven. Instrumented candidate
+passed1786 physical reads and browser reconnects; normal image still needs its
+own baseline/read/browser/recovery and subsequent acceptance/power gates.
+Keep USB/ON, avoid restart/modes. Ask ON baseline/Fn+U/Studio tabs closed before
+read-only normal-image probes; normal build has no feature9 instrumentation.
+
 # Normal complete-frame candidate frozen; stock verified for install
 
 Full local tools/ci.sh exits0 on source0834b8f (no GitHub CI push): Python/web,
