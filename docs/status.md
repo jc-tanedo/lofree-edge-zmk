@@ -1,3 +1,21 @@
+# Complete-frame candidate frozen; ready for stock-return handoff
+
+Source7e700c5 rebuild reproduces OTA047100b6690d9fbce41dcd171224089934c3c5826ae3d22a650af319c09be280.
+Frozen build/hardware-tests/alpha3-frame-buffer-047100b6-7e700c5 with source,
+pinned dependencies, ELF/OTA, website, notices, provenance and checksums.
+246-file source/history/source+website archive/site audits and30-link subpath
+checks pass. BrowserOS Neo verifies served SHA/size, selected complete-frame
+build, same-tab Studio navigation, disconnected controls and both risk notices.
+Installer localhost8803/session41332 serves this snapshot only. No CI push.
+
+Hardware remains unconfirmed07a90b83, USB/ON, Studio closed. No writes/acceptance
+or restarts performed. Ask owner to save/export if needed and Fn+Space3s/release
+back to stock. Verify stock USB identity before installation instructions. Fresh
+risk acknowledgment required. No acceptance planned for this short experiment.
+After install verify trial/retained report; owner baseline/Fn+U/Studio closed;
+then run controlled read-only full/coalesced probes with before/after schema2
+fingerprints. Physical read reliability remains unresolved until these tests pass.
+
 # Complete-frame experiment: local gates pass; hardware validation pending
 
 Instrumented experimental OTA SHA256:
