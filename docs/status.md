@@ -1,3 +1,27 @@
+# Wizard hardware test passes; Finalize action moved inside panel
+
+Owner reports entire real8811 wizard/loading/finalization flow worked on exact
+unchanged afa70869 firmware. Independent readonly CLIinfo confirms accepted/
+count0,slotB,retained-image integrity valid. No repeat self-test/devicewrite.
+Owner requests Finalize button inside its wizard step like Install action.
+Moved pending/retry action and persistence copy into fourth-step panel using
+wizard-actions spacing. Already-uploaded recovery action also now belongs to
+Choose panel; no Finalize controls remain outside the wizard. Synthetic8810
+browser verifies correct ancestry/enabled state and retained description.
+No controller/protocol/firmware changes; no physical retest needed for this
+placement-only update. Current physical firmware remains accepted and untouched.
+Final production base/package refresh pending; no CI push/merge/publication.
+
+# Wizard hardware test: stock verified, awaiting installation
+
+Owner confirms stock return. Read-only USB05ac:0256 EDGE84@Lofree verified.
+Frozen afa70869 checksum unchanged;8811 local-only automatic wizard catalog
+reachable. No agent hardware writes. Give Choose→Connect→Install→Finalize
+instructions with fresh risk acknowledgment. Keep USB/ON and page open until
+completion; allow restart loading/access prompt and Finalize without reupload.
+No keyboard queries during installation. After report, read acceptance/retained
+status only. Unrelated tests remain skipped; public registry remains empty.
+
 # Real-hardware wizard test frozen; awaiting stock return
 
 Owner requests testing the guided installer on real hardware. Frozen source

@@ -131,6 +131,27 @@ export default function FirmwareInstaller({
                 Continue to connection →
               </button>
             </div>
+            {phase === "idle" &&
+              !verificationPending(s.lastAttempt) &&
+              automaticInstall(s.approved) &&
+              !updateConnected && (
+                <details className="installation-help">
+                  <summary>Already uploaded this build?</summary>
+                  <p>
+                    Keep this firmware installed when you turn the keyboard off
+                    and on or restart it. This verifies the selected firmware
+                    without uploading again. Select the keyboard in ON mode when
+                    prompted.
+                  </p>
+                  <button
+                    type="button"
+                    disabled={s.busy || !supported}
+                    onClick={onResume}
+                  >
+                    Finalize Installation
+                  </button>
+                </details>
+              )}
           </section>
           <section
             id="firmware-connection-step"
@@ -285,6 +306,24 @@ export default function FirmwareInstaller({
                 firmware across power-offs and restarts.
               </p>
             )}
+            {verificationPending(s.lastAttempt) && (
+              <div className="wizard-finalize-action">
+                <p>
+                  Keep this firmware installed when you turn the keyboard off
+                  and on or restart it. Reconnect in ON mode to verify and
+                  finalize without uploading again.
+                </p>
+                <div className="wizard-actions">
+                  <button
+                    type="button"
+                    disabled={s.busy || !supported}
+                    onClick={onResume}
+                  >
+                    Finalize Installation
+                  </button>
+                </div>
+              </div>
+            )}
             {phase === "complete" && (
               <>
                 <p>
@@ -321,43 +360,6 @@ export default function FirmwareInstaller({
           >
             {s.firmwareStatus}
           </p>
-          {verificationPending(s.lastAttempt) && (
-            <div role="status">
-              <p>
-                Keep this firmware installed when you turn the keyboard off and
-                on or restart it. Reconnect in ON mode to verify and finalize
-                without uploading again.
-              </p>
-              <button
-                type="button"
-                disabled={s.busy || !supported}
-                onClick={onResume}
-              >
-                Finalize Installation
-              </button>
-            </div>
-          )}
-          {phase === "idle" &&
-            !verificationPending(s.lastAttempt) &&
-            automaticInstall(s.approved) &&
-            !updateConnected && (
-              <details className="installation-help">
-                <summary>Already uploaded this build?</summary>
-                <p>
-                  Keep this firmware installed when you turn the keyboard off
-                  and on or restart it. This verifies the selected firmware
-                  without uploading again. Select the keyboard in ON mode when
-                  prompted.
-                </p>
-                <button
-                  type="button"
-                  disabled={s.busy || !supported}
-                  onClick={onResume}
-                >
-                  Finalize Installation
-                </button>
-              </details>
-            )}
           {s.lastAttempt &&
             ["preflight", "transferring", "failed"].includes(
               s.lastAttempt.state,
