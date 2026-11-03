@@ -16,6 +16,7 @@ PYTHONPATH=src .venv/bin/python -m unittest discover -s tests
 sh tools/build_edge_zmk.sh --ble-studio
 EDGE_TEST_BUILD=lofree_edge-ble-studio .venv/bin/python tools/test_edge_security_boot_emulator.py
 EDGE_TEST_RPC_FRAMING=1 EDGE_TEST_BUILD=lofree_edge-ble-studio .venv/bin/python tools/test_edge_security_emulator.py
+EDGE_TEST_BUILD=lofree_edge-ble-studio .venv/bin/python tools/test_edge_rpc_receive_emulator.py
 EDGE_TEST_BUILD=lofree_edge-ble-studio .venv/bin/python tools/test_edge_usb_idle_emulator.py
 TC32EMU_SUSPEND_RF=lost EDGE_TEST_BUILD=lofree_edge-ble-studio EDGE_TEST_POWER_SLEEP=1 .venv/bin/python tools/test_edge_ble_delayed_dma.py
 EDGE_TEST_BUILD=lofree_edge-ble-studio .venv/bin/python tools/test_edge_power_states_emulator.py

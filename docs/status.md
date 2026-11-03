@@ -1,3 +1,13 @@
+# Complete-frame diagnostic stock return verified; normal preflight next
+
+Owner confirms Fn+Space3s/release restart, USB/ON. Read-only enumeration verifies
+05ac:0256 EDGE84@Lofree. Diagnostic047100b6 manual return passes; it was never
+accepted. Hardware is now stock; do not query serial or install during preflight.
+Prepare diagnostics-disabled normal candidate with local CI-equivalent gates,
+including compiled bounded request recovery added to tools/ci.sh. No GitHub CI
+push; owner requested local audits during development. The normal binary needs
+its own exact-SHA hardware validation; diagnostic results do not transfer.
+
 # Complete-frame browser reproduction passes; stock return pending
 
 Owner confirms exact047100b6: initial mappings/Power/Security load, five
