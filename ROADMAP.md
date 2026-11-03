@@ -133,3 +133,13 @@ Earlier private builds were physically tested on one keyboard; this is not new-c
 **Acceptance:** Typing, Fn/media, Caps fully on/off, backlight toggle/brightness and layer persistence demonstrated on the tested device.
 
 Tracking issue will be linked after the public repository is created.
+
+## Firmware updates directly from running ZMK
+
+**needs investigation** · Future capabilities
+
+The supported web installer currently returns to stock for its USB update interface. Reuse of existing TC32 OTA/boot-guard machinery needs assessment; direct ZMK updates are not yet a supported browser flow.
+
+**Acceptance:** Document feasibility, flash/slot and settings constraints; if implemented, validate image checks, interruption behavior, explicit consent, unconfirmed trials, retained recovery and exact-SHA hardware updates before release.
+
+[Tracking issue](https://github.com/jc-tanedo/lofree-edge-zmk/issues/14)

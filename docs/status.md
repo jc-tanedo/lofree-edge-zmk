@@ -1,3 +1,58 @@
+# Framing trial installed; baseline/reconnect testing pending
+
+Owner confirmed installation through frozen8798. Read-only edge_ota info reports
+ZMK, slotB, trial boot1, unconfirmed and retained image size/CRC valid. Installed
+candidate SHA is frozen bdb42bcd8daaf025f28b57501e5e020188ea175b979e58bd95c6973b116d60de;
+no acceptance was requested or performed. Keep USB connected and sliderON until
+the next owner-guided tests. Studio baseline and repeated reads/navigation remain
+pending; do not infer a physical fix from compiled fault-injection results.
+
+Added requested direct-from-ZMK update investigation issue14 and roadmap entry.
+Current supported flash procedure is unchanged. Future work must assess existing
+TC32 OTA/boot-guard machinery rather than assume none exists. Frozen installer,
+firmware/catalog/source artifacts were not modified. No merge/tag/release/Pages.
+
+# Framing trial: stock verified; awaiting browser installation
+
+Owner confirmed saved-edits/stock-return handoff for frozen bdb42bcd candidate.
+Read-only USB identity05ac:0256 EDGE84@Lofree verifies stock; frozen OTA checksum is
+unchanged. CI/native hash and audits/browser preflight passed. Installer8798 is
+available. Give browser instructions; do not query/write the keyboard while the
+owner installs. After explicit completion, read trial/retained info before tests.
+No image has been installed or accepted in this phase. Acceptance stays separate.
+
+# Frozen framing candidate ready for hardware handoff
+
+CI41549936377 succeeded on618635d; native-test and packaged OTA SHA matches frozen
+bdb42bcd8daaf025f28b57501e5e020188ea175b979e58bd95c6973b116d60de.
+All independent preflight gates passed. Frozen installer is on8798; source and
+artifacts remain unchanged. Owner may save/export edits and return to stock;
+verify stock USB identity read-only before installation instructions. Installation
+is an unconfirmed trial; acceptance requires separate authorization. No firmware
+was written and no hardware pass is inferred from CI. Installed image remains
+accepted3fde7a03. No merge/tag/release/Pages deployment.
+
+Development preference: run applicable tests/audits locally while iterating, and
+handoff to CI when opening/updating a PR for review. Avoid redundant development
+CI pushes. Local exact-image gates can authorize development trials; release
+promotion retains full CI and exact-SHA hardware gates.
+
+# Clean framing candidate frozen; waiting for CI
+
+Frozen source618635d (clean checkout) rebuilt OTA byte-identical to the locally
+native-tested provisional image: bdb42bcd8daaf025f28b57501e5e020188ea175b979e58bd95c6973b116d60de,
+121940 bytes. Build tree: build/hardware-tests/rpc-framing-source-618635d.
+Frozen installer/artifacts/checklist: build/hardware-tests/alpha3-rpc-framing-bdb42bcd-618635d.
+Source/history/source+website archive and site audits pass (234 source files);
+package provenance and source snapshot are clean. BrowserOS Neo confirms selected
+hardware-test catalog, served-image SHA, risk notice on both workspaces and same-tab
+Studio navigation, with no keyboard connection by the agent. All package checksums pass.
+Server8798/session84517 serves the frozen directory. CI41549936377 is still in
+progress; its success and native hash verification are required before stock
+return/installation handoff. Do not replace/rebuild frozen bytes during testing.
+Owner requested preparing a flash test; nothing was installed or accepted.
+Keyboard remains accepted3fde7a03. No release/merge/Pages deployment.
+
 # Action-detail stall: bounded response-marker fix under validation
 
 Owner reproduced the failure before making any edits on8797:7/13 action details,
