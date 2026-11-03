@@ -209,3 +209,14 @@ by itself establish a firmware timing cause or attribute a frame to a request.
 `web/tests/usb-diagnostics.ts` covers absent, partial and complete input without
 including response values in summaries. The frozen trial installer is unchanged;
 frontend-only instrumentation uses a separate preview, with no reflash needed.
+
+For a zero-input timeout, `filter_edge_studio_usbmon.py` filters Linux usbmon text
+on the actual host. It selects only this board's CDC bulk endpoints and emits
+OUT submission/completion and IN completion metadata, plus RPC sequence/subsystem
+from fully captured outgoing frames. It discards HID and other devices before
+payload parsing; no response values or hardware addresses are saved. Truncated
+usbmon payloads are identified instead of decoded. Outputs must be outside the
+public repository and are created exclusively with0600 permissions. Tests cover
+scope, parameter suppression, partial capture and failed transfer status. Host
+transfer success does not prove firmware parsing; correlate it with browser
+counters before proposing another firmware change.

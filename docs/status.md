@@ -1,3 +1,21 @@
+# No response bytes after outstanding request; USB delivery capture pending
+
+Owner reproduced on the sixth read using8799:5/13 details complete, sent#11/write
+complete, prior response#10,3526 total bytes, ZERO bytes since the last request,
+no unfinished frame,13.2s without progress. This observation does not fit a merely
+missing EOF on that request and weakens the partial-payload lead. It does not by
+itself prove host delivery to the device. Do not accept or declare the read issue
+resolved. Installed unconfirmed bdb42bcd and frozen8798 remain unchanged.
+
+Added tools/filter_edge_studio_usbmon.py to separate CDC OUT submissions/completions
+and IN completions during one owner reproduction. It scopes to the connected
+1d50:615e device and CDC endpoints5OUT/2IN, drops HID/other-device traffic, emits
+only relative timing/status/sizes/session ticket numbers and RPC request sequence/
+subsystem, and never writes raw payloads or addresses. Output is exclusive0600
+outside this public tree. Three filter regressions plus37 existing Python tests
+pass. Administrator access is needed only for the human-run usbmon source; no
+keyboard commands or firmware writes are sent by the helper.
+
 # Partial-response diagnostic ready on8799
 
 Frontend-only diagnostic adds bytes received since the latest request and open
