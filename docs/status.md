@@ -1,3 +1,21 @@
+# Finalize Installation local test ready; no hardware commands sent
+
+Sourcef21cb51 UI plus unchangedOTAfc46a470 frozen in
+build/hardware-tests/alpha3-finalize-web-fc46a470-f21cb51. Local8807/session87977
+catalog explicitly opts in ONLY for owner-authorized focused acceptance test;
+publicapprovalregistry unchanged/empty, unrelatedhardware checksnotretested.
+252-file source/history/source+website archive/site audits and30-linkchecks pass.
+Browser verifies FinalizeInstallation label, adjacent persistence description,
+exactSHA details, freshuncheckedriskack/disabledconfirm and endrollback wording.
+Agent cancelleddialog without acknowledgment; noHIDdeviceopened/commands sent.
+
+Currentkeyboard is unconfirmedfc46a470 USB/ON. Owner may disconnectStudio and use
+Already uploaded this build?→FinalizeInstallation on8807. This performs real
+self-test+acceptance writes afterownerfreshriskack anddevicechooser, no upload.
+Optionally cancelchooserfirst toexerciseinterruption/retry, then finalizeonce.
+Afterownercompletion readaccepted/count0/retainedstatus; do not repeatselftest
+or unrelatedtests. No publicapproval/releaseclaim. Frozen8806 unchanged.
+
 # Finalize Installation wording requested during focused test preparation
 
 Owner requested replacing Continue installation with Finalize Installation and a
