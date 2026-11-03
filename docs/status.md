@@ -1,3 +1,83 @@
+# Complete-frame experiment: local gates pass; hardware validation pending
+
+Instrumented experimental OTA SHA256:
+047100b6690d9fbce41dcd171224089934c3c5826ae3d22a650af319c09be280.
+Pinned build/instruction/data/CRC checks pass. Compiled feature9 byte correlation,
+read-only behavior, map persistence and >=128B observed stack margin pass.
+Malformed/oversize/escaped/empty/interrupted frame recovery followed by valid RPC
+passes; the previous experimental binary failed the interrupted-frame test.
+Security policy/storage/fault/reboot and failed-EOF response regression pass with
+>=128B observed stack margin. Compiled change-only SET_IDLE passes. 48 Python
+tests and246-file source/history audit pass; diff whitespace check passes.
+Logs: build/reports/frame-diagnostic-{build,test,receive,security,usb}.log.
+
+This is not a proven fix for the physical intermittent zero-tag rejection.
+No frozen installer/source archive or website audit yet; no CI push or release.
+Physical keyboard remains unconfirmed07a90b83, USB/ON, serial port closed;
+no settings writes, acceptance, restart or mode changes during this work.
+Next: review/freeze exact source and artifacts, audit archives/site, then owner
+stock-return/install handoff for repeated physical coalesced/full-read probes.
+Do not accept the current diagnostic or flash this experiment without handoff.
+
+# Complete-frame decoder experiment under local validation
+
+Physical schema2 comparison: 200 action-list reads pass with 10ms-separated
+frame markers; coalesced action-list delivery fails at request108 with matching
+expected/UART/consumed FNV2363284455, zero tag at EOF, and no TX failure.
+No settings writes or acceptance. Installed07a90b83 remains trial1, USB/ON.
+
+An experimental bounded128-byte stack frame replaces the unknown-length nanopb
+callback stream. The generated request maximum is compile-time checked against
+the bound. Oversize frames drain through EOF; a new unescaped SOF resynchronizes.
+This tests a hypothesis, not an established fix. Neither the host extraction nor
+compiled emulator reproduces the original physical failure; hardware is the
+red-capable validation seam. A synthetic compiled recovery test was added for
+malformed/oversize/escaped/empty/interrupted frames followed by a valid request.
+
+The first experiment built and passed Security/stack checks. A subsequent source
+transformation guard rejected the SOF-resync revision; tests inadvertently ran the
+previous binary. Those results do not validate the new revision. Guard corrected;
+current instrumented rebuild and tests are chained on successful build. No new
+candidate frozen, installed, accepted, pushed to CI or promoted.
+
+# Physical integrity match; decoder rejects request as zero tag
+
+Owner confirmed schema2 baseline/Fn+U/Studio closed, USB/ON. Controlled info/lock/
+info probe passed: expected FNV2197083596 equals UART and RPC-consumed streams.
+Then read-only full probe failed request10 (behavior details), zero response bytes.
+Before/after: RX+109 matches total sent; decode_ok+10/decode_failed+1; last decoded/
+replied9; send_failed0; rings empty. Expected FNV30679303 equals both firmware
+fingerprints. Error category3 zero tag; pre-reset framing4 EOF. Fingerprints are
+noncryptographic evidence, not proof against collision; no payloads logged.
+Private logs integrity-control* and integrity-failure* in private/analysis/logs/studio.
+No follow-up RPC before after snapshot; no save/flash/acceptance; port closed.
+
+Ranked hypotheses: callback/ring boundary behavior, nanopb nested callback stream,
+or request encoding mismatch. Host extraction of actual upstream callback/framing
+and pinned nanopb/generated descriptors passes19500 action-detail decodes across
+39 ring splits; simple wrap alone not reproduced. Throwaway harness in ignored
+build/tmp/check_rx_callback.py, compiled firmware stress passes 500 additional synthetic reads in
+build/reports/integrity-native-stress.log. Hardware stays unconfirmed07a90b83,
+USB/ON. No restart/mode changes or acceptance authorized. Need native stress
+result and targeted decoder/compiled-code analysis; do not claim fixed.
+
+# Integrity diagnostic installed; awaiting baseline and unlock
+
+Owner installed frozen07a90b83 from8802. Read-only status: slotB/trial1,
+unconfirmed; retained image size/CRC checks pass. Feature9 schema2 available:
+zero RX/decode counters, both FNV seeds2166136261, transport present1.
+No acceptance/settings writes. Ask baseline and Fn+U once, Studio tabs closed,
+USB/ON unchanged. Then controlled read-only fingerprint comparison; no follow-up
+RPC before after-counter snapshot on failure.
+
+# Integrity diagnostic: stock verified; awaiting owner install
+
+Owner returned to stock; read-only USB identity05ac:0256 EDGE84@Lofree verified.
+Frozen07a90b83 image checksum unchanged and localhost8802 catalog reachable.
+Give installation steps; do not query hardware during flashing. After completion,
+read trial/retained integrity and schema2 feature report before requesting baseline
+and physical unlock. No acceptance planned; diagnostic does not claim a fix.
+
 # Schema2 diagnostic frozen; ready for stock return
 
 Source9a840c0 clean rebuild reproduces07a90b8374ffad79c3ca65e66af05191497afdeb09885e4f2ceefe8073499d34.

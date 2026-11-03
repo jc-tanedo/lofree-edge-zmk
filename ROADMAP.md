@@ -48,7 +48,7 @@ Tracking issue will be linked after the public repository is created.
 
 **in progress** · Studio settings
 
-Intermittent action-detail reads still stall in owner hardware testing after the raw framing-marker fix (cycles 3 and 5 failed; Retry recovers). Marker loss is independently reproduced and fixed, but physical read reliability remains unresolved. Further diagnostics distinguish missing and partial responses before changing payload/backpressure behavior.
+Physical read-only probes reproduce zero-response requests with matching sent/UART/decoder byte fingerprints and a zero-tag decode error at EOF. A bounded complete-frame decoder passes local compiled checks but awaits exact-image hardware validation; reliable reads remain unresolved.
 
 **Acceptance:** Repeated initial connections, full action reads and navigation/reconnect succeed under host backpressure; complete frames and bounded disconnect handling pass regression tests; exact-image hardware validation passes.
 

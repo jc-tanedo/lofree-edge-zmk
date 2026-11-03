@@ -272,3 +272,22 @@ or use other Studio clients during this diagnostic. HID typing is not part of
 the hashed stream. Native tests compare a known encoded request end-to-end and
 inject malformed bytes ONLY in the emulator to verify the error classification.
 This remains instrumentation, not a fix for the intermittent physical rejection.
+
+### Complete-frame decoder experiment (unvalidated on hardware)
+
+The physical schema2 probe accounted for all sent bytes with matching UART and
+RPC-consumed fingerprints, yet nanopb rejected a complete request as `zero tag`.
+Host callback extraction and compiled synthetic stress did not reproduce it.
+The experimental receiver in `stage_edge_rpc.py` drains one complete frame into
+128 bytes of RPC-thread stack before invoking nanopb's buffer decoder. A build
+assertion bounds the generated request maximum; oversized frames are rejected
+only after draining through EOF. Unescaped SOF restarts collection; escaped marker
+bytes remain data. It adds no static frame buffer. New exact-image stack checks
+are required because stack consumption changes.
+
+`tools/test_edge_rpc_receive_emulator.py` exercises compiled USB recovery after
+invalid, oversized, escaped-marker, empty and interrupted input, followed by a
+valid RPC. These cases are synthetic and are never sent by the physical probe.
+They validate frame boundaries, not the intermittent physical decoder defect.
+Until repeated physical read probes pass, this remains a hypothesis experiment
+and must not be promoted as a reliability fix.
