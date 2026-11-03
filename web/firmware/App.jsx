@@ -4,7 +4,10 @@ import { createWorkspace } from "./workspace.js";
 import { hasPendingChanges } from "../dist/keymap.js";
 import StockTools from "./StockTools.jsx";
 import FirmwareInstaller from "./FirmwareInstaller.jsx";
-import { automaticInstall } from "../dist/firmware-acceptance.js";
+import {
+  automaticInstall,
+  verificationPending,
+} from "../dist/firmware-acceptance.js";
 import ConfirmDialog from "./ConfirmDialog.jsx";
 
 export default function App({ workspace: supplied }) {
@@ -79,6 +82,9 @@ export default function App({ workspace: supplied }) {
     changeTab(view);
     document.getElementById(`tab-${view}`).focus();
   };
+  const completion = verificationPending(s.lastAttempt)
+    ? s.lastAttempt
+    : s.approved;
   const beginInstall = (resume = false) => {
     setResume(resume);
     setAck(false);
@@ -206,7 +212,7 @@ export default function App({ workspace: supplied }) {
           </div>
           <p id="firmware-confirm-details">
             {resume
-              ? `Finish ${s.lastAttempt?.file} · SHA-256 ${s.lastAttempt?.sha256}`
+              ? `Finish ${completion?.file} · SHA-256 ${completion?.sha256}`
               : s.approved &&
                 `${s.approved.label} (${s.approved.size.toLocaleString()} bytes)`}
           </p>

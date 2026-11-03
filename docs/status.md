@@ -1,3 +1,17 @@
+# Focused existing-image web acceptance preparation
+
+Owner resumed focused testing, with unrelated regression retests explicitly
+skipped. Added receipt-free Continue installation for an already uploaded
+approved selected image; fresh riskack/device selection/identity+health checks
+remain mandatory. Pending receipts still bind to their original exact catalog
+entry. Targeted tests pass for approved/no-receipt/no-upload and unapproved
+refusal plus existing failure/resume paths. Publicregistry stays empty.
+Preparing isolated LOCAL TEST catalog eligible only for owner-authorized
+focused acceptance of installedfc46a470. No publicapproval/release claim.
+Current hardware remains unconfirmedfc46a470,USB/ON; no devicewrites performed.
+Do not reflash/repeatpower/Bluetooth/Security tests. Owner must explicitly
+confirm browser self-test/acceptance writes before they occur.
+
 # Identity trial browser checks pass; owner narrows remaining test scope
 
 Owner confirms exactfc46a470 initialsettings, five Firmware→Studio complete

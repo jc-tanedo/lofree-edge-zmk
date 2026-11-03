@@ -325,11 +325,24 @@ export function createWorkspace({
       }
     },
     async resumeInstallation(acknowledged) {
-      const attempt = readFirmwareAttempt(storage);
-      const build = state.builds.find(
-        (b) => b.sha256 === attempt?.sha256 && b.file === attempt?.file,
-      );
-      if (!acknowledged || !verificationPending(attempt)) return;
+      if (!acknowledged) return;
+      const previous = readFirmwareAttempt(storage);
+      const pending = verificationPending(previous);
+      const build = pending
+        ? state.builds.find(
+            (b) => b.sha256 === previous.sha256 && b.file === previous.file,
+          )
+        : state.approved;
+      const attempt = pending
+        ? previous
+        : {
+            state: "verifying",
+            file: build?.file,
+            sha256: build?.sha256,
+            automatic: true,
+            completed: 0,
+            total: 0,
+          };
       if (!automaticInstall(build)) {
         status(
           "Installation needs attention. This image is not approved for automatic completion in the current catalog. It was not accepted.",

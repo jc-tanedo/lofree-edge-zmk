@@ -372,3 +372,44 @@ test("removed catalog approval refuses resumption visibly", async () => {
   assert.match(f.workspace.getSnapshot().firmwareStatus, /not approved/);
   f.workspace.dispose();
 });
+
+test("approved existing installation can finish without an upload receipt or reflashing", async () => {
+  let accepts = 0,
+    choices = [];
+  const f = await fixture({
+    automatic: true,
+    installedDevice: async (choose) => {
+      choices.push(choose);
+      return {};
+    },
+    accept: async () => {
+      accepts++;
+    },
+  });
+  await f.workspace.loadCatalog();
+  await f.workspace.resumeInstallation(false);
+  assert.equal(accepts, 0);
+  await f.workspace.resumeInstallation(true);
+  assert.equal(accepts, 1);
+  assert.equal(f.writes, 0);
+  assert.deepEqual(choices, [true]);
+  assert.match(
+    f.workspace.getSnapshot().firmwareStatus,
+    /Installation complete/,
+  );
+  f.workspace.dispose();
+});
+test("unapproved existing trial cannot finish without receipt", async () => {
+  let choices = 0;
+  const f = await fixture({
+    installedDevice: async () => {
+      choices++;
+      return {};
+    },
+  });
+  await f.workspace.loadCatalog();
+  await f.workspace.resumeInstallation(true);
+  assert.equal(choices, 0);
+  assert.match(f.workspace.getSnapshot().firmwareStatus, /not approved/);
+  f.workspace.dispose();
+});

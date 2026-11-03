@@ -1,6 +1,9 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 import React from "react";
-import { verificationPending } from "../dist/firmware-acceptance.js";
+import {
+  automaticInstall,
+  verificationPending,
+} from "../dist/firmware-acceptance.js";
 export default function FirmwareInstaller({
   s,
   workspace,
@@ -157,6 +160,24 @@ export default function FirmwareInstaller({
               </button>
             </div>
           )}
+          {!verificationPending(s.lastAttempt) &&
+            automaticInstall(s.approved) &&
+            !updateConnected && (
+              <details className="installation-help">
+                <summary>Already uploaded this build?</summary>
+                <p>
+                  Verify and finish the selected firmware installation without
+                  uploading again. Select the keyboard in ON mode when prompted.
+                </p>
+                <button
+                  type="button"
+                  disabled={s.busy || !supported}
+                  onClick={onResume}
+                >
+                  Continue installation
+                </button>
+              </details>
+            )}
           {s.lastAttempt &&
             ["preflight", "transferring", "failed"].includes(
               s.lastAttempt.state,

@@ -351,3 +351,12 @@ uploading again. Session metadata stores image identifiers/progress, never risk
 consent or mappings. Reload does not trigger acceptance: resumption requires a
 fresh confirmation and a matching approved catalog entry. Development trial
 installs never call the acceptance path. Simulated preview cannot access USB.
+
+For an approved image already uploaded through another session, the collapsed
+“Already uploaded this build?” section can finish verification without an upload
+receipt. It still requires a freshly verified catalog image, explicit risk
+confirmation and user-selected ZMK interface. Actual image identity and health
+are checked before any write. An unapproved trial cannot use this path. A stored
+interrupted receipt always selects its original catalog image, never another
+currently selected image. Local controlled hardware-test catalogs are distinct
+from public approval; the public registry remains empty until review.
