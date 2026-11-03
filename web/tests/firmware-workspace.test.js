@@ -33,7 +33,7 @@ async function fixture({
       build.installation = {
         mode: "automatic",
         hardwareValidatedSha256: build.sha256,
-        identityReport: 1,
+        identityReport: 2,
         crc32: 123,
       };
   const hid = new EventTarget(),

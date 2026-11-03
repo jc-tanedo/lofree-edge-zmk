@@ -1,3 +1,21 @@
+# Browser-sized identity read fails on schema1; fixed-size schema2 under test
+
+Owner8808 error: Failed to receive the feature report. Readonly info still
+trial1/unconfirmed, retained image valid. Native exact GET_FEATURE10 length16
+returns identity; requestedlength67 fails EPIPE/Broken pipe. Chromium Linux uses
+interface maxfeature+1=67, confirmed in primary source linked in development.md.
+Thus native shortlength-only coverage missed the browser request shape.
+
+Changed only feature10 descriptor/count/response to fixed67 bytes, schema2 with
+51 zero padding, using existing scratch storage. Browser/catalog require
+identityReport2 and strict67-byte/zero-padding validation.13 direct acceptance
+and workspace tests plus49 Python tests pass; native browser-sized report/stack/
+OTA sequence checks building/running. New firmware required, so do not retry8808.
+Current hardware remains unacceptedfc46a470; no write/acceptance during diagnosis.
+Owner requested focused tests only; no unrelated regression repeats. Next freeze
+focused LOCAL automatic-install test candidate after local gates, then one
+firmware update to exercise real upload/identity/self-test/acceptance flow.
+
 # Fixed Finalize Installation page ready on port 8808
 
 The actual Edge HID descriptor separates report5 command I/O (usagePage1) from

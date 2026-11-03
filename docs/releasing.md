@@ -29,7 +29,7 @@ Compiled tests and simulated-browser checks do not complete these markers.
 ## Automatic installation approval
 
 Builds default to trial installation. After exact-SHA hardware review, add the
-firmware SHA256/version and `identityReport: 1` to `firmware/validated-builds.json`.
+firmware SHA256/version and `identityReport: 2` to `firmware/validated-builds.json`.
 Only those exact binaries get automatic browser verification/self-test/acceptance.
 Rebuild packages and recheck source/site archives and browser flow; verify the
 firmware hash is unchanged. The registry does not waive any release gates.

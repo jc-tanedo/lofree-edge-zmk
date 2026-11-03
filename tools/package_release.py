@@ -14,8 +14,8 @@ def installation_policy(data,version,registry):
  digest=hashlib.sha256(data).hexdigest()
  approved=[b for b in registry['builds'] if b.get('sha256')==digest and b.get('version')==version]
  if not approved:return {'mode':'trial'}
- if len(approved)!=1 or approved[0].get('identityReport')!=1:raise ValueError('Invalid or duplicate image approval')
- return {'mode':'automatic','identityReport':1,'hardwareValidatedSha256':digest,'crc32':int.from_bytes(data[-4:],'little')}
+ if len(approved)!=1 or approved[0].get('identityReport')!=2:raise ValueError('Invalid or duplicate image approval')
+ return {'mode':'automatic','identityReport':2,'hardwareValidatedSha256':digest,'crc32':int.from_bytes(data[-4:],'little')}
 
 def main():
  p=argparse.ArgumentParser(description=__doc__);p.add_argument('--site-base',default='/lofree-edge-zmk');p.add_argument('--site-only',action='store_true');p.add_argument('--site-output',default='build/site');a=p.parse_args()

@@ -13,7 +13,7 @@ const build = {
   installation: {
     mode: "automatic",
     hardwareValidatedSha256: "a".repeat(64),
-    identityReport: 1,
+    identityReport: 2,
     crc32: 123,
   },
 };
@@ -47,9 +47,9 @@ function fixture({
       d.opened = false;
     },
     receiveFeatureReport: async () => {
-      const a = new Uint8Array(16),
+      const a = new Uint8Array(67),
         v = new DataView(a.buffer);
-      a.set([10, 69, 73, 1]);
+      a.set([10, 69, 73, 2]);
       v.setUint32(4, badIdentity ? 99 : 100, true);
       v.setUint32(8, 123, true);
       return new DataView(a.buffer);
@@ -188,7 +188,7 @@ test("only interrupted automatic verification can resume; partial transfers neve
 
 test("actual Edge descriptor separates report5 commands from vendor identity collections", async () => {
   const { d } = fixture();
-  // Observed descriptor: 05010900...8505 input/output32; 0600ff...850a feature15.
+  // Observed descriptor: 05010900...8505 input/output32; 0600ff...850a feature66.
   // Collections belong to one interface but use different usage pages.
   d.collections = [
     {
@@ -238,4 +238,24 @@ test("cancelled selection differs from an unsupported selected interface", async
     findInstalledDevice({ requestDevice: async () => [d] }, true),
     /update and identity/,
   );
+});
+
+test("short legacy identity and nonzero padding never reach acceptance writes", async () => {
+  for (const mode of ["legacy", "padding"]) {
+    const { d, sent } = fixture();
+    const original = d.receiveFeatureReport;
+    d.receiveFeatureReport = async () => {
+      const data = await original();
+      const bytes = new Uint8Array(data.buffer).slice();
+      if (mode === "legacy") {
+        bytes[3] = 1;
+        return new DataView(bytes.buffer, 0, 16);
+      }
+      bytes[66] = 1;
+      return new DataView(bytes.buffer);
+    };
+    await assert.rejects(verifyAndAccept(d, build));
+    assert.deepEqual(sent, []);
+    assert(!d.opened);
+  }
 });

@@ -12,7 +12,7 @@ class PublicationTests(unittest.TestCase):
   data=b'candidate-image\x12\x34\x56\x78';digest=hashlib.sha256(data).hexdigest()
   registry={'format':'lofree-edge-validated-builds-v1','builds':[]}
   self.assertEqual(installation_policy(data,'1',registry),{'mode':'trial'})
-  registry['builds']=[{'sha256':digest,'version':'1','identityReport':1}]
+  registry['builds']=[{'sha256':digest,'version':'1','identityReport':2}]
   self.assertEqual(installation_policy(data,'1',registry)['mode'],'automatic')
   self.assertEqual(installation_policy(data+b'x','1',registry)['mode'],'trial')
   self.assertEqual(installation_policy(data,'2',registry)['mode'],'trial')

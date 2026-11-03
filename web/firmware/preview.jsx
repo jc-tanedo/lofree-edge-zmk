@@ -93,7 +93,7 @@ async function mountPreview() {
                   installation: {
                     mode: "automatic",
                     hardwareValidatedSha256: hash,
-                    identityReport: 1,
+                    identityReport: 2,
                     crc32: 123,
                   },
                 },

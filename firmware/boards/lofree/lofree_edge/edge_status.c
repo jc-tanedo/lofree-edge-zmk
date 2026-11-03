@@ -39,7 +39,7 @@ SYS_INIT(edge_switch_inputs_init, APPLICATION, 90);
 #endif
 static const uint8_t feature_desc[] = {
     0x06,0x00,0xff, 0x09,0x0a, 0xa1,0x01, 0x85,0x0a,
-    0x15,0x00, 0x26,0xff,0x00, 0x75,0x08, 0x95,0x0f,
+    0x15,0x00, 0x26,0xff,0x00, 0x75,0x08, 0x95,0x42,
     0x09,0x0a, 0xb1,0x02, 0xc0,
 #if IS_ENABLED(CONFIG_LOFREE_EDGE_STUDIO_IO_DIAGNOSTICS)
     0x06,0x00,0xff, 0x09,0x09, 0xa1,0x01, 0x85,0x09,
@@ -98,12 +98,15 @@ static int vendor_get(const struct device *dev, struct usb_setup_packet *setup,
         uint32_t length=sys_get_le32(size);
         if (length < 36 || length > TLSR_SLOT_SIZE || (length & 15U) != 4U ||
             tlsr_slot_read(slot + length - 4U, crc, sizeof(crc))) { return -EIO; }
-        memset(stock_window, 0, 16);
-        stock_window[0]=10; stock_window[1]='E'; stock_window[2]='I'; stock_window[3]=1;
+        /* Chromium requests the interface maximum feature size (67B).
+         * A fixed67-byte report avoids the controller's short16-byte response
+         * failing a larger GET_REPORT request. No new scratch storage. */
+        memset(stock_window, 0, sizeof(stock_window));
+        stock_window[0]=10; stock_window[1]='E'; stock_window[2]='I'; stock_window[3]=2;
         memcpy(&stock_window[4], size, sizeof(size));
         memcpy(&stock_window[8], crc, sizeof(crc));
         sys_put_le32(slot, &stock_window[12]);
-        *data=stock_window; *len=16;
+        *data=stock_window; *len=sizeof(stock_window);
         return 0;
     }
 #if IS_ENABLED(CONFIG_LOFREE_EDGE_STUDIO_IO_DIAGNOSTICS)

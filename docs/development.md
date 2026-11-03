@@ -330,15 +330,15 @@ retried automatically. A timeout, refused test, identity mismatch or missing
 retained image prevents completion. A lost confirmation can be resumed: readback
 of an already accepted image avoids repeating the flash self-test.
 
-Feature10 is a read-only16-byte identity: report ID10, `EI`, schema1, LE32 image
-size, stored trailer CRC32 and running slot. It uses fixed bounded reads after
+Feature10 schema2 is a fixed67-byte identity: report ID10, `EI`, schema2,
+LE32 image size, stored trailer CRC32 and running slot, followed by51 zero bytes. It uses fixed bounded reads after
 running-slot consistency checks, not a whole-flash scan in the USB callback.
 It reuses the existing feature scratch buffer. Identity is not cryptographic
 attestation or a fresh integrity scan. Downloaded images are SHA256-checked;
 OTA/boot checks and the retained-image/self-test checks remain separate gates.
 
 Packaging defaults to `installation.mode=trial`. Only exact SHA/version entries
-with identityReport1 in `firmware/validated-builds.json` receive automatic policy.
+with identityReport2 in `firmware/validated-builds.json` receive automatic policy.
 That registry is deliberately empty until new images pass hardware review.
 Never approve a diagnostic or infer approval from a successful upload. Changing
 this registry changes website/source artifacts; rebuild and compare firmware
@@ -368,3 +368,16 @@ same interface; requiring report5 inside the vendor-page collection rejects a
 valid picker selection before any writes. The descriptor-derived test reproduced
 the owner's exact selection error, then passed after separating these checks.
 Cancelled selection now has its own message.
+
+### Browser feature-report length compatibility
+
+Physical native GET_FEATURE10 at16 bytes succeeded; at67 bytes it returned
+EPIPE/Broken pipe. The old schema1 response was16 bytes, but Chromium Linux
+requests `max_feature_report_size + 1` for the interface, here67 bytes. See
+[Chromium HID connection](https://chromium.googlesource.com/chromium/src/+/b86102f2a243/services/device/hid/hid_connection_linux.cc).
+This directly reproduces the browser failure without acceptance writes.
+Schema2 advertises and returns67 bytes using existing scratch storage. The
+browser requires schema2,67 bytes and zero padding before any OTA write.
+The compiled test now uses the browser-sized control request. Exact-length
+schema1 tests alone missed this physical compatibility failure; full endpoint
+short-transfer behavior is not established by the synthetic USB model.

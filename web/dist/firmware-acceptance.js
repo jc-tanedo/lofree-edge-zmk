@@ -8,7 +8,7 @@ export const ZMK_FILTER = Object.freeze({
 export const automaticInstall = (build) =>
   build?.installation?.mode === "automatic" &&
   build.installation.hardwareValidatedSha256 === build.sha256 &&
-  build.installation.identityReport === 1 &&
+  build.installation.identityReport === 2 &&
   Number.isInteger(build.installation.crc32) &&
   build.installation.crc32 >= 0 &&
   build.installation.crc32 <= 0xffffffff;
@@ -160,17 +160,19 @@ export async function verifyAndAccept(device, build, phase = () => {}) {
     const bytes = new Uint8Array(data.buffer, data.byteOffset, data.byteLength);
     const v = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
     if (
-      bytes.length !== 16 ||
+      bytes.length !== 67 ||
       bytes[0] !== 10 ||
       bytes[1] !== 69 ||
       bytes[2] !== 73 ||
-      bytes[3] !== 1 ||
+      bytes[3] !== 2 ||
       v.getUint32(4, true) !== build.size ||
       v.getUint32(8, true) !== build.installation.crc32
     )
       throw new Error(
         "The running image does not match this installation. It was not accepted.",
       );
+    if (bytes.subarray(16).some((byte) => byte !== 0))
+      throw new Error("Invalid firmware identity padding.");
     const slot = v.getUint32(12, true);
     let info = health(await command(device, 0xff00));
     if (![0, 0x20000].includes(slot) || slot !== info.slot)

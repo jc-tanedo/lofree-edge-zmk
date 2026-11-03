@@ -7,9 +7,10 @@ os.environ.setdefault('EDGE_TEST_BUILD','lofree_edge-ble-studio')
 os.environ['EDGE_TEST_STACKS']='1'
 s=runpy.run_path(str(ROOT/'tools/test_edge_lighting_emulator.py'))
 u=s['u'];interface=s['vendor_interface'];m=s['m']
-request=bytes([0xa1,1,10,3,interface,0,16,0])
+request=bytes([0xa1,1,10,3,interface,0,67,0])
 before=bytes(s['flash'].mem)
-a=bytes(u.control(request));assert len(a)==16 and a[:4]==bytes([10,69,73,1]),a
+a=bytes(u.control(request));assert len(a)==67 and a[:4]==bytes([10,69,73,2]),a
+assert a[16:]==bytes(51), 'Identity padding must be zero'
 size,crc,slot=struct.unpack_from('<III',a,4)
 image=(ROOT/'firmware/build'/os.environ['EDGE_TEST_BUILD']/'zephyr/zmk.ota.bin').read_bytes()
 assert size==len(image) and crc==int.from_bytes(image[-4:],'little') and slot in (0,0x20000),(size,crc,slot)
