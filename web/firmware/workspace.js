@@ -313,7 +313,7 @@ export function createWorkspace({
         patch({ lastAttempt: { ...attempt } });
         status(
           attempt.state === "needs-attention"
-            ? `Installation needs attention. ${error.message} Continue installation to verify its status; do not reflash yet.`
+            ? `Installation needs attention. ${error.message} Finalize Installation to verify its status; do not reflash yet.`
             : `${error.message} Reconnect and verify the running firmware before retrying.`,
           true,
         );

@@ -1,3 +1,11 @@
+# Finalize Installation wording requested during focused test preparation
+
+Owner requested replacing Continue installation with Finalize Installation and a
+short nearby explanation that firmware persists across keyboard power-off/on and
+restarts. Applied to action/dialog/reconnect guidance and user documentation.
+Preparing same local focused acceptance test; no hardware writes or reflashing.
+Existing candidatefc46a470 remains unconfirmed. Public approval registry empty.
+
 # Focused existing-image web acceptance preparation
 
 Owner resumed focused testing, with unrelated regression retests explicitly

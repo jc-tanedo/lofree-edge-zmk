@@ -49,13 +49,13 @@ export async function findInstalledDevice(
     const devices = (await hid.getDevices()).filter(matches);
     if (devices.length > 1)
       throw new Error(
-        "Multiple Edge keyboards found. Continue installation to select the one being updated.",
+        "Multiple Edge keyboards found. Finalize Installation to select the one being updated.",
       );
     if (devices.length === 1) return devices[0];
     await wait(500);
   }
   throw new Error(
-    "Reconnect the keyboard in ON mode, then Continue installation and allow access to its ZMK interface.",
+    "Reconnect the keyboard in ON mode, then Finalize Installation and allow access to its ZMK interface.",
   );
 }
 async function boundedRead(promise, timeout = 3000) {

@@ -148,15 +148,16 @@ export default function FirmwareInstaller({
           {verificationPending(s.lastAttempt) && (
             <div role="status">
               <p>
-                Installation needs attention. Reconnect in ON mode to verify and
-                finish without uploading again.
+                Keep this firmware installed when you turn the keyboard off and
+                on or restart it. Reconnect in ON mode to verify and finalize
+                without uploading again.
               </p>
               <button
                 type="button"
                 disabled={s.busy || !supported}
                 onClick={onResume}
               >
-                Continue installation
+                Finalize Installation
               </button>
             </div>
           )}
@@ -166,15 +167,17 @@ export default function FirmwareInstaller({
               <details className="installation-help">
                 <summary>Already uploaded this build?</summary>
                 <p>
-                  Verify and finish the selected firmware installation without
-                  uploading again. Select the keyboard in ON mode when prompted.
+                  Keep this firmware installed when you turn the keyboard off
+                  and on or restart it. This verifies the selected firmware
+                  without uploading again. Select the keyboard in ON mode when
+                  prompted.
                 </p>
                 <button
                   type="button"
                   disabled={s.busy || !supported}
                   onClick={onResume}
                 >
-                  Continue installation
+                  Finalize Installation
                 </button>
               </details>
             )}

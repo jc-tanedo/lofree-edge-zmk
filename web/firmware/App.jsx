@@ -206,7 +206,7 @@ export default function App({ workspace: supplied }) {
             <div>
               <p className="eyebrow">FIRMWARE INSTALLATION</p>
               <h2 id="firmware-confirm-title">
-                {resume ? "Finish installation?" : "Install this build?"}
+                {resume ? "Finalize installation?" : "Install this build?"}
               </h2>
             </div>
           </div>
@@ -253,7 +253,7 @@ export default function App({ workspace: supplied }) {
               className="danger"
               disabled={!ack}
             >
-              {resume ? "Continue installation" : "Install Firmware"}
+              {resume ? "Finalize Installation" : "Install Firmware"}
             </button>
           </div>
         </form>
