@@ -173,3 +173,13 @@ Deep wake reboots and consumes the wake key. Tested reconnection completes withi
 **Acceptance:** Assess reliable press/release preservation across reboot/reconnect, add actual-seam tests and physical validation, or document why the first key must remain wake-only.
 
 [Tracking issue](https://github.com/jc-tanedo/lofree-edge-zmk/issues/16)
+
+## Unlock Studio binding reachability
+
+**needs investigation** · Studio settings
+
+Save/enable guards prove a direct Unlock Studio binding exists, not that its layer can be reached from Base. Other clients can bypass browser guards.
+
+**Acceptance:** Define conservative supported-layer reachability checks; warn or block provably unreachable unlock bindings and test reachable, unreachable and ambiguous maps without claiming a general proof.
+
+[Tracking issue](https://github.com/jc-tanedo/lofree-edge-zmk/issues/17)

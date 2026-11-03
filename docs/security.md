@@ -27,7 +27,7 @@ device policy if no unlock binding exists. Imports stage browser drafts without 
 fails closed for a missing binding. These are web-UI guards, not new firmware
 restrictions: another client can bypass them. Presence checks do not prove that a
 layer/key is physically reachable or detect unlocks hidden in custom macros.
-Keep an accessible direct binding. Recovery is not guaranteed.
+Keep an accessible direct binding. [Reachability investigation #17](https://github.com/jc-tanedo/lofree-edge-zmk/issues/17) tracks this limitation. Recovery is not guaranteed.
 
 Older firmware shows an unsupported message for policy changes. The runtime policy
 requires supporting firmware; warning spacing and save guards are frontend-only.

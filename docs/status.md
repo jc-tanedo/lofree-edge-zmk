@@ -21,7 +21,7 @@ Installed OTA SHA-256: `afa70869c44ad586ab02ae543652acf7d54125a8bd2c99a18e5b9688
 
 ## Review and remaining gates
 
-Independent pinned reviews found no Spec-axis gap and one Standards blocker: fork access to privileged self-hosted runners. That routing is corrected. Server-side fork approval now requires all external contributors; readback verified, with only the owner as repository collaborator. Final local preflight and PR CI are pending. No hardware writes, merge, tag, release or Pages deployment are part of PR preparation.
+Independent pinned reviews found no Spec-axis gap and one Standards blocker: fork access to privileged self-hosted runners. That routing is corrected. The focused Standards follow-up found no remaining blocker; the Spec review found none. Binding reachability remains [follow-up #17](https://github.com/jc-tanedo/lofree-edge-zmk/issues/17). Server-side fork approval now requires all external contributors; readback verified, with only the owner as repository collaborator. Final local preflight and PR CI are pending. No hardware writes, merge, tag, release or Pages deployment are part of PR preparation.
 
 Functional issue [#2](https://github.com/jc-tanedo/lofree-edge-zmk/issues/2) closes on merge. Separate follow-ups: [measured current #15](https://github.com/jc-tanedo/lofree-edge-zmk/issues/15), [Fn/media cold wake #13](https://github.com/jc-tanedo/lofree-edge-zmk/issues/13), [deep-wake first key #16](https://github.com/jc-tanedo/lofree-edge-zmk/issues/16), [battery sensing #4](https://github.com/jc-tanedo/lofree-edge-zmk/issues/4), [host coverage #5](https://github.com/jc-tanedo/lofree-edge-zmk/issues/5), [direct ZMK updates #14](https://github.com/jc-tanedo/lofree-edge-zmk/issues/14). See [roadmap](../ROADMAP.md).
 
