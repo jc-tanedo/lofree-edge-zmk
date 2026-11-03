@@ -1,3 +1,24 @@
+# Guided installer ready for review; no firmware update needed
+
+UI source f2b9a2b packages pass253-file source/history/source+website archive/site
+audits and30-link checks at both localhost and/lofree-edge-zmk bases. Rebuild
+retains physical accepted afa70869 firmware bytes. All web tests and49 Python
+tests pass; focused controller tests cover postupload busy states, ordered
+verification/testing/acceptance, permission handoff and write-free connection
+review. Synthetic browser tests cover all four panels, delayed restart/loading,
+fresh-confirmation permission retry, delayed verification, completion/Studio
+link and upload failure/review. Visual QA confirms dark wizard styling and
+explicit not-finished copy. Hosted navigation/scripts/risk notices pass.
+
+Hardware-free review at http://127.0.0.1:8810/ (server67273) has pause/release
+controls; cannot access USB. Production review build in build/site (hosted) and
+build/install-wizard-localhost. Owner's frozen8809 page/installer unchanged.
+Real keyboard remains accepted/count0 afa70869, USB/ON at last readback; native
+67B identity succeeds. No further device writes/reflash, GitHub CI push, merge
+or release. Owner requested focused testing and daily-use regression feedback;
+unrelated hardware sequences remain not retested on this SHA. Approval registry
+still empty; publication gates open. UI can be reviewed without reflashing.
+
 # Guided installer browser checks complete; final package refresh pending
 
 Accepted physical image remains afa70869, count0/slotB/retained integrity valid
