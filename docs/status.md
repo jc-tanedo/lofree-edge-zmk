@@ -1,3 +1,54 @@
+# Identity trial browser checks pass; owner narrows remaining test scope
+
+Owner confirms exactfc46a470 initialsettings, five Firmware→Studio complete
+reads, four-keyunsaveddraft count/unchangedtyping/leave/discard/reconnect pass
+withoutRetry. Automatic1786reads and readonlyfeature10identity already pass.
+
+Owner explicitly requests skipping repetitive tests unrelated to the identity/
+unified-install change and will report regressions during daily use. Follow this
+preference: do not repeat BT/power/switch/Security functional sequences solely
+because the image hash changed. Record these as NOT RETESTED onfc46a470; earlier
+5b532244 results remain separate. Do not mark release checkboxes as passed or
+relax publication gates by inference. Daily use provides feedback, not measured
+current, freshpairing or formal evidence. Full release gates remain open.
+
+Currentfc46a470 is still unconfirmed trial1, USB/ON; no self-test/acceptance or
+newwrites authorized by this reply. Next only focused real-browser identity/
+health/self-test/acceptance/readback and interrupted verification resume tests.
+Prepare the browser path for the already uploaded candidate, avoid unnecessary
+reflashes/recovery loops. Obtain explicit risk acknowledgment before acceptance
+writes. Installedtrial must be accepted before persistent daily-use claims.
+
+# Identityfc46a470 physical read stress passes; browser checks next
+
+Owner confirms ONbaseline/settings plus Fn+U/Studio closed onexactfc46a470.
+Readonly probes pass1786/1786 requests:50 coalesced full cycles802replies,
+500 actionlist cycles502replies,30 fragmented full cycles482replies. Zero
+RPCtimeouts. Private identity-frame-{full,small,fragment}.jsonl metadata only.
+Portclosed/termiosrestored. No settingssave/restart/mode/acceptance commands.
+Trial remains unconfirmed, USB/ON. Next8806 browser read/navigation/draft-discard
+checks; then manualstockreturn/reinstall before separate acceptance discussion.
+Feature10 already matches frozen size122180/CRC0xf86748b5/slotB. No automatic
+approvalregistry entry. Newimage functional/power/security gates remain pending.
+
+# Identity trial installed; readonly identity matches frozen image
+
+Owner confirmsfc46a470 installation from8806. Read-only info: slotB/trial1,
+unconfirmed, retained size/CRC valid. Feature10 schema1 replies16bytes:
+size122180,storedCRC0xf86748b5,slot0x20000, all match frozen candidate.
+This verifies identity fields, not cryptographic attestation/fresh fullCRCscan.
+No acceptance/settingswrites. Next ownerON typing/Fn/Caps/backlight/Studio saved
+map/Power/Security baseline, Fn+U then disconnect/closeStudio for automatic
+readonly map/action probes. KeepUSB/ON, no restart/modechanges. Catalogtrial.
+
+# Identity trial stock verified; awaiting owner install
+
+Owner reports stockreturn. Read-only USB05ac:0256 EDGE84@Lofree verified.
+Frozenfc46a470 checksum unchanged;8806 manifest reachable andexplicittrial.
+No writes/acceptance. Give owner install instructions withfresh riskack, keep
+USB/ON, no restart/mode/Studio afterward until trial/retained/feature10 reads.
+No automaticacceptance in this trial; do notquery hardware during upload.
+
 # Identity-capable trial frozen and audited; ready for stock return
 
 Frozen source4f39240/OTAfc46a4706cb92a0c70c5a3fa0cebcfe46c3331b38b18d276a11274141ac3484d
