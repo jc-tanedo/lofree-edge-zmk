@@ -185,3 +185,57 @@ test("only interrupted automatic verification can resume; partial transfers neve
   );
   assert(!verificationPending({ automatic: true, state: "complete" }));
 });
+
+test("actual Edge descriptor separates report5 commands from vendor identity collections", async () => {
+  const { d } = fixture();
+  // Observed descriptor: 05010900...8505 input/output32; 0600ff...850a feature15.
+  // Collections belong to one interface but use different usage pages.
+  d.collections = [
+    {
+      usagePage: 1,
+      usage: 0,
+      inputReports: [{ reportId: 5 }],
+      outputReports: [{ reportId: 5 }],
+      featureReports: [],
+    },
+    {
+      usagePage: 0xff00,
+      usage: 10,
+      inputReports: [],
+      outputReports: [],
+      featureReports: [{ reportId: 10 }],
+    },
+    {
+      usagePage: 0xff00,
+      usage: 7,
+      inputReports: [],
+      outputReports: [],
+      featureReports: [{ reportId: 7 }],
+    },
+    {
+      usagePage: 0xff00,
+      usage: 8,
+      inputReports: [],
+      outputReports: [],
+      featureReports: [{ reportId: 8 }],
+    },
+  ];
+  assert.equal(
+    await findInstalledDevice({ requestDevice: async () => [d] }, true),
+    d,
+  );
+  await verifyAndAccept(d, build);
+});
+
+test("cancelled selection differs from an unsupported selected interface", async () => {
+  await assert.rejects(
+    findInstalledDevice({ requestDevice: async () => [] }, true),
+    /No keyboard selected/,
+  );
+  const { d } = fixture();
+  d.collections = [{ usagePage: 0xff00, inputReports: [], outputReports: [] }];
+  await assert.rejects(
+    findInstalledDevice({ requestDevice: async () => [d] }, true),
+    /update and identity/,
+  );
+});

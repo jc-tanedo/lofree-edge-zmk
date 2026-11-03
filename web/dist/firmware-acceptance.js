@@ -26,9 +26,11 @@ const matches = (d) =>
   d.vendorId === ZMK_FILTER.vendorId &&
   d.productId === ZMK_FILTER.productId &&
   d.productName === "Lofree Edge ZMK" &&
+  // The command collection uses Generic Desktop; identity features are in
+  // separate vendor collections on the same HID interface.
+  d.collections.some((c) => c.usagePage === 0xff00) &&
   d.collections.some(
     (c) =>
-      c.usagePage === 0xff00 &&
       c.outputReports.some((r) => r.reportId === 5) &&
       c.inputReports.some((r) => r.reportId === 5),
   );
@@ -38,11 +40,16 @@ export async function findInstalledDevice(
   wait = (ms) => new Promise((r) => setTimeout(r, ms)),
 ) {
   if (choose) {
-    const devices = (await hid.requestDevice({ filters: [ZMK_FILTER] })).filter(
-      matches,
-    );
-    if (devices.length !== 1)
-      throw new Error("Select one Lofree Edge ZMK update interface.");
+    const selected = await hid.requestDevice({ filters: [ZMK_FILTER] });
+    if (selected.length === 0)
+      throw new Error(
+        "No keyboard selected. Choose Finalize Installation to try again.",
+      );
+    const devices = selected.filter(matches);
+    if (selected.length !== 1 || devices.length !== 1)
+      throw new Error(
+        "Select one Lofree Edge ZMK interface with both update and identity reports.",
+      );
     return devices[0];
   }
   for (let i = 0; i < 40; i++) {

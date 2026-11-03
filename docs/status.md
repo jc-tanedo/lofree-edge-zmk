@@ -1,3 +1,17 @@
+# Finalize selection failure reproduced and fixed; frontend only
+
+Owner selectsEdge but sees Select one LofreeEdgeZMKupdateinterface. Readonly
+info confirmsfc46a470 stilltrial1/unconfirmed, retainedsize/CRCvalid. SysfsHID
+reportdescriptor shows report5 I/O in usagePage1, identityfeatures10/7/8 in
+separateff00collections. Test using those actual collection facts reproduces
+exacterror (red log finalize-collection-red-direct); prior mock incorrectly
+co-locatedreports. Matcher now separately checks vendorcollection presence and
+report5 I/O collection.12 direct acceptance tests pass, including exactdescriptor
+and cancellation-vs-unsupported error. Workspace tests pass. No hardwarewrites.
+Preparing new frozenfrontend-only localtest; firmwarefc46a470unchanged. No
+reflash/restarts/unrelatedtests. Publicregistry remains empty. Owner must fresh
+riskacknowledge actual webself-test/acceptance after fixed page handoff.
+
 # Finalize Installation local test ready; no hardware commands sent
 
 Sourcef21cb51 UI plus unchangedOTAfc46a470 frozen in

@@ -360,3 +360,11 @@ are checked before any write. An unapproved trial cannot use this path. A stored
 interrupted receipt always selects its original catalog image, never another
 currently selected image. Local controlled hardware-test catalogs are distinct
 from public approval; the public registry remains empty until review.
+
+HID collection regression: the Edge vendor interface's report5 input/output
+collection uses Generic Desktop usagePage1, while feature10/7/8 occupy separate
+usagePage0xff00 collections. WebHID matching must recognize these across the
+same interface; requiring report5 inside the vendor-page collection rejects a
+valid picker selection before any writes. The descriptor-derived test reproduced
+the owner's exact selection error, then passed after separating these checks.
+Cancelled selection now has its own message.
