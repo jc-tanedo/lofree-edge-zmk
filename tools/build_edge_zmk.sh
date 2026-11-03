@@ -64,6 +64,12 @@ if [ "${EDGE_SWITCH_DIAGNOSTIC:-0}" = 1 ]; then
  BUILD="$ROOT/firmware/build/lofree_edge-ble-studio-switch-diagnostic"
  CONFIGS="$CONFIGS;$ROOT/firmware/lofree_edge/switch-diagnostic.conf"
 fi
+if [ "${EDGE_STUDIO_IO_DIAGNOSTIC:-0}" = 1 ]; then
+ test "${EDGE_SWITCH_DIAGNOSTIC:-0}" = 0 || { echo "Use only one diagnostic image mode" >&2; exit 2; }
+ test "${1:-}" = --ble-studio || { echo "Studio I/O diagnostics require --ble-studio" >&2; exit 2; }
+ BUILD="$ROOT/firmware/build/lofree_edge-ble-studio-io-diagnostic"
+ CONFIGS="$CONFIGS;$ROOT/firmware/lofree_edge/studio-io-diagnostic.conf"
+fi
 BUILD="${EDGE_BUILD_DIR:-$BUILD}"
 export SOURCE_DATE_EPOCH=${SOURCE_DATE_EPOCH:-$(git -C "$ROOT" log -1 --format=%ct 2>/dev/null || echo 0)}
 cmake -S "$ZMK/app" -B "$BUILD" -GNinja \

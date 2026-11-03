@@ -29,10 +29,30 @@ static bool rpc_tx_marker(uint8_t marker, void *user_data) {
         old=f'    uint8_t framing_byte = FRAMING_{marker};' if marker=='SOF' else f'    framing_byte = FRAMING_{marker};'
         old+='\n    ring_buf_put(&rpc_tx_buf, &framing_byte, 1);'
         new=f'''    if (!rpc_tx_marker(FRAMING_{marker}, user_data)) {{
+        EDGE_IO_ADD(9, 1);
         k_mutex_unlock(&rpc_transport_mutex);
         return -EIO;
     }}'''
         text=replace(text,old,new)
+    text=replace(text, '#include "msg_framing.h"', '#include "msg_framing.h"\n#include "edge_studio_io_diag.h"')
+    text=replace(text, '        if (status) {\n            zmk_studio_Response resp', '        if (status) {\n            EDGE_IO_ADD(3, 1); EDGE_IO_SET(5, req.request_id);\n            zmk_studio_Response resp')
+    text=replace(text, '            LOG_DBG("Decode failed");', '            EDGE_IO_ADD(4, 1);\n            LOG_DBG("Decode failed");')
+    text=replace(text, '    pb_ostream_t stream = pb_ostream_for_tx_buf(user_data);', '    EDGE_IO_ADD(6, 1);\n    if (resp->which_type == zmk_studio_Response_request_response_tag) { EDGE_IO_SET(7, resp->type.request_response.request_id); }\n    pb_ostream_t stream = pb_ostream_for_tx_buf(user_data);')
+    text=replace(text, '    if (!status) {', '    if (!status) {\n        EDGE_IO_ADD(9, 1);')
+    text=replace(text, '    selected_transport->tx_notify(&rpc_tx_buf, 1, true, user_data);', '    selected_transport->tx_notify(&rpc_tx_buf, 1, true, user_data);\n    EDGE_IO_ADD(8, 1);')
+    text += '''
+#if IS_ENABLED(CONFIG_LOFREE_EDGE_STUDIO_IO_DIAGNOSTICS)
+uint32_t edge_studio_io_runtime(unsigned int index) {
+    switch (index) {
+    case 12: return ring_buf_size_get(&rpc_rx_buf);
+    case 13: return ring_buf_size_get(&rpc_tx_buf);
+    case 14: return rpc_framing_state;
+    case 15: return selected_transport != NULL;
+    default: return 0;
+    }
+}
+#endif
+'''
     return text
 
 def stage(out):

@@ -14,6 +14,9 @@
 #define K_FOREVER 0
 #define K_MSEC(v) (v)
 #define IS_ENABLED(v) 0
+#define EDGE_IO_ADD(index,value) ((void)0)
+#define EDGE_IO_SET(index,value) ((void)0)
+#define zmk_studio_Response_request_response_tag 1
 #define LOG_ERR(...) ((void)0)
 #define LOG_WRN(...) ((void)0)
 #define RING_BUF_DECLARE(name,size) struct ring_buf name
@@ -27,7 +30,7 @@ static int rpc_transport_mutex;
 static void k_mutex_lock(int *p,int t){}static void k_mutex_unlock(int *p){}
 static void k_sleep(int n){sleeps++;}
 typedef struct pb_ostream_s { bool(*callback)(struct pb_ostream_s*,const uint8_t*,size_t);void *state;size_t max_size,bytes_written; }pb_ostream_t;
-typedef struct {int unused;}zmk_studio_Response;
+typedef struct {int which_type;struct {struct {uint32_t request_id;}request_response;}type;}zmk_studio_Response;
 static int zmk_studio_Response_msg;
 static bool pb_encode(pb_ostream_t *s,const void *fields,const void *message){uint8_t p[1024];memset(p,42,payload_size);return s->callback(s,p,payload_size);}
 static void tx_notify(struct ring_buf *r,size_t n,bool done,void *data){if(done&&!stalled)drain(r);}

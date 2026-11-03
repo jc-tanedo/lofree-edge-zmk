@@ -227,3 +227,31 @@ The initial helper omitted these events, so capture1 cannot establish OUT succes
 Regression tests preserve both variants. Reference: Linux [usbmon text API](https://docs.kernel.org/usb/usbmon.html).
 Never interpret missing filtered records as missing kernel events without checking
 format coverage; retain original captures and use a new filename for each run.
+
+## Read-only physical Studio probe
+
+`probe_edge_studio_reads.py` is Linux-only and must be used after browser Studio
+releases the serial port. It configures the communications line/DTR, takes an
+exclusive open, restores terminal attributes on exit and sends only a fixed
+read-only protobuf whitelist. Logs omit maps, names and parameter values. Modes
+preserve exact encoded bytes while comparing SDK-style fragments and a single
+frame write. A bounded optional follow-up sends only device-info after a timeout;
+it reports failure regardless of follow-up success. It is not a keymap editor or
+flasher. Normal typing uses a different interface and can continue.
+
+## Diagnostic-only firmware counters
+
+`EDGE_STUDIO_IO_DIAGNOSTIC=1 sh tools/build_edge_zmk.sh --ble-studio` enables a
+separate image with CONFIG_LOFREE_EDGE_STUDIO_IO_DIAGNOSTICS. HID GET_FEATURE9
+returns67 bytes: report9, schema1/reserved0, then16 little-endian uint32 fields.
+Fields0..11 are RX callbacks/bytes/drops, decode successes/failures/last request
+sequence, response begins/last response sequence, successful/failed send calls,
+and UART TX bytes/zero writes. Fields12..15 are RX/TX ring occupancy, framing enum
+and transport-present flag. These are protocol sequence numbers, never hardware
+IDs. `read_edge_studio_io_diag.py` issues GET only. There is no reset/write path.
+Counters have individual32-bit writers; a read is not an atomic multi-field
+snapshot. Sample while traffic is stopped, before Retry/follow-up can overwrite
+last-request fields. Instrumentation can affect timing; no reproduction under
+instrumentation would not establish a fix. The existing scratch buffer is reused;
+48B static counter storage is diagnostic-only. New-image stack and hardware gates
+remain mandatory. Opt-out image must remain byte-identical to the tested base.

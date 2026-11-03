@@ -1,3 +1,29 @@
+# Automated physical read reproduction; diagnostic counter build under test
+
+Corrected capture2 shows request#8 sent as1+11 bytes, both OUT completions status0,
+then no IN completion. Host-level completion does not prove firmware parsing.
+Owner disconnected Studio/all tabs and authorized automated read-only serial tests.
+New Linux probe reproduces zero-byte loss without the browser: fragmented run
+failed in cycle2/request30; whole-frame run failed in cycle3/request40. A further
+whole-frame run reached cycle20 then lost layout request307. On the SAME connection,
+read-only device-info request308 replied in9.35ms, proving no permanent connection
+hang. No configuration, flash or acceptance commands were sent. Read-only status
+still reports slotB/trial1/unconfirmed and valid retained image after the probes.
+Private JSONL logs contain operation/sequence/timing/byte counts only.
+
+Offline strict-IN-toggle assertions passed20 metadata cycles; this does not
+reproduce the physical failure. Request fragmentation alone is not the fix.
+Preparing optional CONFIG_LOFREE_EDGE_STUDIO_IO_DIAGNOSTICS:12 protocol counters
+and4 live ring/framing flags through read-only HID feature9. No payloads/keys,
+selector writes, arbitrary memory access, counter reset or flash operations.
+It reuses the existing67-byte feature scratch buffer. Static RAM22468/22528B
+(48B extra); no threads/stacks added. Opt-out rebuild remains byte-identical to
+bdb42bcd. Instrumented image passes pinned build/image checks and compiled feature, map/layer
+Save/reset persistence, Security/storage/fault/reboot and >=128B observed stack
+checks.47 Python tests and245-file source/history audit pass. Not yet frozen or
+cleared for installation. Current physical firmware
+is unchanged unconfirmed bdb42bcd. Do not accept it or change modes.
+
 # First USB capture: request submission seen; completion filter corrected
 
 Private capture zero-reply-usbmon-1.log has696 metadata lines. Its final request

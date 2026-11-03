@@ -72,7 +72,23 @@ if(CONFIG_ZMK_STUDIO)
   string(REPLACE "            ring_buf_get_finish(tx_buf, MAX(sent, 0));"
     "            ring_buf_get_finish(tx_buf, MAX(sent, 0));\n            if (sent <= 0) { break; }"
     STUDIO_UART_CODE "${STUDIO_UART_CODE}")
+  string(REPLACE "#include <zmk/studio/rpc.h>"
+    "#include <zmk/studio/rpc.h>\n#include \"edge_studio_io_diag.h\""
+    STUDIO_UART_CODE "${STUDIO_UART_CODE}")
+  string(REPLACE "    uart_irq_update(uart_dev);"
+    "    EDGE_IO_ADD(0, 1);\n    uart_irq_update(uart_dev);"
+    STUDIO_UART_CODE "${STUDIO_UART_CODE}")
+  string(REPLACE "                last_read = uart_fifo_read(uart_dev, buffer, len);"
+    "                last_read = uart_fifo_read(uart_dev, buffer, len);\n                EDGE_IO_ADD(1, last_read);"
+    STUDIO_UART_CODE "${STUDIO_UART_CODE}")
+  string(REPLACE "                last_read = uart_fifo_read(uart_dev, &dummy, 1);"
+    "                last_read = uart_fifo_read(uart_dev, &dummy, 1);\n                EDGE_IO_ADD(2, last_read);"
+    STUDIO_UART_CODE "${STUDIO_UART_CODE}")
+  string(REPLACE "            ring_buf_get_finish(tx_buf, MAX(sent, 0));"
+    "            if (sent > 0) { EDGE_IO_ADD(10, sent); } else { EDGE_IO_ADD(11, 1); }\n            ring_buf_get_finish(tx_buf, MAX(sent, 0));"
+    STUDIO_UART_CODE "${STUDIO_UART_CODE}")
   file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/edge_studio_uart.c" "${STUDIO_UART_CODE}")
+  target_sources_ifdef(CONFIG_LOFREE_EDGE_STUDIO_IO_DIAGNOSTICS app PRIVATE "${CMAKE_CURRENT_LIST_DIR}/edge_studio_io_diag.c")
   set_source_files_properties("${STUDIO_UART}" TARGET_DIRECTORY app PROPERTIES HEADER_FILE_ONLY TRUE)
   target_sources(app PRIVATE "${CMAKE_CURRENT_BINARY_DIR}/edge_studio_uart.c")
 endif()

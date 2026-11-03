@@ -11,6 +11,8 @@
 #include <zmk/hid_indicators.h>
 #include "tlsr_slots.h"
 #include "edge_lighting.h"
+#include "edge_studio_io_diag.h"
+#include <zephyr/sys/byteorder.h>
 
 static struct hid_ops keyboard_ops, vendor_ops;
 static const struct hid_ops *original_keyboard, *original_vendor;
@@ -36,6 +38,11 @@ static int edge_switch_inputs_init(void)
 SYS_INIT(edge_switch_inputs_init, APPLICATION, 90);
 #endif
 static const uint8_t feature_desc[] = {
+#if IS_ENABLED(CONFIG_LOFREE_EDGE_STUDIO_IO_DIAGNOSTICS)
+    0x06,0x00,0xff, 0x09,0x09, 0xa1,0x01, 0x85,0x09,
+    0x15,0x00, 0x26,0xff,0x00, 0x75,0x08, 0x95,0x42,
+    0x09,0x09, 0xb1,0x02, 0xc0,
+#endif
     0x06,0x00,0xff, 0x09,0x07, 0xa1,0x01, 0x85,0x07,
     0x15,0x00, 0x26,0xff,0x00, 0x75,0x08, 0x95,0x1f,
     0x09,0x07, 0xb1,0x02, 0xc0,
@@ -78,6 +85,19 @@ static int keyboard_set(const struct device *dev, struct usb_setup_packet *setup
 static int vendor_get(const struct device *dev, struct usb_setup_packet *setup,
                       int32_t *len, uint8_t **data)
 {
+#if IS_ENABLED(CONFIG_LOFREE_EDGE_STUDIO_IO_DIAGNOSTICS)
+    if (setup->wValue == 0x0309) {
+        /* Reuse the existing67-byte feature scratch buffer; no extra RAM. */
+        memset(stock_window, 0, sizeof(stock_window));
+        stock_window[0]=9; stock_window[1]=1;
+        for (unsigned int i=0; i<16; i++) {
+            uint32_t value=i<12 ? edge_studio_io_counts[i] : edge_studio_io_runtime(i);
+            sys_put_le32(value, &stock_window[3+i*4]);
+        }
+        *data=stock_window; *len=sizeof(stock_window);
+        return 0;
+    }
+#endif
     if (setup->wValue == 0x0308) {
         stock_window[0]=8; stock_window[1]=stock_page; stock_window[2]=stock_page>>8;
         int rc = tlsr_slot_read(tlsr_slot_other()+((uint32_t)stock_page*64U),

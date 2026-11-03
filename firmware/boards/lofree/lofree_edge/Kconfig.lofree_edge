@@ -19,3 +19,11 @@ config LOFREE_EDGE_MODE_SWITCH
       Use the measured PD5/PD6 selector. ON enables USB only, BT enables
       Bluetooth only, and OFF enables neither. No transport fallback or
       output-key override is allowed. Moves use guarded planned restarts.
+
+config LOFREE_EDGE_STUDIO_IO_DIAGNOSTICS
+    bool "Read-only Studio receive/dispatch/transmit counters"
+    depends on BOARD_LOFREE_EDGE && ZMK_STUDIO && UART_INTERRUPT_DRIVEN
+    default n
+    help
+      Diagnostic builds only. Expose bounded protocol counters via HID feature9.
+      No payloads, key values, arbitrary memory access or persistent writes.
