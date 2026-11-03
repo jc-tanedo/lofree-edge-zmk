@@ -1,3 +1,20 @@
+# Finalize button placement complete and audited
+
+UI source e869366 moves Finalize Installation into fourth-step panel, with
+wizard-actions spacing and persistence guidance. Already-uploaded recovery
+control is inside Choose panel too. Root synthetic browser checks verify
+insideFinalStep/insideWizard/enabled state; no Finalize action sits outside the
+wizard. Hosted build/link checks and253-file source/history/source+website
+archive/site audits pass. Firmware rebuild remains byte-identical afa70869.
+Packager rejected mismatched Studio base before output; matching hosted Studio
+was rebuilt and final packaging/audits pass. No owner page refresh or writes.
+Preview8810 updated; frozen real installer8811 intentionally unchanged.
+
+Owner's actual wizard test passed; independent readonly status confirms
+accepted/count0/slotB/retained integrity. No additional hardware test requested
+for this reversible placement-only change. Public registry still empty and
+release gates remain separate. No CI push, merge, tag or deployment.
+
 # Wizard hardware test passes; Finalize action moved inside panel
 
 Owner reports entire real8811 wizard/loading/finalization flow worked on exact
