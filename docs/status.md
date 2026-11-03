@@ -1,3 +1,22 @@
+# Normal complete-frame candidate frozen; stock verified for install
+
+Full local tools/ci.sh exits0 on source0834b8f (no GitHub CI push): Python/web,
+compiled Security/request-recovery/USB/BLE/mode/power/storage/stack/boot/import/
+draft/switch checks, both website bases and source/history/archive/site audits.
+Diagnostics-disabled OTA SHA256:
+5b53224452589907eeafd485b294800023bbf5114746f1feebb9230e8cc8ff5b (121940B).
+Frozen build/hardware-tests/alpha3-complete-frame-normal-5b532244-0834b8f;
+localhost8804/session38397. Source/website archives and246-file audits pass;
+30 hosted-subpath asset/link checks pass. BrowserOS Neo verifies servedSHA/size,
+selected diagnostics-disabled label, same-tab Studio and both persistent risk
+notices/disconnected controls. Source build clean at0834b8f; frozen immutable.
+
+Read-only USB identity still stock05ac:0256 EDGE84@Lofree. Owner already returned
+to stock successfully; do NOT ask Fn+Space again. Ready for browser install with
+fresh risk acknowledgment, USB/ON, then read trial/retained integrity. No normal
+candidate installed or accepted yet. Acceptance remains a separate handoff.
+No release/merge/Pages deployment. Normal exact-image hardware checks required.
+
 # Complete-frame diagnostic stock return verified; normal preflight next
 
 Owner confirms Fn+Space3s/release restart, USB/ON. Read-only enumeration verifies
