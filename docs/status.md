@@ -1,3 +1,20 @@
+# Guided installer browser checks complete; final package refresh pending
+
+Accepted physical image remains afa70869, count0/slotB/retained integrity valid
+at independent readback. Original failing native GET_FEATURE10(67) now physically
+passes with schema2, zero padding, expected size/CRC/slot; no test/confirm writes
+repeated. Focused evidence is in validation/v0.1.0-alpha.3-browser-identity.md.
+
+Wizard synthetic browser checks pass Choose→Connect→Install→Finalize, restart
+spinner/indeterminate/not-finished copy, permission CTA/fresh confirmation,
+verification loading, success/Studio link, and upload-error Review connection
+without write retry. Header correctly distinguishes installation/access from
+device disconnection.14 phase/workspace tests initially pass; added connection
+review regression passes as well. All web test files and49 Python tests pass.
+A final UI-only refinement requires source/site archive refresh; no new firmware
+or physical wizard installation requested. Frozen8809 remains unchanged;8810 is
+synthetic-only preview. No unrelated tests, GitHub CI, merge or publication.
+
 # Browser installation succeeded; guided installer UI implemented locally
 
 Owner reports Installation complete from8809 for exactafa70869. Independent

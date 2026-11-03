@@ -473,3 +473,20 @@ test("missing post-restart permission is a recoverable wizard handoff", async ()
   assert.equal(f.workspace.getSnapshot().lastAttempt.state, "needs-attention");
   f.workspace.dispose();
 });
+
+test("upload error can return to connection review without retrying writes", async () => {
+  const f = await fixture({
+    flash: async () => {
+      throw Error("Transfer stopped");
+    },
+  });
+  await f.workspace.loadCatalog();
+  await f.workspace.connectUpdate();
+  await f.workspace.install(true);
+  assert.equal(f.workspace.getSnapshot().installPhase, "upload-error");
+  const writes = f.writes;
+  f.workspace.reviewConnection();
+  assert.equal(f.workspace.getSnapshot().installPhase, "idle");
+  assert.equal(f.writes, writes);
+  f.workspace.dispose();
+});

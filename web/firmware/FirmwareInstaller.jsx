@@ -209,6 +209,20 @@ export default function FirmwareInstaller({
             >
               Install firmware…
             </button>
+            {phase === "upload-error" && !s.busy && (
+              <div className="wizard-actions">
+                <button
+                  type="button"
+                  className="secondary"
+                  onClick={() => {
+                    workspace.reviewConnection();
+                    setStep(1);
+                  }}
+                >
+                  Review connection
+                </button>
+              </div>
+            )}
             {!s.busy && phase === "idle" && (
               <div className="wizard-actions">
                 <button

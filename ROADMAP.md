@@ -148,7 +148,7 @@ The supported web installer currently returns to stock for its USB update interf
 
 **in progress** · Release hardening
 
-Unified Install Firmware flow and read-only image identity implemented; local synthetic browser/compiled checks pass. New exact-image hardware validation and approval registry entry are pending. Unlisted development builds remain trials.
+Owner reports unified browser installation complete on schema2 firmware; independent accepted/count0 and browser-sized identity readback pass. Guided wizard/loading/permission/retry UX passes synthetic browser checks. Wider hardware coverage and public approval/release gates remain open.
 
 **Acceptance:** Validated exact builds upload/reconnect/verify/self-test/accept/readback in one flow; interruptions offer verification-only resume; trial builds never auto-accept; exact-SHA physical install/recovery/persistence tests pass.
 

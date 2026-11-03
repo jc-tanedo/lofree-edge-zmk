@@ -130,7 +130,7 @@
     "title": "Verified one-step firmware installation",
     "status": "in progress",
     "milestone": "Release hardening",
-    "limitation": "Unified Install Firmware flow and read-only image identity implemented; local synthetic browser/compiled checks pass. New exact-image hardware validation and approval registry entry are pending. Unlisted development builds remain trials.",
+    "limitation": "Owner reports unified browser installation complete on schema2 firmware; independent accepted/count0 and browser-sized identity readback pass. Guided wizard/loading/permission/retry UX passes synthetic browser checks. Wider hardware coverage and public approval/release gates remain open.",
     "acceptance": "Validated exact builds upload/reconnect/verify/self-test/accept/readback in one flow; interruptions offer verification-only resume; trial builds never auto-accept; exact-SHA physical install/recovery/persistence tests pass.",
     "issue": null
   }

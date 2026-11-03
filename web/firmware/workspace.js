@@ -404,6 +404,10 @@ export function createWorkspace({
         end();
       }
     },
+    reviewConnection() {
+      if (!state.busy && state.installPhase === "upload-error")
+        patch({ installPhase: "idle", progress: null });
+    },
     async connectStock() {
       if (!begin()) return;
       message("Select your Edge in the browser’s device picker if prompted.");
