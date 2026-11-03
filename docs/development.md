@@ -220,3 +220,10 @@ public repository and are created exclusively with0600 permissions. Tests cover
 scope, parameter suppression, partial capture and failed transfer status. Host
 transfer success does not prove firmware parsing; correlate it with browser
 counters before proposing another firmware change.
+
+The usbmon filter must retain events with omitted-data tags (notably `<` for an
+IN submission and `>` for an OUT completion). Only `=` carries captured hex.
+The initial helper omitted these events, so capture1 cannot establish OUT success.
+Regression tests preserve both variants. Reference: Linux [usbmon text API](https://docs.kernel.org/usb/usbmon.html).
+Never interpret missing filtered records as missing kernel events without checking
+format coverage; retain original captures and use a new filename for each run.

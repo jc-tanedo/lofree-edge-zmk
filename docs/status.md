@@ -1,3 +1,18 @@
+# First USB capture: request submission seen; completion filter corrected
+
+Private capture zero-reply-usbmon-1.log has696 metadata lines. Its final request
+is#10/behaviors at14.824810s; no IN completion follows. It retains124 OUT submissions
+but ZERO OUT completions or IN submissions. The filter incorrectly rejected data
+omission tags (`>` completion and `<` submission), documented by the Linux usbmon
+text format. Therefore this capture cannot prove successful USB OUT delivery.
+Do not infer a firmware receive/parse failure from missing retained records.
+
+Two regressions reproduce the filter omission (0 vs1 returned record). The fixed
+filter accepts single-character data tags and parses hex only for `=`. All42 Python
+tests pass, including scope/privacy and both omitted-payload forms. Original
+capture preserved; a new file is required for the repeat. No firmware changes,
+flashes or acceptance. Frozen8798 and diagnostic8799 stay unchanged.
+
 # No response bytes after outstanding request; USB delivery capture pending
 
 Owner reproduced on the sixth read using8799:5/13 details complete, sent#11/write

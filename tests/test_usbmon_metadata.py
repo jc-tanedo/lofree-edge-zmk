@@ -14,6 +14,17 @@ class UsbMetadata(unittest.TestCase):
   self.assertNotIn('abcd1234',text);self.assertNotIn('1:42',text);self.assertNotIn('080b2202',text)
   self.assertEqual(m.feed('p 104 C Bi:1:42:3 0 8 = 00000400 00000000'),[])
   self.assertEqual(m.feed('p 104 C Bi:1:43:2 0 8 = 00000400 00000000'),[])
+ def test_bulk_completion_without_payload(self):
+  m=module.Metadata((1,42))
+  m.feed('ptr 100 S Bo:1:42:5 -115 11 = ab080b22 040a0208 01ad00')
+  result=m.feed('ptr 101 C Bo:1:42:5 0 11 >')
+  self.assertEqual(len(result),1)
+  self.assertIn('OUT C ticket=1 bytes=11 status=0',result[0])
+ def test_input_submission_without_payload(self):
+  m=module.Metadata((1,42))
+  result=m.feed('ptr 100 S Bi:1:42:2 -115 4096 <')
+  self.assertEqual(len(result),1)
+  self.assertIn('IN S ticket=1 bytes=4096 status=-115',result[0])
  def test_input_values_not_exposed(self):
   text='\n'.join(module.Metadata((1,42)).feed('ptr 100 C Bi:1:42:2 0 4 = 11223344'))
   self.assertIn('bytes=4 status=0',text);self.assertNotIn('11223344',text)

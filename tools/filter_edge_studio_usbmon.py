@@ -12,7 +12,7 @@ import re
 import sys
 
 ROOT=Path(__file__).resolve().parents[1]
-LINE=re.compile(r'^\S+\s+(\d+)\s+([SCE])\s+B([io]):(\d+):(\d+):(\d+)\s+(-?\d+)\s+(\d+)(?:\s+=\s*(.*))?$')
+LINE=re.compile(r'^\S+\s+(\d+)\s+([SCE])\s+B([io]):(\d+):(\d+):(\d+)\s+(-?\d+)\s+(\d+)(?:\s+(\S)(?:\s+(.*))?)?$')
 
 def varint(data,offset):
     value=0
@@ -28,7 +28,7 @@ class Metadata:
     def feed(self,line):
         m=LINE.match(line.strip())
         if not m:return []
-        stamp,event,direction,bus,dev,ep,status,size,payload=m.groups()
+        stamp,event,direction,bus,dev,ep,status,size,data_tag,payload=m.groups()
         if (int(bus),int(dev))!=self.device or (direction,int(ep)) not in [('o',5),('i',2)]:return []
         stamp=int(stamp)
         if self.origin is None:self.origin=stamp
@@ -44,7 +44,7 @@ class Metadata:
         # No request parameters, bindings or names are retained in output.
         if event=='S' and direction=='o' and int(size):
             try:
-                tokens=(payload or '').split();hexdata=''
+                tokens=(payload or '').split() if data_tag=='=' else [];hexdata=''
                 for token in tokens:
                     if not re.fullmatch(r'(?:[0-9a-fA-F]{2})+',token):break
                     hexdata+=token
