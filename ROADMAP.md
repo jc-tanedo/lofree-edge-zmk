@@ -48,7 +48,7 @@ Tracking issue will be linked after the public repository is created.
 
 **in progress** · Studio settings
 
-Intermittent action-detail reads can stall despite completed USB writes; Retry recovers. A missing-EOF defect in the firmware response writer is reproduced at a full TX ring, and an isolated fix is under native validation. Hardware resolution is not yet demonstrated.
+Intermittent action-detail reads still stall in owner hardware testing after the raw framing-marker fix (cycles 3 and 5 failed; Retry recovers). Marker loss is independently reproduced and fixed, but physical read reliability remains unresolved. Further diagnostics distinguish missing and partial responses before changing payload/backpressure behavior.
 
 **Acceptance:** Repeated initial connections, full action reads and navigation/reconnect succeed under host backpressure; complete frames and bounded disconnect handling pass regression tests; exact-image hardware validation passes.
 

@@ -1,3 +1,37 @@
+# Partial-response diagnostic ready on8799
+
+Frontend-only diagnostic adds bytes received since the latest request and open
+frame payload length. Local tests distinguish no reply, partial frame and complete
+reply without disclosing response values. All serial lifecycle/reconnect tests,
+production TypeScript, both30-target website checks and235-file source/history/site
+audits pass. BrowserOS Neo confirms disconnected Studio/risk banner. Preview8799
+(session89938) serves build/ui-previews/read-partial; its firmware catalog is copied
+from the matching frozen bdb42bcd candidate. No reflash is needed. Frozen8798 and
+installed firmware were not changed. Owner must disconnect the old editor before
+using8799; capture the first timeout with the new counters before Retry. No CI push
+for this development-only instrumentation, per owner preference.
+
+# Framing candidate read-stress failed; do not accept
+
+Owner reports trial bdb42bcd failed reads3 and5 of five navigation/reconnect cycles.
+Cycle3 recovered with Retry; cycle5 first retry failed, second succeeded. Latest
+error:4/13 details complete; last written getBehaviorDetails#10, last complete
+response#9,3485 received bytes;13.2s since progress/15s total. This is not resolved
+by the raw-marker fix. Baseline passes were not explicitly confirmed separately.
+Keep trial unconfirmed, USB connected and sliderON; no acceptance/power cycle.
+Frozen installer stays unchanged. Need distinguish partial response from no bytes
+for the outstanding request. The existing payload writer still aborts after50ms
+without ring space; a host seam demonstrates400-byte payload abort with128 queued
+bytes under persistent backpressure. This is a separate lead, not a hardware cause
+established by the reported aggregate byte count. No firmware writes this turn.
+
+# Frozen preview server restored
+
+Owner could not reach8798 before baseline checks. Restarted the same frozen
+static server (session65533), rechecked unchanged bdb42bcd OTA checksum and Studio
+availability. No source/bundle/image changes, flash or acceptance. Hardware tests
+remain pending; keep USB connected and sliderON. Do not reinstall for this outage.
+
 # Framing trial installed; baseline/reconnect testing pending
 
 Owner confirmed installation through frozen8798. Read-only edge_ota info reports

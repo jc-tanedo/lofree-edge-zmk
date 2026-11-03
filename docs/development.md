@@ -201,3 +201,11 @@ compiled ring_buf_put call site, then requires a complete action-detail reply.
 It uses synthetic flash/USB and fault injection, not host timing evidence. CI runs
 this check inside its existing Security emulator pass via EDGE_TEST_RPC_FRAMING=1,
 avoiding another full firmware boot/test pass.
+
+After the owner's bdb42bcd read-stress failure, diagnostic summaries also show
+received bytes since the latest request and the unescaped byte count in an open
+incoming frame. This distinguishes no input from an unfinished frame; it does not
+by itself establish a firmware timing cause or attribute a frame to a request.
+`web/tests/usb-diagnostics.ts` covers absent, partial and complete input without
+including response values in summaries. The frozen trial installer is unchanged;
+frontend-only instrumentation uses a separate preview, with no reflash needed.
