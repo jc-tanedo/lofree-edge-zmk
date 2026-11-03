@@ -1,3 +1,103 @@
+# Accepted5b532244 functional sequences recorded; identity trial preparation next
+
+Owner restored all four customPower settings and confirms reconnectreadback
+matches; exact numbers not provided (do not infer defaults). Protectionenabled,
+UnlockStudio restored, ON/USB. Consolidated exact-SHA physical record in
+validation/v0.1.0-alpha.3-complete-frame.md covers read stress/browser/drafts,
+manualreturn/acceptance, mode/battery/wake, hostresume and Security. Current
+unmeasured, Fn/media coldwake unresolved, freshpairing not repeated on5b532244.
+No publication gate completed by omission; newfc46a470 needs separate testing.
+Next freeze audited identity-capable trial, defaulttrial policy, then handoff.
+Do not enable automatic acceptance for unapproved builds. Existing8804 unchanged.
+
+# Accepted5b532244 enabled Security policy/guards pass
+
+Owner confirms enable/immediate lock, Fn+U unlock, full OFF/unplug5s/reconnect/ON
+requires physicalunlock again, saved maps/Power/policy intact. While enabled,
+unsaved removal of lastUnlock binding warns and disablesSave; Undo restores
+binding and clearswarning. FinalON/USB,protectionenabled,bindingrestored. Next
+restore everydayPower and reconnectreadback, then consolidate exactimage record.
+Fresh pairing/current/remote wake not established by these tests. Newfc46a470
+identity firmware remains uninstalled/unapproved; no agent device writes.
+
+# Accepted5b532244 missing-unlock enable guard passes
+
+Owner confirms whileprotectiondisabled: temporaryNone saved for soleUnlockStudio
+binding, Securityenablewarned/blocked; originalUnlockStudio restored and saved,
+protection remainsdisabled. USB/ON. Next enable/immediatelock/Fn+U/reboot policy
+persistence, then enabled-policy unsavedmissingbindingwarning/Saveblocked/Undo.
+No agent hardware commands/new image. ShortPower2/4/10/20 still active.
+
+# Accepted5b532244 disabled Security policy persists
+
+Owner confirms Security disable confirmationCancel/Discard preservesenabled,
+confirmeddisable permits Studio reconnect withoutFn+U, and OFF/unplug5s/
+reconnect/ON retainsdisabled policy plus saved map/layers/Power. FinalON/USB,
+protectiondisabled, directUnlock bindingintact. Next missing-unlock enable guard
+on unsaved draft only, restorebinding, enable/immediatelock/Fn+U, enabledreboot
+and enabled-policy missing-binding Save guard. No agent device writes/new image.
+
+# Accepted5b532244 USB host suspend/resume passes
+
+Owner confirms CachyOS suspend30s/resume via host controls with USB attached:
+typing/Fn/media/Caps/backlight return, Studio reconnect/unlock and saved map,
+Power2/4/10/20 and Security retained. FinalON/USB. Next exact-image Security
+policy cancel/disable/reconnect/reboot and re-enable/lock/unlock/reboot guards;
+then restore everyday timers. No agent hardware commands/new image.
+
+# Accepted5b532244 deep-wake timing and modifier transitions pass
+
+Owner confirms disconnected battery deep wake reconnects within a few seconds
+without re-pairing; wake key consumed (documented limitation). HeldLeftShift
+BT→ON andON→BT both release correctly/lowercasea, proper Bluetooth/USB/Studio
+routing, returnON restoresUSB/Studio. FinalON/USB. Next USB-host suspend/resume,
+Security policy/warnings persistence, and everyday timer restoration. No device
+writes/new firmware by agent; short2/4/10/20 test settings still active.
+
+# Accepted5b532244 disconnected deep wake reconnects; wake key consumed
+
+Owner reports reconnect after battery/hostBluetoothOFF90s→ON test; first key
+consumed. This matches documented disconnected deep-wake behavior. Exact delay
+and explicit no-repair confirmation not yet supplied; ask alongside next held-
+modifier transition check. Expected finalBT/USB per test instructions, not yet
+independently verified. No agent device writes/new image. Short timers remain.
+
+# Accepted5b532244 battery connected-sleep row wake passes
+
+Owner confirms six sampled rows Esc/1/Q/A/Z/LeftCtrl wake promptly after15s/
+Caps-indicator-dark, first number/letter tap registers, no lost/repeated/stuck
+keys/modifier. Cable reinsertion inBT preservesBluetooth and Studio unavailable.
+FinalBT/USB; short timers2/4/10/20 remain. Next disconnected deep wake after
+hostBluetoothOFF90s, then held-modifier transitions/USB host suspend/Security.
+Fn/media cold wake remains separately tracked; current draw unmeasured.
+
+# Accepted5b532244 idle-lighting and Power controls pass
+
+Owner confirms short values2s dim/4s off/10s sleep/20%; automatic dim/off and
+activity brightness restore, held Shift inhibition, manual off preservation,
+invalid dim5/off4 Save disabled, and all-timers0/Never remain lit15s. Restored
+short test values and saved. ON/USB. Next connected BT row wake and disconnected
+deep wake; restore everyday timers after tests. No agent device writes/new image.
+
+# Accepted5b532244 OFF and switch-wake checks pass
+
+Owner confirms BT→OFF30s inactive keys/lights/radio/USB/Studio; OFF→BT saved
+reconnect on USB and battery without pairing; keys do not wake OFF on battery;
+OFF/reconnectUSB/ON restores prompt typing and Studio unlock with saved settings.
+Final positionON/USB. No agent device writes/new firmware. Next short-timer idle
+lighting/held-key/manual-off/Never checks, then connected/deep BT wake and
+Security policy checks. Current draw remains unmeasured.
+
+# Accepted5b532244 Bluetooth routing/battery/cable checks pass
+
+Owner confirms ON→BT saved-profile reconnect and typing, Studio/USB-data
+unavailable in BT, typing/Fn/media/Caps indicator on battery, and USB cable
+reinsertion preserving Bluetooth with USB/Studio unavailable. Exact installed
+normal5b532244 remains accepted; final positionBT with USB connected. No new
+firmware installed or agent device writes. Next OFF inactivity and OFF→BT/ON
+wake on USB/battery, then short-timer power/security hardware checks. New
+identity firmware fc46a470 remains uninstalled and unapproved.
+
 # Unified installer final review packages audited
 
 Final review source4f39240 rebuild retains tested identity-firmware SHA

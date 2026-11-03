@@ -48,7 +48,7 @@ Tracking issue will be linked after the public repository is created.
 
 **in progress** · Studio settings
 
-Both instrumented and normal complete-frame candidates pass1786 physical requests each, plus browser reconnect/draft checks on one Edge/CachyOS host. Normal-image recovery/power checks and wider coverage remain pending. Precise streaming decoder root cause is not established.
+Normal complete-frame firmware passes1786 physical reads, browser reconnect/draft checks and mode/power/Security sequences on one Edge/CachyOS host. Precise streaming root cause and wider coverage remain unproven; new identity-capable firmware needs separate validation.
 
 **Acceptance:** Repeated initial connections, full action reads and navigation/reconnect succeed under host backpressure; complete frames and bounded disconnect handling pass regression tests; exact-image hardware validation passes.
 
