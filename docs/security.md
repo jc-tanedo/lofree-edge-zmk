@@ -31,10 +31,10 @@ Keep an accessible direct binding. [Reachability investigation #17](https://gith
 
 Older firmware shows an unsupported message for policy changes. The runtime policy
 requires supporting firmware; warning spacing and save guards are frontend-only.
-The [normal decoder image](https://github.com/jc-tanedo/lofree-edge-zmk/blob/firmware/power-management/docs/validation/v0.1.0-alpha.3-complete-frame.md)
+The [normal decoder image](https://github.com/jc-tanedo/lofree-edge-zmk/blob/df4e9b2bd8aa46afbb11be3ca2812a1240dd2197/docs/validation/v0.1.0-alpha.3-complete-frame.md)
 passed policy cancel/disable/reconnect, both policy reboot modes, immediate locking,
 physical unlocking and missing-binding enable/Save guards on one Edge/CachyOS.
-The later [browser identity image](https://github.com/jc-tanedo/lofree-edge-zmk/blob/firmware/power-management/docs/validation/v0.1.0-alpha.3-browser-identity.md)
+The later [browser identity image](https://github.com/jc-tanedo/lofree-edge-zmk/blob/df4e9b2bd8aa46afbb11be3ca2812a1240dd2197/docs/validation/v0.1.0-alpha.3-browser-identity.md)
 received focused baseline/settings and installer testing; unrelated policy tests
 were not repeated, per owner request. No release certification is implied.
 
