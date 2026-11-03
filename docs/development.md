@@ -399,3 +399,15 @@ Synthetic preview controls pause reconnect/verification and simulate access
 requirements without hardware. Test reconnect-loading → permission handoff →
 fresh confirmation → verification-loading → completion. Check that completion
 removes the spinner and exposes Studio, and development trials retain rollback.
+
+CI skips fork pull requests entirely. Only main pushes and same-repository pull
+requests execute jobs on the privileged persistent self-hosted runners. After
+review, the repository owner may explicitly bring approved fork changes onto a
+repository-owned branch to allow CI. Fork submission alone grants no execution.
+Repository collaborators must remain trusted; cleanup is not an isolation boundary.
+
+Repository Actions settings also require approval for **all external contributors**
+(`all_external_contributors`). Keep this server-side gate enabled: a fork can edit
+its proposed workflow, so a job condition alone is not a trust boundary. GitHub
+allows maintainers with write access to approve; the owner is currently the only
+repository collaborator. Do not approve an unreviewed fork run on these runners.

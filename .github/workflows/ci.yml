@@ -8,6 +8,9 @@ permissions:
   contents: read
 jobs:
   validate:
+    # Fork submissions do not execute Actions. After review, the owner may
+    # explicitly bring approved changes onto a repository-owned branch.
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: [self-hosted, Linux, X64]
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262

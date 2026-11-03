@@ -1,16 +1,22 @@
-# Power management bring-up
+# Sleep and power management
 
-Experimental; firmware, tools and instructions are used entirely at your own risk. [Risk notice](../RISK.md).
+Experimental firmware, website, tools and instructions. Use at your own risk. [Risk notice](../RISK.md).
 
-This feature is under development on `firmware/power-management`, tracking [issue #2](https://github.com/jc-tanedo/lofree-edge-zmk/issues/2). Alpha.2 has fixed idle backlight shutoff and no validated low-power sleep. Nothing here certifies a new image for hardware or publication.
+Implemented in unreleased alpha.3, [PR #12](https://github.com/jc-tanedo/lofree-edge-zmk/pull/12). Functional [issue #2](https://github.com/jc-tanedo/lofree-edge-zmk/issues/2) closes on merge; release approval is separate.
 
 ## Policy and Studio
 
-A project-specific additive core RPC extension uses the existing Studio connection, framing, mutex and physical unlock. Get uses core request 16; Set uses 17; response 16 is EdgePower. Fields 1–7 are schema, dim seconds, off seconds, Bluetooth sleep seconds, dim percentage of requested brightness, capabilities, and status. Core fields 1–4 are unchanged. Old firmware's no-response is treated as unsupported; no second serial/HID reader is opened.
+The Power tab stores dim, lights-off and Bluetooth sleep deadlines plus relative dim brightness on the keyboard. Defaults are 30 / 120 / 900 seconds and 20%. Each deadline is measured from last key activity; zero means Never. Active deadlines must be ordered, timers range 0–86400 seconds, and brightness ranges 0–100%. Dimming multiplies requested brightness and never enables manually disabled lighting. Physical held positions, nonzero HID reports, queued behavior work and writes inhibit Bluetooth sleep.
 
-Schema 1 defaults: dim after 30 s, off after 120 s, sleep after 900 s, dim to 20%. Every deadline is measured from last key activity; zero is Never. Active deadlines must be ordered; range 0–86400 seconds; dim 0–100%. Dimming multiplies requested brightness and never turns on manually disabled lighting. Physical held positions, nonzero HID reports, queued behavior work and writes inhibit Bluetooth sleep. Settings are one versioned CRC-protected TLSR settings-log value; save only on explicit user action and read back after saving. Unknown newer schemas are not overwritten. Power defaults affect no keymap or bond.
+ON retains USB/Studio and uses lighting timers. BT uses retained suspend while its encrypted link is ready; while advertising it enters pad-wake deep sleep after the configured deadline (pairing gets at least 60 seconds). USB power in BT does not suppress sleep. OFF enters selector-only deep sleep after a 20-second startup holdoff. USB host suspend in ON inhibits lighting and uses pad/core/timer wake; remote-wake requests are gated by host permission. Physical Edge remote wake is not validated.
 
-ON retains USB/Studio and uses lighting timers. BT uses retained suspend while its encrypted link is ready; while advertising it uses pad-wake deep sleep after the configured timeout (pairing gets at least 60 s). USB power in BT does not suppress its policy. OFF enters selector-only deep sleep after a 20 s startup holdoff. USB-host suspend in ON inhibits lighting and uses pad/core/timer wake with remote-wake requests only when the host permits it. On exact image145f81d2 (see the hardware record), the owner validated connected/deep Bluetooth wake, six ordinary wake rows, OFF selector wake, USB host suspend/resume, persistence and held-modifier transitions. Deep wake reboots and consumes its wake key; connected retained suspend delivered the tested ordinary first taps promptly. Fn/media cold wake remains a known exception. Selector policy remains authoritative.
+Connected retained suspend delivered sampled ordinary first taps promptly. Disconnected deep wake reboots, consumes its wake key and reconnects within a few seconds without re-pairing on the tested host. Fn/media connected cold wake can miss or delay its first action. These are documented limitations, not passing checks for all wake behavior.
+
+## Protocol and storage
+
+Project-specific additive core requests 16=get and 17=set reuse the existing secured Studio connection, framing and mutex; response 16 is EdgePower. Fields 1–7 are schema, dim seconds, off seconds, Bluetooth sleep seconds, dim percentage, capabilities and status. Core fields 1–4 are unchanged. Older firmware's missing response is treated as unsupported; no second serial/HID reader is opened.
+
+Schema 1 uses one versioned CRC-32 payload in `edge_power/config`. Save occurs only on explicit user action, followed by readback. Unknown newer schemas cannot be overwritten; Power defaults reset neither keymaps nor bonds. The backend is `CONFIG_TLSR_SETTINGS_LOG`, not NVS: two journal areas, CRC-16 named records and commit-last area headers. Older values are invalidated only after replacement writes. Atomicity depends on upstream storage and flash behavior, not a recovery guarantee. Alpha.2 ignores this new namespace; upgrading reads stored settings or defaults.
 
 ## Stock reference and source boundary
 
@@ -18,64 +24,22 @@ Offline V0116 analysis corroborated six row wake pads PC5/PC4/PC3/PC2/PC0/PB7 an
 
 Proprietary inputs and decompiler excerpts remain outside this repository. Our board setup is original code using public TC32 APIs. Upstream immutable checkouts are staged with reviewed hashes. Shared PB5/Caps gating remains inhibited while scanning sleeps. Radio registers/TX level are restored by upstream retained-suspend hooks.
 
-## Memory and gates
+## Wake and USB corrections
 
-The first memory reduction was rejected by compiled stack-sentinel tests. Capturing peaks **before** resets then found that initial Studio encoding used 1712 of 1800 bytes (84 spare); later snapshots had hidden that peak. Studio now reserves 2048 bytes. Main/IRQ/USB/OTA/work remain 768/896/768/1152/1536 bytes; idle remains 384. The queued-behavior buffer is 16 entries to fit this allocation; macro support is still outside the advertised feature set. Layers and Bluetooth profiles remain three.
+Deep entry uses 1 MΩ row pull-ups against 100 kΩ column pulldowns with outputs disabled. Retaining the scan driver's 10 kΩ pull-ups would nominally leave a pressed row near 91% VDD; the deep-only correction yields about 9%. Normal boot restores scanning pulls. Compiled register tests and physical key/deep-wake tests are separate evidence; divider estimates are not current measurements.
 
-The new build uses 22316/22528 bytes of static RAM. Every reset in the power/storage tests is now preceded by a watermark check, and the final state is checked too. The gate requires at least 128 bytes spare in each observed stack. These checks and the complete regression suite must pass on the revised image before hardware handoff.
+Linux HID startup previously waited roughly five seconds for zero-duration/report-zero SET_IDLE requests. A narrow reviewed Zephyr transformation accepts this change-only mode without SOF support; periodic nonzero idle remains unsupported. Owner OFF→ON tests became prompt, with descriptor-to-HID attachment intervals of approximately 117–154 ms on the USB-startup candidate. This is not a stopwatch measurement of slider-to-typing latency.
 
-Regression coverage includes compiled timer/PWM boundaries, held keys/deferred actions, version/corrupt record/write failure, locked RPCs, persistence, RF-loss resume, deep-entry/trial guard, OFF/selector/cable states, browser loading/error/retry and dirty navigation, and old firmware fallback. Exact-SHA functional hardware results are recorded separately. Measured current remains an unmet release gate. No battery-life claim before measurements. Measured battery reporting remains [issue #4](https://github.com/jc-tanedo/lofree-edge-zmk/issues/4).
+## Memory and regression coverage
 
-## Validation so far
+BLE/Studio stack allocations are main 768, IRQ 896, USB 768, OTA 1152, work queue 1536, Studio 2048 and idle 448 bytes. Three layers/profiles and a 16-entry behavior queue are retained. Compiled tests capture stack peaks before resets and require at least 128 bytes observed margin. This does not prove every possible workload fits.
 
-Portable C policy and actual shared TypeScript codec tests pass. The compiled power harness passed secured reads/writes, invalid ordering rejection, dim/off PWM transitions, manual-off preservation, held-key inhibition, restoration on activity, USB continuity and saved power/keymap/layer readback after reset on the prior integration image. The alpha.3 rerun also passed.
+Tests cover timer/PWM boundaries, held/deferred input, failed/corrupt/future settings, secured RPCs, persistence, encrypted retained suspend with radio-register loss, sleep-entry races, deep-entry GPIO masks, OFF/selector/cable policy, host suspend/core resume and stack margins. Browser fixtures cover loading/progress, errors/timeouts/retry, old-firmware fallback and dirty navigation. Models are not physical deep wake or current measurements.
 
-Isolated browser fixture checks passed: locked controls; defaults and save/readback; invalid ordering; rejected save retaining the draft; older firmware fallback; 15-second stalled read ending in a retry error; ignored late response; reconnect/retry; dirty navigation confirmation. These checks cannot access a physical keyboard. No browser console errors were observed in the exercised paths.
+## Physical evidence and follow-ups
 
-The backend is `CONFIG_TLSR_SETTINGS_LOG`, not NVS. It uses two journal areas in the storage partition, CRC-16 for each named record and commit-last area headers during compaction. Power settings add a versioned CRC-32 payload in one named record; the older value is invalidated only after the replacement is written. Atomicity is bounded by that upstream log implementation and flash behavior, not a recovery guarantee.
+The [normal decoder record](validation/v0.1.0-alpha.3-complete-frame.md) ties the full functional matrix to OTA `5b53224452589907eeafd485b294800023bbf5114746f1feebb9230e8cc8ff5b`: Power controls, ordinary row wake, battery/BT/OFF/USB behavior, persistence, modifiers and host resume passed on one Edge/CachyOS host.
 
-Power settings use a new `edge_power/config` namespace (schema 1), so upgrading from alpha.2 uses defaults without resetting saved mappings or bonds. Alpha.2 ignores this namespace. Future stored power schemas are read-only on schema-1 firmware. The UI and CLI use the canonical alpha.3 version; no release is published by this branch.
+Later identity and wizard changes received [focused exact-image validation](validation/v0.1.0-alpha.3-browser-identity.md), per owner request, without repeating unrelated sequences. Earlier results do not certify changed binaries. The current accepted image is `afa70869c44ad586ab02ae543652acf7d54125a8bd2c99a18e5b9688d251ef69`. Custom Power settings were restored and read back; exact values were not supplied.
 
-The current compiled image also passed encrypted connected wake with modeled radio-register loss, a key injected exactly at sleep entry, three actual pad wakes with first press/release reports, mode/legacy-output regressions, USB host suspend/core resume, and both BT/OFF deep-entry GPIO masks. These assertions do not simulate deep wake. The smallest reported connected-suspend stack margin was 148 bytes in idle; full regression requires at least 128 bytes spare in every observed stack.
-
-## Known cold-wake limitation
-
-On the tested alpha.3, Fn+F12 after connected sleep can miss its first action or
-wake with a delay, including the Caps indicator in one trial. Ordinary battery
-wake across all six rows was fast. This remains unresolved in [issue #13](https://github.com/jc-tanedo/lofree-edge-zmk/issues/13),
-with refinement lower priority per the owner. Do not describe all Fn wake
-behavior as validated. Existing modeled A latency coverage does not exercise
-the entire physical Fn-plus-consumer sequence.
-
-## Deep row-pull correction (not hardware-certified yet)
-
-The scan driver chooses10k pull-ups for GPIO_PULL_UP. Preserving them with
-deep-sleep100k column pull-downs leaves a closed key near91% VDD, so the row
-may not reach LOW. Retained sleep drives columns low and did not have that
-weak-pull problem. The corrected deep-only setup selects1M row pull-ups
-(near9% VDD pressed); normal reboot restores the DTS scanning configuration.
-The compiled-entry regression fails on the initial binary and passes with the
-correction. No actual current or electrical wake is inferred from that model.
-OFF selector wake and Never reconnect controls worked on the initial image.
-
-## USB startup investigation
-
-The corrected deep-wake image can still have roughly five-second Linux HID
-initialization waits. A payload-free host control capture identifies zero-duration,
-report-zero SET_IDLE requests cancelled after approximately5.25s and5.03s for
-the keyboard/vendor HID interfaces. The pinned HID class rejects this request
-when SOF support is disabled. A reviewed source transformation now accepts this
-change-only mode without enabling periodic reports; nonzero idle remains
-unsupported. The compiled model regression observes the prior rejection and
-the new acceptance, but does not establish silicon stall behavior or eliminate
-the physical delay. The new image requires independent hardware validation.
-
-## Final functional test state
-
-Owner-tested OTA SHA-256:
-`145f81d269f030e2338f61662f1f8ceeaf1d5499d3f2c34791c6d88ab404131e`.
-Self-test/acceptance and the available-equipment functional sequences pass as
-recorded in [the hardware record](validation/v0.1.0-alpha.3.md). Everyday
-defaults30s dim/120s off/900s Bluetooth sleep/20% were restored and read back.
-No actual current, battery-life, broad-host or full Fn cold-wake claim follows.
-Publication remains gated; no release or Pages deployment has occurred.
+Separate roadmap items track [measured current #15](https://github.com/jc-tanedo/lofree-edge-zmk/issues/15), [Fn cold wake #13](https://github.com/jc-tanedo/lofree-edge-zmk/issues/13), [deep-wake first key #16](https://github.com/jc-tanedo/lofree-edge-zmk/issues/16), [battery sensing #4](https://github.com/jc-tanedo/lofree-edge-zmk/issues/4) and [hardware/host coverage #5](https://github.com/jc-tanedo/lofree-edge-zmk/issues/5). No measurement equipment is available. Current draw and battery life remain unmeasured; the measured-current release gate remains required. No release or Pages deployment follows from merging this PR.

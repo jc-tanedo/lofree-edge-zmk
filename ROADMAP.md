@@ -18,9 +18,9 @@ The first prerelease now has clean builds, package/license audits, hosted-path v
 
 **in progress** · Power and mode handling
 
-Unreleased alpha.3 passes available-equipment owner functional checks on one Edge/CachyOS: settings/lighting, six ordinary wake rows, connected/deep wake, OFF, persistence, USB startup, host resume and held-modifier transitions. Defaults restored. Measured-current release gate is blocked by unavailable equipment; Fn/media cold wake is separately deferred. No measured power or battery-life claim.
+Functional idle lighting, Bluetooth suspend/deep wake, OFF wake and settings persistence are implemented and owner-tested on one Edge/CachyOS. PR #12 closes functional issue #2 on merge. Current measurements, Fn/media cold wake and consumed deep-wake key have separate follow-ups; no measured power or battery-life claim.
 
-**Acceptance:** Measure wired/BLE idle current, validate wake keys and reconnect, and demonstrate no lost saved mappings across repeated sleep/wake cycles.
+**Acceptance:** Persist and validate Studio timers; verify held-key/manual-off policy, ordinary wake/reconnect, mode/cable behavior, USB host resume and saved settings. Keep exact-SHA evidence separate from model tests and later focused changes.
 
 [Tracking issue](https://github.com/jc-tanedo/lofree-edge-zmk/issues/2)
 
@@ -28,7 +28,7 @@ Unreleased alpha.3 passes available-equipment owner functional checks on one Edg
 
 **in progress** · Studio settings
 
-A default-on, persistent requirement is implemented with a Security tab beside Power. Missing-unlock warnings, blocked unsafe keymap saves/imports, and guarded policy enabling are included. Runtime policy requires supporting firmware; UI guards need no new flash. Compiled/mock checks pass; owner verified both policy reboot modes on accepted3fde7a03. Remaining exact-image validation is in progress. See [security details](docs/security.md).
+Implemented in PR #12: default-on persistent unlock policy, Security tab, missing-binding warning and Save/enable guards. Both policy reboot modes and guards passed on the normal decoder image; later identity-only firmware received focused validation. Presence does not prove layer reachability. See [security details](docs/security.md).
 
 **Acceptance:** Exact-image tests show default lock, disable/save/reconnect/reboot, re-enable/immediate lock and physical unlock, missing-binding warnings, retained maps/bonds/Power settings, ON-only Studio, and recovery/regression checks.
 
@@ -38,21 +38,21 @@ A default-on, persistent requirement is implemented with a Security tab beside P
 
 **in progress** · Studio settings
 
-Owner verified browser drafts do not affect typing and Save applies correctly. Local counts, Undo/Redo, import/discard and conflict guards are implemented. An intermittent action-read timeout also occurs before edits; reliable reads/reconnect remain under investigation. No firmware update is required for draft semantics.
+Implemented in PR #12: edits/imports remain browser-local until Save, with counts, Undo/Redo, discard and conflict guards. Owner verified typing is unchanged before Save and browser draft/leave/reconnect checks pass on normal and identity-capable images.
 
 **Acceptance:** No keymap writes before explicit Save; accurate counts and Undo/Redo; draft-only import/discard; guarded saves and conflict handling; reliable reconnect and navigation; hardware typing changes only after Save.
 
-Tracking issue will be linked after the public repository is created.
+[Tracking issue](https://github.com/jc-tanedo/lofree-edge-zmk/pull/12)
 
 ## Studio read and USB framing reliability
 
 **in progress** · Studio settings
 
-Normal complete-frame firmware passes1786 physical reads, browser reconnect/draft checks and mode/power/Security sequences on one Edge/CachyOS host. Precise streaming root cause and wider coverage remain unproven; new identity-capable firmware needs separate validation.
+Implemented in PR #12: bounded complete-frame decoding and response framing. Normal and identity-capable images each passed 1,786 read-only requests and browser reconnect/draft checks. Precise old streaming root cause and wider hardware/host coverage remain unproven.
 
 **Acceptance:** Repeated initial connections, full action reads and navigation/reconnect succeed under host backpressure; complete frames and bounded disconnect handling pass regression tests; exact-image hardware validation passes.
 
-Tracking issue will be linked after the public repository is created.
+[Tracking issue](https://github.com/jc-tanedo/lofree-edge-zmk/pull/12)
 
 ## Fn/media after connected sleep
 
@@ -148,8 +148,28 @@ The supported web installer currently returns to stock for its USB update interf
 
 **in progress** · Release hardening
 
-Owner reports unified browser installation complete on schema2 firmware; independent accepted/count0 and browser-sized identity readback pass. Guided wizard/loading/permission/retry UX passes synthetic browser checks. Wider hardware coverage and public approval/release gates remain open.
+Implemented and physically tested in PR #12: guided upload/restart/identity verification/self-test/acceptance, permission handoff and verification-only resume. Finalize action is inside its step. Public approval registry remains empty pending release review; unapproved builds stay trials.
 
-**Acceptance:** Validated exact builds upload/reconnect/verify/self-test/accept/readback in one flow; interruptions offer verification-only resume; trial builds never auto-accept; exact-SHA physical install/recovery/persistence tests pass.
+**Acceptance:** Exact approved builds upload/reconnect/verify/self-test/accept/readback; interruption resumes verification without reupload; development builds remain trials. Record exact-image installation evidence and satisfy separate release approval gates.
 
-Tracking issue will be linked after the public repository is created.
+[Tracking issue](https://github.com/jc-tanedo/lofree-edge-zmk/pull/12)
+
+## Measured sleep current and power savings
+
+**blocked** · Release hardening
+
+No suitable current-measurement equipment is available. Functional sleep tests do not establish power savings; the measured-current release gate remains required.
+
+**Acceptance:** Measure active/dim/off, connected suspend, advertising/deep sleep, OFF and USB suspend current with documented setup, exact SHA and repeatability; investigate unexpected consumption before battery-life claims.
+
+[Tracking issue](https://github.com/jc-tanedo/lofree-edge-zmk/issues/15)
+
+## First key after disconnected deep wake
+
+**needs investigation** · Power and mode handling
+
+Deep wake reboots and consumes the wake key. Tested reconnection completes within a few seconds without re-pairing; ordinary connected wake is separate.
+
+**Acceptance:** Assess reliable press/release preservation across reboot/reconnect, add actual-seam tests and physical validation, or document why the first key must remain wake-only.
+
+[Tracking issue](https://github.com/jc-tanedo/lofree-edge-zmk/issues/16)

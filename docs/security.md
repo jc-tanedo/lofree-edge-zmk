@@ -2,7 +2,7 @@
 
 Experimental firmware and tools. Use at your own risk. [Risk notice](../RISK.md).
 
-## User behavior — unreleased, hardware validation in progress
+## User behavior — unreleased alpha.3
 
 Studio's Security tab is beside Power. “Require physical unlock before editing”
 is enabled by default. Unlock with Fn+U in the default keymap, or your remapped
@@ -31,10 +31,12 @@ Keep an accessible direct binding. Recovery is not guaranteed.
 
 Older firmware shows an unsupported message for policy changes. The runtime policy
 requires supporting firmware; warning spacing and save guards are frontend-only.
-The owner accepted OTA3fde7a03 during hardware validation and passed ON baseline,
-both policy power-cycle modes, manual stock return/reinstall and warning/Undo.
-Further exact-image hardware checks remain pending; no additional flash is needed
-for these UI changes.
+The [normal decoder image](validation/v0.1.0-alpha.3-complete-frame.md)
+passed policy cancel/disable/reconnect, both policy reboot modes, immediate locking,
+physical unlocking and missing-binding enable/Save guards on one Edge/CachyOS.
+The later [browser identity image](validation/v0.1.0-alpha.3-browser-identity.md)
+received focused baseline/settings and installer testing; unrelated policy tests
+were not repeated, per owner request. No release certification is implied.
 
 ## Protocol and storage
 
@@ -68,9 +70,8 @@ Compiled emulator tests exercise secured authorization, default protection,
 input rejection, storage failure/retry, disconnect policy, disabled-policy reboot,
 immediate relock, re-enabled reboot, corrupt/future fail-closed records and
 preservation of saved mappings/layers. All flash inputs are synthetic.
-Browser QA uses a transport that cannot access real hardware. Physical tests
-against the new exact OTA are required separately; earlier power hardware
-results do not certify this changed binary.
+Browser QA uses a transport that cannot access real hardware. Physical results are recorded by exact image in the linked validation records;
+automated tests and earlier binaries do not certify later images.
 
 ### Startup stack regression
 

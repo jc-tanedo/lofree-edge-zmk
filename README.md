@@ -32,7 +32,7 @@ This is an independent project, not affiliated with or endorsed by Lofree, Telin
 | Bluetooth input | Vendor functionality | Pairing, typing, media, Caps and reconnect physically tested |
 | Wireless editing / flashing | Not supported by these tools | Not supported; Studio and flashing require USB |
 | Physical switch | Vendor implementation | Alpha.2: ON USB/Studio, BT Bluetooth, OFF inactive; [owner validated](docs/validation/v0.1.0-alpha.2.md) |
-| Sleep / power | Vendor implementation, not independently characterized | Unfinished; no battery-life claim |
+| Sleep / power | Vendor implementation, not independently characterized | Unreleased alpha.3: configurable idle lighting and sleep; current unmeasured |
 | Battery reporting | Not independently verified by this project | Placeholder; not a measured battery level |
 | Recovery | Vendor behavior | Retained-image return exists; **recovery is not guaranteed** |
 
@@ -52,16 +52,17 @@ Use a desktop browser exposing WebHID for the stock tools and Web Serial for Stu
 <details>
 <summary>Power management preview — unreleased alpha.3</summary>
 
-Studio can edit idle dim/off/Bluetooth sleep timers and relative dim brightness, with settings stored on the keyboard. Each timer supports Never. This work is under validation; use published artifacts until its [exact-image hardware checklist](docs/validation/v0.1.0-alpha.3.md) passes. No battery-life improvement is claimed without measurements. A known [Fn+F12 cold-wake issue](https://github.com/jc-tanedo/lofree-edge-zmk/issues/13) can miss or delay the first volume action after Bluetooth sleep.
+Studio can edit idle dim/off/Bluetooth sleep timers and relative dim brightness, with settings stored on the keyboard. Each timer supports Never. Functional checks passed on one Edge/CachyOS; see [exact-image evidence and limits](docs/validation/v0.1.0-alpha.3-complete-frame.md). Later installer changes received [focused validation](docs/validation/v0.1.0-alpha.3-browser-identity.md). This branch is unreleased; use published artifacts until release gates pass. No battery-life improvement is claimed without measurements. A known [Fn+F12 cold-wake issue](https://github.com/jc-tanedo/lofree-edge-zmk/issues/13) can miss or delay the first volume action after Bluetooth sleep.
 
 The unreleased [Security tab](docs/security.md) beside Power adds a persistent,
 default-on physical-unlock requirement. Disabling it permits Studio software to
-edit without Fn+U. Missing-unlock-binding warnings are included. This requires
-new firmware and separate physical validation; it is not in the released alpha.2.
+edit without Fn+U. Missing-unlock-binding warnings are included. Supporting firmware is required. Policy persistence and Save guards passed physical checks on the normal decoder image; it is not in the released alpha.2.
 
 ![Studio Power settings: idle timers and relative backlight brightness, with the persistent risk warning](docs/images/power-settings.png)
 
 *Interface preview using a simulated connection; this screenshot is not evidence of hardware sleep or current draw.*
+
+Disconnected deep wake currently consumes its first key; [follow-up #16](https://github.com/jc-tanedo/lofree-edge-zmk/issues/16). Current measurements remain a [separate release gate](https://github.com/jc-tanedo/lofree-edge-zmk/issues/15).
 
 See [implementation and validation notes](docs/power-management.md).
 </details>
