@@ -61,9 +61,11 @@ export async function findInstalledDevice(
     if (devices.length === 1) return devices[0];
     await wait(500);
   }
-  throw new Error(
-    "Reconnect the keyboard in ON mode, then Finalize Installation and allow access to its ZMK interface.",
+  const error = new Error(
+    "Allow access to the restarted keyboard to finish installation. Keep the slider ON and USB connected.",
   );
+  error.code = "device-permission";
+  throw error;
 }
 async function boundedRead(promise, timeout = 3000) {
   let timer;
@@ -155,7 +157,7 @@ export async function verifyAndAccept(device, build, phase = () => {}) {
   if (!matches(device)) throw new Error("Unsupported firmware interface.");
   try {
     if (!device.opened) await device.open();
-    phase("Verifying installed firmware…");
+    phase("Verifying installed firmware…", "verifying");
     const data = await boundedRead(device.receiveFeatureReport(10));
     const bytes = new Uint8Array(data.buffer, data.byteOffset, data.byteLength);
     const v = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
@@ -178,12 +180,12 @@ export async function verifyAndAccept(device, build, phase = () => {}) {
     if (![0, 0x20000].includes(slot) || slot !== info.slot)
       throw new Error("Running firmware slot verification failed.");
     if (info.accepted && info.count === 0) return;
-    phase("Testing firmware storage…");
+    phase("Testing firmware storage…", "testing");
     const tested = await command(device, 0xff07, 5000);
     health(tested);
     if (!(tested[18] & 8))
       throw new Error("Firmware storage self-test did not pass.");
-    phase("Finishing installation…");
+    phase("Finishing installation…", "accepting");
     health(await command(device, 0xff03));
     info = health(await command(device, 0xff00));
     if (!info.accepted || info.count !== 0)

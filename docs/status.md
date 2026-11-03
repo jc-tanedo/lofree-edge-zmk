@@ -1,3 +1,34 @@
+# Browser installation succeeded; guided installer UI implemented locally
+
+Owner reports Installation complete from8809 for exactafa70869. Independent
+readonly CLIinfo confirms accepted/count0,slotB,retained size/CRCvalid. No repeat
+self-test or write by agent. The browser upload/reconnect/schema2/self-test/
+acceptance/readback path now has physical success evidence on one Edge/CachyOS.
+Owner requested no unrelated BT/power/Security retests; not marked as passed on
+this SHA. Public approval registry remains empty and release gates remain open.
+
+User requested guided steps/loading especially after upload. Implemented
+Choose→Connect→Install→Finalize with one visible panel, explicit controller
+phases, upload acknowledgment progress, indeterminate restart/verification
+loading, neutral permission handoff and Finalize CTA, success state/Studio link.
+Header shows progress/access status instead of Disconnected mid-install.
+Controller tests cover busy postupload, phase order and permission handoff;
+all web test files and49 Python tests pass. Browser synthetic8810 tests waiting,
+permission retry/fresh acknowledgment, verification and completion; visual QA
+checked dark styling and explicit not-finished copy. No real-device UI tests,
+new firmware writes or owner page reloads. Final package/base audits pending.
+
+# Browser-compatible identity fix: stock verified, awaiting owner install
+
+Owner reports Fn+Space return; read-only USB05ac:0256 EDGE84@Lofree verified.
+Frozen afa70869 checksum unchanged and8809 local-only automatic test catalog
+reachable. No agent hardware writes. Provide install handoff explicitly noting
+post-upload verification/self-test/acceptance after fresh risk acknowledgment.
+If ZMK permission is absent after restart, Finalize Installation resumes without
+reflash. Do not query the keyboard during installation. After owner completion,
+read67B identity and accepted/count0/retained integrity; no duplicate self-test.
+Unrelated tests stay skipped per owner. No public registry/release approval.
+
 # Browser-sized identity fix frozen; one focused firmware update required
 
 Physical schema1 report10 succeeds at requested16B and fails EPIPE at67B.

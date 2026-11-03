@@ -102,11 +102,17 @@ export default function App({ workspace: supplied }) {
           id="connection-status"
           className={`pill${connected || updateConnected ? " connected" : ""}`}
         >
-          {updateConnected
-            ? "Update interface connected"
-            : connected
-              ? "Connected"
-              : "Disconnected"}
+          {s.busy && s.installPhase !== "idle"
+            ? "Installation in progress…"
+            : s.installPhase === "permission-needed"
+              ? "Awaiting keyboard access"
+              : s.installPhase === "complete"
+                ? "Installation complete"
+                : updateConnected
+                  ? "Update interface connected"
+                  : connected
+                    ? "Connected"
+                    : "Disconnected"}
         </span>
       </header>
       <main>

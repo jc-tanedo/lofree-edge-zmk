@@ -413,3 +413,63 @@ test("unapproved existing trial cannot finish without receipt", async () => {
   assert.match(f.workspace.getSnapshot().firmwareStatus, /not approved/);
   f.workspace.dispose();
 });
+
+test("wizard stays busy after upload and exposes real finalization phases", async () => {
+  let reconnect, verify;
+  const connection = new Promise((resolve) => {
+    reconnect = resolve;
+  });
+  const done = new Promise((resolve) => {
+    verify = resolve;
+  });
+  const f = await fixture({
+    automatic: true,
+    installedDevice: async () => connection,
+    accept: async (_d, _b, phase) => {
+      phase("Verifying", "verifying");
+      await done;
+      phase("Testing", "testing");
+      phase("Accepting", "accepting");
+    },
+  });
+  await f.workspace.loadCatalog();
+  await f.workspace.connectUpdate();
+  const phases = [];
+  f.workspace.subscribe(() =>
+    phases.push(f.workspace.getSnapshot().installPhase),
+  );
+  const installation = f.workspace.install(true);
+  await new Promise((resolve) => setTimeout(resolve, 0));
+  assert.equal(f.workspace.getSnapshot().installPhase, "reconnecting");
+  assert(f.workspace.getSnapshot().busy);
+  assert.equal(f.workspace.getSnapshot().progress, null);
+  reconnect({});
+  await new Promise((resolve) => setTimeout(resolve, 0));
+  assert.equal(f.workspace.getSnapshot().installPhase, "verifying");
+  assert(f.workspace.getSnapshot().busy);
+  verify();
+  await installation;
+  assert(phases.includes("testing"));
+  assert(phases.includes("accepting"));
+  assert.equal(f.workspace.getSnapshot().installPhase, "complete");
+  assert(!f.workspace.getSnapshot().busy);
+  f.workspace.dispose();
+});
+test("missing post-restart permission is a recoverable wizard handoff", async () => {
+  const f = await fixture({
+    automatic: true,
+    installedDevice: async () => {
+      const error = Error("Allow access");
+      error.code = "device-permission";
+      throw error;
+    },
+  });
+  await f.workspace.loadCatalog();
+  await f.workspace.connectUpdate();
+  await f.workspace.install(true);
+  assert.equal(f.workspace.getSnapshot().installPhase, "permission-needed");
+  assert(!f.workspace.getSnapshot().busy);
+  assert(!f.workspace.getSnapshot().firmwareError);
+  assert.equal(f.workspace.getSnapshot().lastAttempt.state, "needs-attention");
+  f.workspace.dispose();
+});

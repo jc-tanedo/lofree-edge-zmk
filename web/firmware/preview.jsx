@@ -12,6 +12,11 @@ async function mountPreview() {
     failVerify = false,
     failFlash = false,
     failAcceptance = false,
+    requirePermission = false,
+    pauseReconnect = false,
+    releaseReconnect,
+    pauseVerification = false,
+    releaseVerification,
     continueFlash;
   let map = remapKey(
     factoryMap(),
@@ -67,15 +72,30 @@ async function mountPreview() {
       getItem: (key) => sessionStorage.getItem("qa-" + key),
       setItem: (key, value) => sessionStorage.setItem("qa-" + key, value),
     },
-    installedDevice: async () => ({}),
+    installedDevice: async (choose) => {
+      if (pauseReconnect)
+        await new Promise((resolve) => {
+          releaseReconnect = resolve;
+        });
+      if (requirePermission && !choose) {
+        const error = new Error("Allow access to the restarted keyboard.");
+        error.code = "device-permission";
+        throw error;
+      }
+      return {};
+    },
     accept: async (_device, _build, phase) => {
-      phase("Verifying installed firmware…");
+      phase("Verifying installed firmware…", "verifying");
+      if (pauseVerification)
+        await new Promise((resolve) => {
+          releaseVerification = resolve;
+        });
       if (failAcceptance) {
         failAcceptance = false;
         throw new Error("Synthetic reconnect interruption");
       }
-      phase("Testing firmware storage…");
-      phase("Finishing installation…");
+      phase("Testing firmware storage…", "testing");
+      phase("Finishing installation…", "accepting");
     },
     fetcher: async (file) =>
       file.endsWith("manifest.json")
@@ -134,6 +154,49 @@ async function mountPreview() {
           >
             Fail next verification
           </button>{" "}
+          <label>
+            <input
+              type="checkbox"
+              onChange={(e) => {
+                requirePermission = e.target.checked;
+              }}
+            />
+            Require access after restart
+          </label>
+          <label>
+            <input
+              type="checkbox"
+              onChange={(e) => {
+                pauseReconnect = e.target.checked;
+              }}
+            />
+            Pause reconnect
+          </label>
+          <button
+            onClick={() => {
+              releaseReconnect?.();
+              pauseReconnect = false;
+            }}
+          >
+            Reconnect synthetic keyboard
+          </button>
+          <label>
+            <input
+              type="checkbox"
+              onChange={(e) => {
+                pauseVerification = e.target.checked;
+              }}
+            />
+            Pause final verification
+          </label>
+          <button
+            onClick={() => {
+              releaseVerification?.();
+              pauseVerification = false;
+            }}
+          >
+            Finish synthetic verification
+          </button>
           <button
             onClick={() => {
               failAcceptance = true;

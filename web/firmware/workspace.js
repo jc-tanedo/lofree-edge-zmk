@@ -33,6 +33,7 @@ export function createWorkspace({
       storage = target.localStorage;
     } catch {}
   }
+  const previousAttempt = readFirmwareAttempt(storage);
   let state = {
     busy: false,
     supported: Boolean(hid && secure),
@@ -55,7 +56,10 @@ export function createWorkspace({
     firmwareStatus: "Loading available builds…",
     firmwareError: false,
     progress: null,
-    lastAttempt: readFirmwareAttempt(storage),
+    lastAttempt: previousAttempt,
+    installPhase: verificationPending(previousAttempt)
+      ? "permission-needed"
+      : "idle",
     view: "firmware",
   };
   if (!state.supported)
@@ -158,14 +162,27 @@ export function createWorkspace({
   async function finishInstallation(attempt, build, choose = false) {
     attempt.state = "verifying";
     saveFirmwareAttempt(storage, attempt);
-    patch({ lastAttempt: null, progress: null });
-    status("Restarting and reconnecting to the keyboard…");
+    patch({
+      lastAttempt: null,
+      progress: null,
+      installPhase: choose ? "selecting" : "reconnecting",
+    });
+    status(
+      choose
+        ? "Select Lofree Edge ZMK in the browser’s device picker…"
+        : "Waiting for the keyboard to restart and reconnect. Installation is not finished yet…",
+    );
     const device = await installedDevice(choose);
-    await accept(device, build, (text) => status(text));
+    patch({ installPhase: "verifying" });
+    await accept(device, build, (text, phase) => {
+      if (["verifying", "testing", "accepting"].includes(phase))
+        patch({ installPhase: phase });
+      status(text);
+    });
     attempt.state = "complete";
     delete attempt.error;
     saveFirmwareAttempt(storage, attempt);
-    patch({ lastAttempt: null, progress: 1 });
+    patch({ lastAttempt: null, progress: 1, installPhase: "complete" });
     status("Installation complete. Firmware verified and ready to use.");
   }
   const onDisconnect = (event) => {
@@ -271,7 +288,7 @@ export function createWorkspace({
         automatic: automaticInstall(approved),
       };
       saveFirmwareAttempt(storage, attempt);
-      patch({ lastAttempt: null, progress: 0 });
+      patch({ lastAttempt: null, progress: 0, installPhase: "uploading" });
       try {
         await closeStock();
         if (!current.device.opened) await current.device.open();
@@ -297,6 +314,7 @@ export function createWorkspace({
           await finishInstallation(attempt, approved);
         } else {
           attempt.state = "trial";
+          patch({ installPhase: "trial" });
           saveFirmwareAttempt(storage, attempt);
           status(
             "Transfer complete. Development trial installed; automatic rollback remains enabled. Follow the build’s test instructions before acceptance.",
@@ -309,13 +327,24 @@ export function createWorkspace({
             ? "needs-attention"
             : "failed";
         attempt.error = error.message;
+        attempt.errorCode = error.code;
         saveFirmwareAttempt(storage, attempt);
-        patch({ lastAttempt: { ...attempt } });
+        patch({
+          lastAttempt: { ...attempt },
+          installPhase:
+            attempt.state === "failed"
+              ? "upload-error"
+              : error.code === "device-permission"
+                ? "permission-needed"
+                : "error",
+        });
         status(
-          attempt.state === "needs-attention"
-            ? `Installation needs attention. ${error.message} Finalize Installation to verify its status; do not reflash yet.`
-            : `${error.message} Reconnect and verify the running firmware before retrying.`,
-          true,
+          error.code === "device-permission"
+            ? "The keyboard has restarted. Select Finalize Installation to allow access and finish."
+            : attempt.state === "needs-attention"
+              ? `Installation needs attention. ${error.message} Finalize Installation to verify its status; do not reflash yet.`
+              : `${error.message} Reconnect and verify the running firmware before retrying.`,
+          error.code !== "device-permission",
         );
       } finally {
         unprotect();
@@ -357,9 +386,19 @@ export function createWorkspace({
       } catch (error) {
         attempt.state = "needs-attention";
         attempt.error = error.message;
+        attempt.errorCode = error.code;
         saveFirmwareAttempt(storage, attempt);
-        patch({ lastAttempt: { ...attempt } });
-        status(`Installation needs attention. ${error.message}`, true);
+        patch({
+          lastAttempt: { ...attempt },
+          installPhase:
+            error.code === "device-permission" ? "permission-needed" : "error",
+        });
+        status(
+          error.code === "device-permission"
+            ? "Select Finalize Installation to allow access and finish."
+            : `Installation needs attention. ${error.message}`,
+          error.code !== "device-permission",
+        );
       } finally {
         unprotect();
         end();

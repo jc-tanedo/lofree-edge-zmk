@@ -381,3 +381,21 @@ browser requires schema2,67 bytes and zero padding before any OTA write.
 The compiled test now uses the browser-sized control request. Exact-length
 schema1 tests alone missed this physical compatibility failure; full endpoint
 short-transfer behavior is not established by the synthetic USB model.
+
+## Installation wizard states
+
+The Firmware installer presents Choose firmware → Connect → Install → Finalize,
+with one active panel. React navigation covers only pre-upload steps; the device
+controller exposes `installPhase` for uploading, reconnecting, selecting,
+verifying, testing, accepting, permission-needed, error, trial and complete.
+No stages are inferred from status text. Upload progress counts acknowledged
+blocks. Post-upload work uses a spinner/indeterminate bar and explicit incomplete
+copy until final accepted readback. Missing post-restart permission is a neutral
+action handoff with Finalize Installation, not an upload failure. Genuine errors
+retain their detailed message and verification-only retry. Restored interrupted
+receipts reopen the finalization step; reload never writes automatically.
+
+Synthetic preview controls pause reconnect/verification and simulate access
+requirements without hardware. Test reconnect-loading → permission handoff →
+fresh confirmation → verification-loading → completion. Check that completion
+removes the spinner and exposes Studio, and development trials retain rollback.
