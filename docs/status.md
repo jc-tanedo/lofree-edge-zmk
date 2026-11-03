@@ -1,3 +1,22 @@
+# Identity-capable trial frozen and audited; ready for stock return
+
+Frozen source4f39240/OTAfc46a4706cb92a0c70c5a3fa0cebcfe46c3331b38b18d276a11274141ac3484d
+(122180B) at build/hardware-tests/alpha3-install-identity-fc46a470-4f39240.
+Existing audited review release reused; only subsequent source changes are docs/
+roadmap, verified by gitdiff. New website archive matches trial-only catalog.
+251-file source/history/source+website archive/site audits and30-link checks pass.
+BrowserOS Neo verifies served SHA/size, trial mode, selected identity label,
+same-tab Studio/disconnected controls and both risk notices. localhost8806,
+server session21582. No new hardware commands, CI push or release.
+
+Hardware remains accepted5b532244, ON/USB, protectionenabled/unlockbindingintact,
+allcustomPower restored/readbackmatches (numbers notspecified). Ask owner to
+save/export andFn+Space3s/release returnstock; verify stockidentity before install.
+This newidentity firmware is trial-only, no autoacceptance/registryapproval.
+Postinstall: readonly trial/retained and feature10 identity againstsize/CRC/slot,
+ownerbaseline/Fn+U/Studioclosed then readprobes. Later automaticflow testing
+requires explicit approval only after exactimage review. Do notmodify8804.
+
 # Accepted5b532244 functional sequences recorded; identity trial preparation next
 
 Owner restored all four customPower settings and confirms reconnectreadback
