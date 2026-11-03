@@ -1,3 +1,22 @@
+# Real-hardware wizard test frozen; awaiting stock return
+
+Owner requests testing the guided installer on real hardware. Frozen source
+f2b9a2b and unchanged accepted firmware afa70869 in
+build/hardware-tests/alpha3-install-wizard-afa70869-f2b9a2b. Local8811/server35794.
+253-file source/history/source+website archive/site audit and30-link check pass.
+Browser verifies exact served SHA, local-only automatic schema2 catalog,
+Choose/Connect/Install/Finalize stepper, one visible panel and risk notice.
+No device opened or written during preparation. Public registry stays empty.
+
+Current keyboard remains accepted afa70869, USB/ON at last readback. Ask owner
+save/export and disconnectStudio, Fn+Space3s/release to stock; verify stockUSB
+identity before install handoff. Fresh riskack explicitly covers reinstallation,
+storage self-test and acceptance after verification. Test only wizard upload,
+restart-loading, access handoff and Finalize/completion; no unrelated retests.
+Do not reload/query owner device during transfer. After completion read only
+accepted/count0/retained status, without rerunning self-test. Existing8810 is
+synthetic preview; real installer is8811. Older frozen pages remain unchanged.
+
 # Guided installer ready for review; no firmware update needed
 
 UI source f2b9a2b packages pass253-file source/history/source+website archive/site
