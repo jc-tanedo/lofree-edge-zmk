@@ -1,3 +1,27 @@
+# Fixed Finalize Installation page ready on port 8808
+
+The actual Edge HID descriptor separates report5 command I/O (usagePage1) from
+vendor feature collections (usagePage0xff00). The old filter required both in
+one collection, rejecting the owner's selection before any firmware commands.
+A descriptor-derived regression reproduced the exact error; corrected matching
+passes all12 direct acceptance tests and workspace tests. Cancellation now has
+a separate message. Last readback still showed trial1/unconfirmed and valid
+retained-image integrity. No self-test/acceptance was rerun during diagnosis.
+
+Frozen source aea4b8f, unchanged OTA fc46a470, local test site:
+build/hardware-tests/alpha3-finalize-web-fc46a470-aea4b8f.
+Server8808/session66496.252-file source/history/source+website archive/site
+audits and30-link checks pass. Browser checks confirm fixed bundle, exact served
+SHA, local-only catalog, Finalize Installation label/persistence description,
+fresh unchecked risk acknowledgment and disabled confirmation. Agent cancelled
+its dialog; no keyboard was opened by browser QA. Public registry stays empty.
+
+Owner can retry Finalize Installation on8808 after disconnecting Studio, USB/ON.
+No reflash/restart or repeated cancellation test needed. Fresh risk acknowledgment
+and choosing the ZMK device authorize real flash self-test/acceptance. After
+success read accepted/count0/retained integrity without repeating the self-test.
+If it fails, obtain the full detailed status. Unrelated tests remain skipped.
+
 # Finalize selection failure reproduced and fixed; frontend only
 
 Owner selectsEdge but sees Select one LofreeEdgeZMKupdateinterface. Readonly
