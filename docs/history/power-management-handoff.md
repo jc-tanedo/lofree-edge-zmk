@@ -1,3 +1,7 @@
+# Historical power-management handoff
+
+Archived 2026-11-03. These checkpoints describe earlier states; use [current status](../status.md) for the active handoff.
+
 # Finalize button placement complete and audited
 
 UI source e869366 moves Finalize Installation into fourth-step panel, with
@@ -1253,7 +1257,7 @@ Both handlers retain upstream secured authorization. The independent CRC-protect
 record fails closed on corruption/future schema and does not reset maps/bonds or
 Power. Studio remains ON-only. Missing direct unlock-binding warnings cover the
 current live map and enable confirmation; save/discard map edits before policy
-changes. See [security details](security.md).
+changes. See [security details](../security.md).
 
 Corrected OTA SHA-256:
 `d7e477c8db047a108c3a1b91a13b3b335e6fab2ab3996df8c7581a8f4d0333c7`
@@ -1399,7 +1403,7 @@ wake is untested. Everyday defaults have been restored and read back. Fn/media c
 [issue13](https://github.com/jc-tanedo/lofree-edge-zmk/issues/13) is open and lower
 priority. Deep wake consumes its first key. Current is unmeasured: owner has no
 suitable instrument, so no battery-life/current savings are established.
-See [exact-image record](validation/v0.1.0-alpha.3.md); previous image results
+See [exact-image record](../validation/v0.1.0-alpha.3.md); previous image results
 are archived separately and do not certify this binary.
 
 ## Software verification and UI
@@ -1421,7 +1425,7 @@ Physical-switch implementation is complete on `firmware/physical-mode-switch`,
 Merged PR #10 / closed issue #3. Exact alpha.2 OTA SHA-256
 `ee74d5411891418eb6b08621c2fc21175bbecbe70c65511476aac11c5326297e`
 passed owner hardware validation on one Edge/CachyOS host and was previously
-installed/accepted before the alpha.3 tests. See [the validation record](validation/v0.1.0-alpha.2.md).
+installed/accepted before the alpha.3 tests. See [the validation record](../validation/v0.1.0-alpha.2.md).
 ON enables USB/Studio only; BT enables BLE with USB power only; OFF suppresses
 input/radio/lighting/data. Three profiles remain. Mode movement briefly restarts
 firmware; saved maps/layers/bonds survive. Legacy output actions are ignored.
@@ -1432,7 +1436,7 @@ reconnect after OFF/unplug5s/reconnect, Studio save/persistence, indicators,
 manual stock return/reinstall and explicitly approved flash self-test/acceptance.
 No RF sniffer or current/supply measurement is claimed. Retained recovery is not
 a guarantee. Sleep, measured battery reporting and broader host coverage remain
-in the [roadmap](../ROADMAP.md).
+in the [roadmap](../../ROADMAP.md).
 
 The source UI now caps Bluetooth selection/import to indices 0..2: pinned native
 metadata reports PROFILE_COUNT as an inclusive maximum, despite the runtime
