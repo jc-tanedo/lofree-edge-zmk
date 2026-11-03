@@ -193,15 +193,20 @@ test('opcode08 loads the current device map while opcode07 remains the factory b
   assert.equal(sent.filter(packet => packet[3] === 8).length, 7);
 });
 
-test('restore defaults is isolated behind an explicit destructive confirmation', async () => {
-  const html = await readFile(new URL('../dist/index.html', import.meta.url), 'utf8');
-  const app = await readFile(new URL('../dist/app.js', import.meta.url), 'utf8');
-  assert.match(html, /class="danger-zone"/);
-  assert.match(html, /<dialog id="restore-dialog"/);
-  assert.match(html, /class="restore-impact"/);
-  assert.match(html, /id="confirm-restore"[^>]*class="danger"/);
-  assert.match(app, /restore-dialog'\)\.showModal\(\)/);
-  assert.match(app, /confirm-restore[\s\S]*applyDraft\(true\)/);
+test('React renders required per-flash acknowledgment and destructive reset confirmation', async () => {
+  const { build } = await import('../../.deps/zmk-studio/node_modules/esbuild/lib/main.js');
+  const result = await build({ stdin: { contents: `import React from 'react'; import {renderToStaticMarkup} from 'react-dom/server'; import App from './web/firmware/App.jsx'; export const render = () => renderToStaticMarkup(React.createElement(App,{workspace:{subscribe:()=>()=>{},getSnapshot:()=>({view:'stock',busy:false,supported:false,builds:[],progress:null,selectedBuild:''})}}));`, resolveDir: new URL('../../', import.meta.url).pathname, loader: 'jsx' }, bundle:true, platform:'node', format:'cjs', write:false, nodePaths:[new URL('../../.deps/zmk-studio/node_modules',import.meta.url).pathname] });
+  const { createRequire } = await import('node:module');
+  const module = {exports:{}}; new Function('module','exports','require',result.outputFiles[0].text)(module,module.exports,createRequire(import.meta.url));
+  const html=module.exports.render();
+  assert.match(html,/<input(?=[^>]*id="firmware-risk-ack")(?=[^>]*required=)[^>]*>/);
+  assert.match(html,/<button(?=[^>]*id="firmware-confirm-install")(?=[^>]*disabled=)[^>]*>/);
+  assert.match(html,/formnovalidate=/);
+  assert.match(html,/class="danger-zone"/);
+  assert.match(html,/<dialog[^>]*id="restore-dialog"/);
+  assert.match(html,/class="restore-impact"/);
+  assert.match(html,/id="confirm-restore"[^>]*class="danger"/);
+  assert.match(html,/Your custom mappings will be replaced/);
 });
 
 test('complete browser transaction matches the successful physical remap capture', async () => {

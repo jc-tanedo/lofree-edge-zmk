@@ -1,3 +1,6 @@
+/* Use the same bundled Inter face on Firmware and Studio. Relative to this
+ * shared stylesheet, this also resolves under the GitHub Pages project path. */
+@font-face { font-family: Inter; src: url("studio/Inter.woff2") format("woff2"); font-display: fallback; }
 /* Edge / Carbon & Silver. Shared tokens and components for Firmware + Studio. */
 :root {
   --edge-paper: #080809;
@@ -96,9 +99,18 @@ edge-navigation { display: flex; align-items: center; gap: 36px; flex: 0 0 auto;
 .edge-suite .edge-leave-dialog .edge-dialog-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 26px; }
 .edge-suite .edge-leave-dialog::backdrop { background: #0009; backdrop-filter: blur(5px); }
 
-edge-risk-notice.edge-risk-notice { position: sticky; top: 0; display: flex; flex-direction: column; gap: 8px; padding: 18px max(22px, calc((100vw - 1200px)/2)); border-bottom: 1px solid #8d4a42; background: linear-gradient(110deg,#391c19,#211518); color: #f0d4ce; font-size: 12px; line-height: 1.65; z-index: 110; }
-.edge-risk-notice > strong { color: #ffb8a8; font-size: 13px; letter-spacing: .07em; }
+edge-risk-notice.edge-risk-notice { position: sticky; top: 0; display: flex; flex-direction: column; gap: 8px; padding: 18px max(22px, calc((100vw - 1200px)/2)); border-bottom: 1px solid #8d4a42; background: linear-gradient(110deg,#391c19,#211518); color: #f0d4ce; font: 400 12px/1.65 var(--edge-font); letter-spacing: normal; text-rendering: auto; z-index: 110; }
+edge-risk-notice.edge-risk-notice > strong { color: #ffb8a8; font: 700 13px/1.65 var(--edge-font); letter-spacing: .07em; }
+edge-risk-notice.edge-risk-notice > span, edge-risk-notice.edge-risk-notice nav, edge-risk-notice.edge-risk-notice nav a, edge-risk-notice.edge-risk-notice nav span { font: inherit; letter-spacing: normal; }
 .edge-risk-notice nav { display: flex; gap: 24px; flex-wrap: wrap; }
 .edge-risk-notice a { color: #ffe4db; text-decoration: underline; text-underline-offset: 3px; }
 .edge-risk-ack { display: flex; align-items: flex-start; gap: 12px; font-size: 13px; line-height: 1.7; margin-top: 22px; }
 .edge-risk-ack input { flex: none; width: 18px; height: 18px; accent-color: #d39a68; margin-top: 4px; }
+
+/* Verified stock connection is a status, rather than a disabled action. */
+.edge-suite .firmware-connection-indicator { display: flex; align-items: center; gap: 13px; padding: 16px; border: 1px solid #527660; border-radius: 12px; background: linear-gradient(120deg, #20372a, #142219); box-shadow: inset 0 1px 0 #b7ddc110; }
+.edge-suite .firmware-connection-indicator[hidden] { display: none; }
+.edge-suite .firmware-connection-check { display: grid; place-items: center; flex-shrink: 0; width: 34px; height: 34px; border: 1px solid #7eae8d; border-radius: 50%; background: #91c49f18; color: #c0e8cb; font-size: 21px; }
+.edge-suite .firmware-connection-indicator strong { display: block; color: #d2efda; font-size: 19px; font-weight: 600; line-height: 1.3; letter-spacing: -.3px; }
+.edge-suite .firmware-connection-indicator div > span { display: block; margin-top: 3px; color: #aac5b2; font-size: 12px; }
+.edge-suite .installer-step.is-connected .step-number { color: #aacdb5; }

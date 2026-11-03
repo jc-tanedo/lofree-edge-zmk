@@ -1,0 +1,8 @@
+zmk.core.EdgePower.schema int_size:IS_8
+zmk.core.EdgePower.dim_percent int_size:IS_8
+zmk.core.EdgePower.capabilities int_size:IS_8
+zmk.core.EdgePower.status int_size:IS_8
+
+zmk.core.EdgeSecurity.schema int_size:IS_8
+zmk.core.EdgeSecurity.require_unlock int_size:IS_8
+zmk.core.EdgeSecurity.status int_size:IS_8

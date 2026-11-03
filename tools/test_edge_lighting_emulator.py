@@ -28,6 +28,12 @@ if os.environ.get('EDGE_TEST_UNIT_ID'):
     # Manufactured per-unit data fixture, not an actual device write.
     flash.mem[0x76000:0x76004] = bytes.fromhex(os.environ['EDGE_TEST_UNIT_ID'])
 m = te.Machine(flash, symbols=addresses, max_log=20)
+if os.environ.get('EDGE_TEST_STACKS'):
+    def fail_fatal(mm):
+        raise AssertionError(f'Compiled fatal handler {mm.symbolize(mm.r[15])}, reason={mm.r[0]}, lr={mm.symbolize(mm.r[14])}, sp={hex(mm.r[13])}')
+    for fatal in run_boot.FATAL:
+        if fatal in addresses: m.hooks[addresses[fatal]]=fail_fatal
+
 idle = run_boot.idle_ranges(addresses, sizes)
 if os.environ.get('EDGE_TEST_STACKS'):
     import stack_use

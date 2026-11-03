@@ -9,10 +9,19 @@ def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
 def tar_files(path,files):
  with tarfile.open(path,'w:gz') as t:
   for p,name in files:t.add(p,arcname=name,recursive=False)
+def installation_policy(data,version,registry):
+ if registry.get('format')!='lofree-edge-validated-builds-v1' or not isinstance(registry.get('builds'),list):raise ValueError('Invalid hardware approval registry')
+ digest=hashlib.sha256(data).hexdigest()
+ approved=[b for b in registry['builds'] if b.get('sha256')==digest and b.get('version')==version]
+ if not approved:return {'mode':'trial'}
+ if len(approved)!=1 or approved[0].get('identityReport')!=2:raise ValueError('Invalid or duplicate image approval')
+ return {'mode':'automatic','identityReport':2,'hardwareValidatedSha256':digest,'crc32':int.from_bytes(data[-4:],'little')}
+
 def main():
  p=argparse.ArgumentParser(description=__doc__);p.add_argument('--site-base',default='/lofree-edge-zmk');p.add_argument('--site-only',action='store_true');p.add_argument('--site-output',default='build/site');a=p.parse_args()
  base=a.site_base.rstrip('/')
  if base and not re.fullmatch(r'/[a-zA-Z0-9_-]+',base):raise SystemExit('Expected empty base or one project subdirectory')
+ subprocess.run([str(ROOT/'.venv/bin/python'),str(ROOT/'tools/build_edge_firmware_ui.py'),'--base',base],cwd=ROOT,check=True)
  version=(ROOT/'VERSION').read_text().strip()
  if not re.fullmatch(r'0\.\d+\.\d+-alpha\.\d+',version):raise SystemExit('First-publication pipeline accepts 0.x alpha releases only; review stable-release policy before changing this')
  audit_source()
@@ -33,12 +42,12 @@ def main():
   if old.is_dir():shutil.rmtree(old)
   else:old.unlink()
  for f in (ROOT/'web/dist').iterdir():
-  if f.name in ['studio-qa','firmware'] or 'qa.html' in f.name:continue
+  if f.name in ['studio-qa','firmware-qa','firmware'] or 'qa.html' in f.name:continue
   if f.is_dir():shutil.copytree(f,site/f.name)
   else:shutil.copyfile(f,site/f.name)
  # Bundle only fresh production output. Vite root paths must match this artifact.
  studio=(site/'studio/index.html').read_text()
- if f'{base}/studio/assets/' not in studio:raise SystemExit('Rebuild Studio with EDGE_SITE_BASE='+base)
+ if f'src="{base}/studio/assets/' not in studio:raise SystemExit('Rebuild Studio with EDGE_SITE_BASE='+base)
  (site/'version.json').write_text(json.dumps({'version':version})+'\n')
  (site/'.nojekyll').touch()
  stem='lofree-edge-zmk-'+version
@@ -46,9 +55,13 @@ def main():
  firmware=site/'firmware';firmware.mkdir()
  shutil.copyfile(image,firmware/binary)
  manifest={'format':'lofree-edge-browser-firmware-v1','version':version,'builds':[{'file':binary,'label':'ZMK '+version+' · Experimental BLE + USB Studio','version':version,'board':'lofree_edge','size':len(data),'sha256':sha(image)}]}
+ # Only exact images explicitly approved after hardware review auto-complete.
+ approvals=json.loads((ROOT/'firmware/validated-builds.json').read_text())
+ manifest['builds'][0]['installation']=installation_policy(data,version,approvals)
  (firmware/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
- for name,doc in [('risk.html','RISK.md'),('roadmap.html','ROADMAP.md')]:
+ for name,doc in [('risk.html','RISK.md'),('roadmap.html','ROADMAP.md'),('security.html','docs/security.md')]:
   text=markdown.markdown((ROOT/doc).read_text(),extensions=['tables'])
+  text=text.replace('href="docs/security.md"','href="security.html"').replace('href="../RISK.md"','href="risk.html"')
   text=text.replace('href="RISK.md"','href="risk.html"').replace('href="ROADMAP.md"','href="roadmap.html"')
   (site/name).write_text('<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Lofree Edge ZMK — '+doc+'</title><link rel="stylesheet" href="edge-design.css"><body class="edge-suite"><edge-risk-notice></edge-risk-notice><main style="max-width:900px;margin:40px auto;padding:0 24px;line-height:1.8"><a href="./">Firmware</a> · <a href="studio/">Studio</a>'+text+'</main><script type="module" src="edge-shell.js"></script></body></html>')
  locks=json.loads((ROOT/'dependencies.lock.json').read_text());license_dir=site/'licenses';license_dir.mkdir()
@@ -115,7 +128,7 @@ def main():
  tar_files(release/(stem+'-source.tar.gz'),source)
  # Audit before publishing; license/source review is also a human release gate.
  for f in release.glob('*.tar.gz'):audit_archive(f)
- notes=f'''# Lofree Edge ZMK {version}\n\n> EXPERIMENTAL — USE ENTIRELY AT YOUR OWN RISK. Firmware, website, tools and instructions may make your keyboard unusable, erase settings or interrupt input. Recovery may require a programmer and may fail. No warranty. Backups and retained stock are not guarantees.\n\nIndependent project; no vendor endorsement. Substantial AI assistance; see AI_DISCLOSURE.md in the source archive.\n\nBLE+USB Studio; three total layers. USB required for editing/flashing. The physical selector controls USB/Studio (ON), Bluetooth with USB power only (BT), and inactive input/radio/lighting/data (OFF). Moving it restarts firmware; save edits first. Three Bluetooth profiles remain. Sleep and measured battery reporting remain unfinished.\n\nFirmware SHA-256: `{sha(image)}`\n\n## Exact-artifact hardware checklist\n\n'''
+ notes=f'''# Lofree Edge ZMK {version}\n\n> EXPERIMENTAL — USE ENTIRELY AT YOUR OWN RISK. Firmware, website, tools and instructions may make your keyboard unusable, erase settings or interrupt input. Recovery may require a programmer and may fail. No warranty. Backups and retained stock are not guarantees.\n\nIndependent project; no vendor endorsement. Substantial AI assistance; see AI_DISCLOSURE.md in the source archive.\n\nBLE+USB Studio; three total layers. USB required for editing/flashing. The physical selector controls USB/Studio (ON), Bluetooth with USB power only (BT), and inactive input/radio/lighting/data (OFF). Moving it restarts firmware; save edits first. Three Bluetooth profiles remain. Configurable idle dim/off and Bluetooth sleep are experimental; physical deep wake and current measurements require the checklist below. Measured battery reporting remains unfinished.\n\nFirmware SHA-256: `{sha(image)}`\n\n## Exact-artifact hardware checklist\n\n'''
  for case in CASES:notes+='- [ ] hardware:'+case+'\n'
  notes+='\nDo not publish until every required hardware check is recorded against this exact SHA. Emulation is not a substitute.\n'
  (release/'RELEASE_NOTES.md').write_text(notes)

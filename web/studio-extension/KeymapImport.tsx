@@ -4,15 +4,20 @@ import type { Keymap } from '@zmkfirmware/zmk-studio-ts-client/keymap';
 import { LockState } from '@zmkfirmware/zmk-studio-ts-client/core';
 import { ConnectionContext } from './rpc/ConnectionContext';
 import { LockStateContext } from './rpc/LockStateContext';
-import { usePub } from './usePubSub';
-import { parseKeymap, planImport, readImportContext, applyImport } from './edge-export/keymap-import.js';
+import { usePub, useSub } from './usePubSub';
+import { useKeymapDraft } from './EdgeDraft';
+import { unlockSaveBlocked, UNLOCK_SAVE_ERROR } from './edge-export/unlock-guard.js';
+import { parseKeymap, planImport, readImportContext, snapshotKey } from './edge-export/keymap-import.js';
 import type { Plan, Rpc } from './edge-export/keymap-import.js';
 import { exportFiles, exportZip, exportLayout, describeBinding } from './edge-export/keymap-export.js';
 
 export function KeymapImport() {
+  const draft=useKeymapDraft();
   const { conn } = useContext(ConnectionContext);
   const lock = useContext(LockStateContext);
   const publish = usePub();
+  const [lockingEnabled,setLockingEnabled]=useState<boolean>();
+  useSub("edge.security.policy",setLockingEnabled);
   const input = useRef<HTMLInputElement>(null);
   const dialog = useRef<HTMLDialogElement>(null);
   const failedConnections = useRef(new WeakSet<object>());
@@ -44,8 +49,11 @@ export function KeymapImport() {
       if(file.size>131072) throw new Error('Choose a .keymap smaller than 128 KiB.');
       const parsed=parseKeymap(await file.text());
       const context=await readImportContext(rpc);
-      const plan=planImport(parsed,context.map,context.details);
-      setPreview({plan,backup:context.map,filename:file.name});
+      if(draft.base && snapshotKey(context.map)!==snapshotKey(draft.base)) throw new Error('The keyboard changed outside this draft. Discard/reload before importing.');
+      if(!draft.map)draft.store.load(context.map);
+      const current=draft.map||context.map;
+      const plan=planImport(parsed,current,context.details);
+      setPreview({plan,backup:current,filename:file.name});
       setMessage('Review the import before applying.');
       dialog.current?.showModal();
     } catch(error) { setMessage(error instanceof Error?error.message:'Could not read this keymap.'); }
@@ -60,25 +68,16 @@ export function KeymapImport() {
   async function apply() {
     if(!preview||!ready||busy) return;
     setBusy(true);
-    const warn=(event:BeforeUnloadEvent)=>{event.preventDefault();event.returnValue='';};
-    window.addEventListener('beforeunload',warn);
     try {
-      const result=await applyImport(rpc,preview.plan,(done,total)=>setMessage(`Applying ${done} of ${total} key changes…`));
-      await publish('edge.keymap.imported',result);
-      await publish('rpc_notification.keymap.unsavedChangesStatusChanged',false);
-      const changed=preview.plan.changes.length+preview.plan.add+preview.plan.remove+preview.plan.renamed;
-      setMessage(changed?'Imported, saved and read back from the keyboard. No firmware flash was needed.':'No changes needed; the keyboard already matches the file.');
+      if(!draft.map||snapshotKey(draft.map)!==preview.plan.beforeKey)throw new Error('The draft changed after preview. Reopen the file.');
+      draft.store.replace({...preview.backup,layers:preview.plan.targets,availableLayers:preview.backup.layers.length+preview.backup.availableLayers-preview.plan.targets.length});
+      setMessage('Imported into this browser draft. Press Save to apply it to the keyboard.');
       dialog.current?.close();setPreview(null);
-    } catch(error) {
-      // Refresh from device after partial failure, never display an assumed map.
-      try {
-        const actual=(await rpc({keymap:{getKeymap:true}})).keymap?.getKeymap;
-        if(actual) await publish('edge.keymap.imported',actual);
-      } catch { /* Keep the explicit recovery message. */ }
-      setMessage(error instanceof Error?error.message:'Import failed; reconnect and read the keyboard.');
-      dialog.current?.close();setPreview(null);
-    } finally { window.removeEventListener('beforeunload',warn);setBusy(false); }
+    } catch(error) {setMessage(error instanceof Error?error.message:'Could not stage the import.');}
+    finally {setBusy(false);}
   }
+
+  const blocked=!!preview && unlockSaveBlocked({layers:preview.plan.targets},lockingEnabled);
   return <div className="p-2 flex flex-col gap-2 border-t border-base-300 max-w-64">
     <input ref={input} type="file" accept=".keymap" hidden onChange={event=>{
       const file=event.target.files?.[0];event.target.value='';if(file) void load(file);
@@ -87,7 +86,7 @@ export function KeymapImport() {
     <p className="text-xs" role="status">{message}</p>
     <dialog ref={dialog} className="modal" onCancel={event=>{if(busy)event.preventDefault();}}>
       <div className="modal-box max-w-xl">
-        <h2 className="font-bold text-lg">Apply imported keymap?</h2>
+        <h2 className="font-bold text-lg">Import into draft?</h2>
         {preview && <>
           <p className="py-2 break-words">{preview.filename}</p>
           <p>{preview.plan.changes.length} key changes · {preview.plan.add} layers added · {preview.plan.remove} removed · {preview.plan.renamed} renamed</p>
@@ -97,13 +96,14 @@ export function KeymapImport() {
               {preview.plan.targets[change.layer].name} · {exportLayout().layouts.LAYOUT.layout[change.position].label}: {describeBinding(preview.backup.layers[change.layer]?.bindings[change.position])} → {describeBinding(change.binding)}
             </li>)}
           </ul></details>
-          <p className="text-sm">Changes take effect during import and are saved to the keyboard. Keep keys released and leave this window open until it finishes.</p>
+          <p className="text-sm">This updates the browser draft only. The keyboard changes when you press Save in the header.</p>
         </>}
+        {blocked && <p role="alert" className="edge-inline-error">{UNLOCK_SAVE_ERROR}</p>}
         <p className="text-sm py-2" role="status">{busy?message:'Download a backup first if you want to restore your current setup later.'}</p>
         <div className="modal-action flex-wrap">
           <button className="btn btn-sm" disabled={busy} onClick={backup}>Download current backup ↓</button>
           <button className="btn btn-sm" disabled={busy} onClick={()=>dialog.current?.close()}>Cancel</button>
-          <button className="btn btn-sm btn-primary" disabled={busy||!ready} onClick={()=>void apply()}>Apply and save</button>
+          <button className="btn btn-sm btn-primary" disabled={busy||!ready||blocked} onClick={()=>void apply()}>Use as draft</button>
         </div>
       </div>
     </dialog>

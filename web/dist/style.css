@@ -163,3 +163,26 @@ footer { max-width: 1280px; margin: auto; padding: 25px 44px 32px; display: flex
 
 /* Leave room for descenders inside the clipped silver text background. */
 .edge-firmware .intro h1 { line-height: 1.12; padding-bottom: .12em; }
+
+/* Guided installer: one active panel, measured upload progress, honest wait states. */
+.install-stepper { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; list-style:none; margin:28px 0 24px; padding:0; }
+.install-stepper li { display:flex; align-items:center; gap:9px; color:var(--edge-muted); font-size:12px; border-top:1px solid var(--edge-line); padding-top:14px; }
+.install-stepper li.is-current { color:var(--edge-ink); border-color:#bdbdbd; }
+.install-stepper li.is-done { color:#aacdb5; border-color:#557361; }
+.install-step-index { display:grid; place-items:center; width:24px; height:24px; flex:none; border:1px solid var(--edge-line); border-radius:50%; font-size:11px; }
+.is-current .install-step-index { background:#dedede; border-color:#dedede; color:#111; }
+.installer-steps.installer-wizard-panel { display:block; min-height:220px; padding:24px; border:1px solid var(--edge-line); border-radius:12px; background:linear-gradient(135deg,rgba(255,255,255,.035),rgba(255,255,255,.008)); }
+.installer-wizard-panel .installer-step { border:0; padding:0; max-width:760px; }
+.installer-wizard-panel .installer-step[hidden] { display:none; }
+.installer-wizard-panel .installer-step > p:not(.step-number) { min-height:0; }
+.installer-wizard-panel h3 { font-size:21px; line-height:1.4; }
+.wizard-actions { display:flex; gap:12px; margin-top:22px; }
+.wizard-stage-heading { display:flex; align-items:center; gap:14px; margin-bottom:12px; }
+.wizard-stage-heading h3 { margin:0; }
+.install-spinner { display:inline-block; width:25px; height:25px; flex:none; border:2px solid #444; border-top-color:#e5e5e5; border-radius:50%; animation:install-spin .8s linear infinite; }
+.install-success { color:#aacdb5; font-size:30px; }
+.install-wait-progress { width:100%; height:5px; margin:12px 0; accent-color:#c5c5c5; }
+.wizard-studio-link { display:inline-block; margin-top:12px; color:var(--edge-ink); }
+@keyframes install-spin { to { transform:rotate(360deg); } }
+@media(prefers-reduced-motion:reduce) { .install-spinner { animation:none; border-style:dashed; } }
+@media(max-width:600px) { .install-stepper { gap:7px; } .install-stepper li { flex-direction:column; align-items:flex-start; gap:7px; font-size:11px; } .installer-steps.installer-wizard-panel { padding:18px; } }

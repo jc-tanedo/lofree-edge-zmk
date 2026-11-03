@@ -1,3 +1,7 @@
+import { hasUnlockBinding, unlockSaveBlocked } from "./edge-export/unlock-guard.js";
+import type { KeymapReadProgress } from "./useEdgeKeymapData";
+import { EdgeSecurity } from "./EdgeSecurity";
+import { EdgePower } from "./EdgePower";
 import { useContext, useEffect, useRef, useState } from "react";
 import type {
   Keymap,
@@ -11,6 +15,8 @@ import {
   Command,
   Layers,
   Settings2,
+  Power,
+  Shield,
   Search,
   Plus,
   ChevronRight,
@@ -42,6 +48,7 @@ import {
 
 type Props = {
   loadingError?: string;
+  readProgress?: KeymapReadProgress;
   onRetry: () => unknown;
   keymap: Keymap | null | undefined;
   layout?: PhysicalLayout;
@@ -62,6 +69,8 @@ const tabs = [
   ["Shortcuts", Command],
   ["Layers", Layers],
   ["Advanced", Settings2],
+  ["Power", Power],
+  ["Security", Shield],
 ] as const;
 const initialGeometry = PRINTED_KEYS.map((k) => ({
   ...k,
@@ -79,6 +88,8 @@ export function EdgeWorkspace(p: Props) {
     [error, setError] = useState(""),
     [notice, setNotice] = useState(""),
     [mac, setMac] = useState(false);
+  const [lockingEnabled,setLockingEnabled] = useState<boolean>();
+  useSub("edge.security.policy",setLockingEnabled);
   const [externalBusy, setExternalBusy] = useState(false);
   useSub("edge.ui.busy", (value) => {
     setExternalBusy(value);
@@ -110,6 +121,9 @@ export function EdgeWorkspace(p: Props) {
     selected = p.selectedKeyPosition,
     selectedBinding =
       selected === undefined ? undefined : layer?.bindings[selected];
+  const hasUnlock = hasUnlockBinding(map);
+  const saveBlocked = unlockSaveBlocked(map, lockingEnabled);
+  useEffect(() => { void publish("edge.keymap.save-blocked", saveBlocked); }, [saveBlocked]);
   const unlocked =
     !!conn.conn && lock === LockState.ZMK_STUDIO_CORE_LOCK_STATE_UNLOCKED;
   const ready = unlocked && !!map && !busy && !externalBusy;
@@ -141,7 +155,7 @@ export function EdgeWorkspace(p: Props) {
     if (canAssign && supportsBinding(action.binding, p.behaviors, layers))
       void run(
         () => p.onBinding(action.binding),
-        `${action.label} assigned. Save to keep your changes.`,
+        `${action.label} drafted. Save to apply your changes.`,
       );
   }
   function available(actions: Action[]) {
@@ -190,7 +204,13 @@ export function EdgeWorkspace(p: Props) {
         <div role="status" className="edge-loading-status">
           <span className="edge-eyebrow">READING KEYBOARD</span>
           <h1>Loading your keymap</h1>
-          <p>Reading mappings, layers and supported actions from your keyboard.</p>
+          <p>{p.readProgress?.label || "Preparing to read the keyboard…"}</p>
+          <div className="edge-read-progress">
+            <progress aria-label="Keyboard read progress" max={p.readProgress?.total || 1} value={p.readProgress?.completed} />
+            {p.readProgress?.total && p.readProgress.completed !== undefined && (
+              <span aria-hidden="true">{Math.floor(p.readProgress.completed / p.readProgress.total * 100)}%</span>
+            )}
+          </div>
         </div>
         <div className="edge-skeleton-layout" aria-hidden="true">
           <div className="edge-skeleton-layers"><span /><span /><span /></div>
@@ -350,6 +370,11 @@ export function EdgeWorkspace(p: Props) {
           </div>
         </div>
       </section>
+      {map && !hasUnlock && lockingEnabled !== false && <div role="alert" className="edge-inline-error edge-unlock-warning">
+        <strong>No Unlock Studio binding in this keymap.</strong>{" "}
+        {lockingEnabled === true ? "Locking is enabled." : "Locking may be enabled; its current policy is unavailable."}{" "}
+        Saving is blocked while locking is enabled or its policy is unavailable. Add an accessible Unlock Studio binding to this draft before saving. To save a keymap without one, disable locking in Security before editing. Recovery is not guaranteed.
+      </div>}
       <section className="edge-action-dock" aria-label="Key actions">
         <div className="edge-dock-toolbar">
           <div role="tablist" aria-label="Action categories">
@@ -359,7 +384,7 @@ export function EdgeWorkspace(p: Props) {
                 id={`tab-${name}`}
                 role="tab"
                 aria-selected={category === name}
-                aria-controls="edge-action-panel"
+                aria-controls={name === "Power" ? "edge-power-panel" : name === "Security" ? "edge-security-panel" : "edge-action-panel"}
                 tabIndex={category === name ? 0 : -1}
                 onKeyDown={(e) => {
                   if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
@@ -382,7 +407,7 @@ export function EdgeWorkspace(p: Props) {
               </button>
             ))}
           </div>
-          <label className="edge-search">
+          {category !== "Power" && category !== "Security" && <label className="edge-search">
             <Search size={15} />
             <input
               aria-label="Search actions"
@@ -395,9 +420,10 @@ export function EdgeWorkspace(p: Props) {
                 <X size={13} />
               </button>
             )}
-          </label>
+          </label>}
         </div>
         <div
+          hidden={category === "Power" || category === "Security"}
           className="edge-action-body"
           role="tabpanel"
           id="edge-action-panel"
@@ -562,10 +588,22 @@ export function EdgeWorkspace(p: Props) {
           )}
           <p role="status" className="edge-action-status">
             {busy
-              ? "Updating keyboard…"
+              ? "Updating draft…"
               : notice ||
-                "Edits apply immediately. Save writes changes to device storage."}
+                "Drafts do not affect typing. Save applies them to the keyboard and persists them."}
           </p>
+        </div>
+        <div
+          hidden={category !== "Power"}
+          className="edge-action-body"
+          role="tabpanel"
+          id="edge-power-panel"
+          aria-labelledby="tab-Power"
+        >
+          <EdgePower ready={unlocked && !!map} busy={busy || externalBusy} />
+        </div>
+        <div hidden={category !== "Security"} className="edge-action-body" role="tabpanel" id="edge-security-panel" aria-labelledby="tab-Security">
+          <EdgeSecurity ready={unlocked && !!map} busy={busy || externalBusy} hasUnlock={hasUnlock} />
         </div>
       </section>
       <dialog

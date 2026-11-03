@@ -2,5 +2,9 @@
   "name": "lofree-edge-web",
   "private": true,
   "type": "module",
-  "scripts": { "test": "node --test tests/*.test.js", "serve": "sh ../tools/serve_edge_web.sh" }
+  "scripts": {
+    "build": "python3 ../tools/build_edge_firmware_ui.py",
+    "test": "node --test tests/*.test.js",
+    "serve": "sh ../tools/serve_edge_web.sh"
+  }
 }

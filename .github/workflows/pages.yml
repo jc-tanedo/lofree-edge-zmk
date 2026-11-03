@@ -21,12 +21,14 @@ jobs:
       contents: read
       pages: write
       id-token: write
-    runs-on: ubuntu-24.04
+    runs-on: [self-hosted, Linux, X64]
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           ref: ${{ github.event.release.tag_name || inputs.tag }}
           fetch-depth: 0
+      - name: System tools
+        run: sh tools/ci_prerequisites.sh
       - name: Download existing release; never rebuild
         env:
           GH_TOKEN: ${{ github.token }}
@@ -45,3 +47,6 @@ jobs:
       - name: Deploy exact released website
         id: deployment
         uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e
+      - name: Clean transient deployment storage
+        if: ${{ always() }}
+        run: sh tools/ci_cleanup.sh finish

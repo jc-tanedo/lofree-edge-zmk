@@ -1,5 +1,5 @@
 // Browser-only test fixture. Staged into studio-qa; never in the production build.
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type {
   RpcConnection,
   Request,
@@ -13,12 +13,20 @@ let notify: ReadableStreamDefaultController<Notification> | undefined,
   rejectKey = false,
   rejectSave = false,
   failRead = false;
-let pauseReads = false;
+let pauseReads = false, pausePower=false, failPower=false, legacyPower=false, rejectPower=false;
 const pendingReads: Array<() => void> = [];
+let pauseDetails = false;
+const pendingDetails: Array<() => void> = [];
 const clone = <T,>(v: T): T => structuredClone(v);
 export function PreviewControls() {
+  const [rpcNames,setRpcNames]=useState<string[]>([]);
+  useEffect(()=>{const receive=(event:Event)=>setRpcNames(names=>[...names,(event as CustomEvent<string>).detail]);window.addEventListener('edge-preview-rpc',receive);return()=>window.removeEventListener('edge-preview-rpc',receive);},[]);
+  const writes=rpcNames.filter(n=>['setLayerBinding','setLayerProps','addLayer','removeLayer','restoreLayer','moveLayer','saveChanges','discardChanges'].includes(n)).length;
   const [isLocked, setLocked] = useState(locked);
   const [paused, setPaused] = useState(false);
+  const [pausedPower,setPausedPower]=useState(false);
+  const [detailsPaused,setDetailsPaused]=useState(false);
+  const [legacy,setLegacy]=useState(false);
   return (
     <div
       className="edge-preview-banner"
@@ -39,8 +47,14 @@ export function PreviewControls() {
         setPaused(pauseReads);
         if (!pauseReads) pendingReads.splice(0).forEach(reply => reply());
       }}>{paused ? "Resume mapping reads" : "Pause mapping reads"}</button>
+      <button onClick={() => { pauseDetails=!pauseDetails;setDetailsPaused(pauseDetails);if(!pauseDetails)pendingDetails.splice(0).forEach(reply=>reply()); }}>{detailsPaused ? "Resume action reads" : "Pause action reads"}</button>
+      <button onClick={() => pendingDetails.shift()?.()}>Read next action</button>
       <button onClick={() => { failRead = true; }}>Fail next mapping read</button>
-      <strong>UI PREVIEW — no keyboard connection</strong>
+      <button onClick={()=>{pausePower=!pausePower;setPausedPower(pausePower);if(!pausePower)pendingReads.splice(0).forEach(reply=>reply());}}>{pausedPower ? "Resume power reads" : "Pause power reads"}</button>
+      <button onClick={()=>{failPower=true;}}>Fail next power read</button>
+      <button onClick={()=>{legacyPower=!legacyPower;setLegacy(legacyPower);}}>{legacy ? "Enable power support" : "Simulate old firmware"}</button>
+      <button onClick={()=>{rejectPower=true;}}>Reject next power save</button>
+      <strong>UI PREVIEW — no keyboard connection</strong><output id="edge-qa-writes">Keymap writes: {writes} · Saves: {rpcNames.filter(n=>n==="saveChanges").length}</output>
       <button
         onClick={() => {
           locked = !locked;
@@ -113,7 +127,33 @@ export function create_rpc_connection({ signal }: { signal?: AbortSignal } = {})
   let responses: ReadableStreamDefaultController<RequestResponse>;
   const dirtyNotice = () =>
     notify?.enqueue({ keymap: { unsavedChangesStatusChanged: dirty } });
+  let security={schema:1,requireUnlock:1,status:0};
+  let power={schema:1,dimSeconds:30,offSeconds:120,sleepSeconds:900,dimPercent:20,capabilities:7,status:0};
   function handle(r: Request): any {
+    const core=r.core as typeof r.core & {edgeGetPower?:boolean;edgeSetPower?:typeof power;edgeGetSecurity?:boolean;edgeSetSecurity?:typeof security};
+    if(core?.edgeGetSecurity) {
+      if(legacyPower)return {meta:{simpleError:2}};
+      if(locked)return {meta:{simpleError:1}};
+      return {core:{edgeSecurity:clone(security)}};
+    }
+    if(core?.edgeSetSecurity) {
+      if(locked)return {meta:{simpleError:1}};
+      security={...core.edgeSetSecurity,status:0};
+      locked=!!security.requireUnlock;
+      notify?.enqueue({core:{lockStateChanged:locked ? 0 : 1}});
+      return {core:{edgeSecurity:clone(security)}};
+    }
+    if(core?.edgeGetPower) {
+      if(legacyPower)return {meta:{simpleError:2}};
+      if(failPower){failPower=false;return {core:{edgePower:{...power,dimSeconds:86401}}};}
+      return {core:{edgePower:clone(power)}};
+    }
+    if(core?.edgeSetPower) {
+      if(rejectPower){rejectPower=false;return {core:{edgePower:{...power,status:2}}};}
+      if(locked)return {meta:{simpleError:1}};
+      power={...core.edgeSetPower,capabilities:7,status:0};
+      return {core:{edgePower:clone(power)}};
+    }
     if (r.core?.getDeviceInfo)
       return { core: { getDeviceInfo: { name: "Lofree Edge ZMK" } } };
     if (r.core?.getLockState) return { core: { getLockState: locked ? 0 : 1 } };
@@ -229,6 +269,7 @@ export function create_rpc_connection({ signal }: { signal?: AbortSignal } = {})
         responses = c;
         signal?.addEventListener("abort", () => {
           pendingReads.splice(0);
+          pendingDetails.splice(0);
           responses.error(new Error("Preview connection closed"));
         }, { once: true });
       },
@@ -240,8 +281,10 @@ export function create_rpc_connection({ signal }: { signal?: AbortSignal } = {})
     }),
     request_writable: new WritableStream({
       write(r) {
+        const name=Object.keys(r.keymap||r.core||r.behaviors||{})[0];window.dispatchEvent(new CustomEvent("edge-preview-rpc",{detail:name}));
         const reply = () => responses.enqueue({ requestId: r.requestId, ...handle(r) });
-        if (pauseReads && r.keymap?.getKeymap) pendingReads.push(reply);
+        if ((pauseReads && r.keymap?.getKeymap) || (pausePower && (r.core as any)?.edgeGetPower)) pendingReads.push(reply);
+        else if (pauseDetails && r.behaviors?.getBehaviorDetails) pendingDetails.push(reply);
         else reply();
       },
     }),

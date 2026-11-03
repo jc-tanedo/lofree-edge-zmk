@@ -3,9 +3,11 @@ import { call_rpc } from '@zmkfirmware/zmk-studio-ts-client';
 import { ConnectionContext } from './rpc/ConnectionContext';
 import { LockStateContext } from './rpc/LockStateContext';
 import { LockState } from '@zmkfirmware/zmk-studio-ts-client/core';
+import { useKeymapDraft } from './EdgeDraft';
 import { exportFiles, exportZip } from './edge-export/keymap-export.js';
 
 export function KeymapExport() {
+  const draft=useKeymapDraft();
   const { conn } = useContext(ConnectionContext);
   const lock = useContext(LockStateContext);
   const [busy, setBusy] = useState(false);
@@ -17,7 +19,7 @@ export function KeymapExport() {
       // Fresh RPC read, not the editor's cached React state. Never mutate/save.
       const identity = await call_rpc(conn, { core: { getDeviceInfo: true } });
       if (identity.core?.getDeviceInfo?.name !== 'Lofree Edge ZMK') throw new Error('This export supports the Lofree Edge firmware only.');
-      const response = await call_rpc(conn, { keymap: { getKeymap: true } });
+      const response = draft.count && draft.map ? {keymap:{getKeymap:draft.map}} : await call_rpc(conn, { keymap: { getKeymap: true } });
       if (!response.keymap?.getKeymap) throw new Error('Unlock the keyboard, then try exporting again.');
       const files = exportFiles(response.keymap.getKeymap);
       const zip = exportZip(files);
@@ -27,7 +29,7 @@ export function KeymapExport() {
       link.download = 'lofree-edge-keymap-editor.zip';
       link.click();
       setTimeout(() => URL.revokeObjectURL(url), 1000);
-      setMessage('Exported info.json and lofree_edge.keymap. Use Import edited .keymap to apply external edits.');
+      setMessage(draft.count ? 'Exported your browser draft; it has not been applied to the keyboard.' : 'Exported the current keyboard mapping with info.json.');
     } catch (error) { setMessage(error instanceof Error ? error.message : 'Export failed.'); }
     finally { setBusy(false); }
   }

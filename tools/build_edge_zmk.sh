@@ -20,7 +20,8 @@ case "${1:-}" in
   python3 "$ROOT/tools/check_dependency.py" zmk-studio-messages
   python "$ROOT/tools/generate_edge_studio.py"
   BUILD="$ROOT/firmware/build/lofree_edge-studio"
-  MODULES="$MODULES;$ROOT/.deps/nanopb;$ROOT/.deps/zmk-studio-messages"
+  python "$ROOT/tools/stage_edge_power_messages.py"
+  MODULES="$MODULES;$ROOT/.deps/nanopb;$ROOT/build/generated/edge-studio-messages"
   OVERLAYS="$ROOT/firmware/lofree_edge/studio.keymap;$ROOT/firmware/lofree_edge/studio.overlay"
   CONFIGS="$CONFIGS;$ROOT/firmware/lofree_edge/studio.conf"
   if [ "$1" = --studio-export ]; then
@@ -63,6 +64,13 @@ if [ "${EDGE_SWITCH_DIAGNOSTIC:-0}" = 1 ]; then
  BUILD="$ROOT/firmware/build/lofree_edge-ble-studio-switch-diagnostic"
  CONFIGS="$CONFIGS;$ROOT/firmware/lofree_edge/switch-diagnostic.conf"
 fi
+if [ "${EDGE_STUDIO_IO_DIAGNOSTIC:-0}" = 1 ]; then
+ test "${EDGE_SWITCH_DIAGNOSTIC:-0}" = 0 || { echo "Use only one diagnostic image mode" >&2; exit 2; }
+ test "${1:-}" = --ble-studio || { echo "Studio I/O diagnostics require --ble-studio" >&2; exit 2; }
+ BUILD="$ROOT/firmware/build/lofree_edge-ble-studio-io-diagnostic"
+ CONFIGS="$CONFIGS;$ROOT/firmware/lofree_edge/studio-io-diagnostic.conf"
+fi
+BUILD="${EDGE_BUILD_DIR:-$BUILD}"
 export SOURCE_DATE_EPOCH=${SOURCE_DATE_EPOCH:-$(git -C "$ROOT" log -1 --format=%ct 2>/dev/null || echo 0)}
 cmake -S "$ZMK/app" -B "$BUILD" -GNinja \
  -DZephyr_DIR="$ZEPHYR_BASE/share/zephyr-package/cmake" \

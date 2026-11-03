@@ -76,4 +76,5 @@ def relocate(text):
         '#include "' + str(base/m[1]) + '"' if (base/m[1]).exists() else m[0], text)
 (out/'edge_ble_adv.c').write_text(relocate(adv))
 from stage_edge_mode import patch_ble
-(out/'edge_ble.c').write_text(relocate(patch_ble(ble)))
+from stage_edge_power import patch_ble as patch_power_ble
+(out/'edge_ble.c').write_text(relocate(patch_power_ble(patch_ble(ble))))

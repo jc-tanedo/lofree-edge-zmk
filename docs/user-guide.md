@@ -29,13 +29,17 @@ Press Fn+U on the keyboard, or your remapped Studio Unlock action. The overlay b
 
 ![Studio layer and key-action workspace — isolated UI preview, not a connected physical device](images/studio-keymap.png)
 
-Select a layer and key, choose its action, then **Save**. Edits take effect immediately; Save writes them to persistent storage. Three total layers are available. Use Files to export a .keymap and info.json for [Keymap Editor](https://nickcoutsos.github.io/keymap-editor/), or import the edited .keymap after reviewing its assignments. Import saves and reads back without rebuilding firmware.
+Select a layer and key, choose its action, then **Save**. Edits remain in a temporary browser draft and do not change typing. Save rereads the device, checks for external changes, then applies and persists the draft. Undo/Redo and Discard do not write to the keyboard. The header counts changed key assignments and layer changes. Leaving the page discards the browser draft. Three total layers are available. Use Files to export a .keymap and info.json for [Keymap Editor](https://nickcoutsos.github.io/keymap-editor/), or import the edited .keymap after reviewing its assignments. Import stages a draft; press the main Save button to apply and persist it without rebuilding firmware.
 
 ## Accept a tested trial
 
 **This writes flash and ends automatic trial rollback. Entirely at your own risk.** First verify typing, BLE, layers/save, indicators and retained-image return for the exact image. Keep the editor idle. Do not confirm an untested image or an image without a valid retained recovery slot.
 
-The first alpha uses an explicit command-line acceptance step. Install the pinned public dependencies using the development guide. On Linux, install the system HIDAPI library as well (`libhidapi-hidraw0` on Debian/Ubuntu, `hidapi` on Arch). Use the pinned Python `hid` package, not the incompatible `hidapi` package, in a clean virtual environment. Then:
+The guided installer uses **Choose firmware → Connect → Install → Finalize**. The upload finishing is not the end: keep the page open through the restart/reconnect loading state. If browser access is needed, the Finalize step will prompt you. Only **Installation complete** means verification and acceptance finished.
+
+Validated builds with automatic installation reconnect, verify the running image, run the storage self-test and finish acceptance under the **Install Firmware** action. Keep USB connected until **Installation complete**. If browser permission is needed or verification is interrupted, choose **Finalize Installation**; it verifies without uploading again. A failed check never reports completion. Automatic checks do not test every key, Bluetooth or lighting.
+
+Development builds remain unconfirmed trials. Older firmware without the image-identity report also stays on the trial workflow. These builds use an explicit command-line acceptance step after their required hardware tests. Install the pinned public dependencies using the development guide. On Linux, install the system HIDAPI library as well (`libhidapi-hidraw0` on Debian/Ubuntu, `hidapi` on Arch). Use the pinned Python `hid` package, not the incompatible `hidapi` package, in a clean virtual environment. Then:
 
 ```sh
 .venv/bin/python -m pip install -r requirements-device.lock
@@ -44,6 +48,15 @@ The first alpha uses an explicit command-line acceptance step. Install the pinne
 ```
 
 Confirm runs the upstream flash self-test and boot guard checks. A refused self-test is a stop condition, not a reason to bypass the guard. Linux USB access may require the included udev rule and reconnecting the keyboard. Manual retained-image return remains available only while that image and recovery path are valid; it is not a guarantee.
+
+## Studio security preview — unreleased
+
+The new [Security tab](security.md) beside Power can make physical unlock
+optional on firmware supporting this setting. Enabled is the default. Disabling
+allows software with Studio access to edit without Fn+U; enabling locks
+immediately. Keep an accessible Unlock Studio binding. Studio warns before
+enabling without one and when the last binding is removed while locking is on.
+This requires a firmware update and has not yet passed physical validation.
 
 ## Physical mode switch (alpha.2)
 

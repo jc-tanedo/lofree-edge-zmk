@@ -5,7 +5,20 @@ ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'tools'))
 from audit_publication import check
 from verify_promotion import validate_metadata,CASES
+from package_release import installation_policy
 class PublicationTests(unittest.TestCase):
+ def test_only_exact_hardware_approved_image_auto_completes(self):
+  import hashlib
+  data=b'candidate-image\x12\x34\x56\x78';digest=hashlib.sha256(data).hexdigest()
+  registry={'format':'lofree-edge-validated-builds-v1','builds':[]}
+  self.assertEqual(installation_policy(data,'1',registry),{'mode':'trial'})
+  registry['builds']=[{'sha256':digest,'version':'1','identityReport':2}]
+  self.assertEqual(installation_policy(data,'1',registry)['mode'],'automatic')
+  self.assertEqual(installation_policy(data+b'x','1',registry)['mode'],'trial')
+  self.assertEqual(installation_policy(data,'2',registry)['mode'],'trial')
+  registry['builds']*=2
+  with self.assertRaises(ValueError):installation_policy(data,'1',registry)
+
  def test_private_inputs_and_credentials_are_rejected(self):
   for name,data in [('private/input.txt',b'x'),('app.exe',b'MZ'),('capture.pcap',b'x'),('ok.txt',b'github_pat_'+b'a'*35)]:
    with self.subTest(name=name),self.assertRaises(ValueError):check(name,data)
@@ -30,16 +43,23 @@ class PublicationTests(unittest.TestCase):
     args=list(self.metadata())
     args[2]['body']=args[2]['body'].replace('- [x] hardware:'+case,'')
     with self.assertRaisesRegex(ValueError,'Missing hardware check: '+case):validate_metadata(*args)
+ def test_missing_power_hardware_evidence_blocks_promotion(self):
+  for case in ('power-settings-persistence','idle-dim-off','ble-suspend-wake','ble-deep-wake','off-selector-wake','usb-host-suspend','power-current-measurements'):
+   with self.subTest(case=case):
+    args=list(self.metadata())
+    args[2]['body']=args[2]['body'].replace('- [x] hardware:'+case,'')
+    with self.assertRaisesRegex(ValueError,'Missing hardware check: '+case):validate_metadata(*args)
  def test_draft_or_wrong_commit_cannot_deploy(self):
   args=list(self.metadata());args[2]['isDraft']=True
   with self.assertRaises(ValueError):validate_metadata(*args)
   args=list(self.metadata());args[3]['commit']='different'
   with self.assertRaises(ValueError):validate_metadata(*args)
- def test_canonical_version_and_risk_ack_are_present(self):
+ def test_canonical_version_and_static_risk_fallback_are_present(self):
   from lofree_edge._version import __version__
   self.assertEqual(__version__,(ROOT/'VERSION').read_text().strip())
-  html=(ROOT/'web/dist/index.html').read_text()
-  self.assertIn('id="firmware-risk-ack" required',html)
-  self.assertIn('formnovalidate',html)
+  html=(ROOT/'web/firmware/index.html').read_text()
+  # Dialog/ack behavior is checked against actual React output in the JS suite.
+  self.assertIn('id="local-file-notice"',html)
+  self.assertIn('use at your own risk',html)
   self.assertIn('<edge-risk-notice>',html)
 if __name__=='__main__':unittest.main()

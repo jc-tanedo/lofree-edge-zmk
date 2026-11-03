@@ -43,7 +43,7 @@ if (!customElements.get('edge-navigation')) customElements.define('edge-navigati
   const dialog = document.createElement('dialog');
   dialog.className = 'edge-dialog edge-leave-dialog';
   dialog.setAttribute('aria-labelledby', 'edge-leave-heading');
-  dialog.innerHTML = '<div class="edge-dialog-heading"><h2 id="edge-leave-heading">Leave without saving?</h2></div><p>Your changes have not been saved to the keyboard. Save before leaving to keep them after a restart.</p><div class="edge-dialog-actions"><button type="button" class="edge-button" autofocus>Stay here</button><button type="button" class="edge-button edge-button-danger">Leave page</button></div>';
+  dialog.innerHTML = '<div class="edge-dialog-heading"><h2 id="edge-leave-heading">Leave without saving?</h2></div><p>Your browser draft has not been applied to the keyboard. Leaving discards the draft. Save first to apply and keep your changes.</p><div class="edge-dialog-actions"><button type="button" class="edge-button" autofocus>Stay here</button><button type="button" class="edge-button edge-button-danger">Leave page</button></div>';
   const [stay, leave] = dialog.querySelectorAll('button');
   stay.addEventListener('click', () => dialog.close());
   leave.addEventListener('click', () => {
@@ -72,7 +72,7 @@ class EdgeRiskNotice extends HTMLElement {
     this.className = 'edge-risk-notice';
     const risk = new URL('risk.html', workspaceBase).href;
     const roadmap = new URL('roadmap.html', workspaceBase).href;
-    this.innerHTML = `<strong>EXPERIMENTAL — ENTIRELY AT YOUR OWN RISK</strong><span>Firmware, website, tools and instructions may leave your keyboard unusable, erase settings or interrupt input. Recovery may require a programmer and may fail. No warranty; no liability to the extent permitted by law. Independent project, not endorsed by Lofree.</span><nav><a href="${risk}" target="_blank" rel="noopener">Read the full risk notice ↗</a><a href="${roadmap}" target="_blank" rel="noopener">Roadmap ↗</a><span class="edge-project-version"></span></nav>`;
+    this.innerHTML = `<strong>EXPERIMENTAL — USE AT YOUR OWN RISK</strong><span>Firmware, website, tools and instructions may leave your keyboard unusable, erase settings or interrupt input. Recovery may require a programmer and may fail. No warranty; no liability to the extent permitted by law. Independent project, not endorsed by Lofree.</span><nav><a href="${risk}" target="_blank" rel="noopener">Read the full risk notice ↗</a><a href="${roadmap}" target="_blank" rel="noopener">Roadmap ↗</a><span class="edge-project-version"></span></nav>`;
     fetch(new URL('version.json', workspaceBase)).then(r => r.ok ? r.json() : null).then(v => {
       if(v?.version) this.querySelector('.edge-project-version').textContent = 'Tools v'+v.version;
     }).catch(() => {});

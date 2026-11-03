@@ -14,3 +14,24 @@ Use main as the default branch. VERSION is canonical SemVer, initially 0.1.0-alp
 Every release remains used entirely at the user's own risk. Successful testing is evidence for the tested device, not a guarantee. Do not move a published tag or silently replace assets. Fix mistakes in a new version and retain the original source/checksums.
 
 Before launch, enable Pages via Actions, private vulnerability reporting, and main branch protections requiring CI. Create linked roadmap issues with tools/sync_roadmap_issues.py only after reviewing its dry-run output.
+
+Power-management releases additionally require exact-image evidence for device settings persistence, dim/off timing, connected and deep Bluetooth wake, OFF selector wake, USB host suspend, and measured current. `verify_promotion.py` rejects a release missing any of these markers. No earlier image's wake results or unmeasured battery-life inference satisfies these gates.
+
+## Studio unlock policy gate
+
+For the runtime-policy firmware, exact-image evidence must include default
+locking, confirmed disable/save/reconnect/power-cycle, re-enable/immediate lock
+and physical unlock, plus both missing-unlock-binding warnings. Record
+`hardware:studio-security-policy` and `hardware:studio-unlock-binding-warnings`
+only after those physical/browser checks pass against the matching firmware.
+Compiled tests and simulated-browser checks do not complete these markers.
+
+## Automatic installation approval
+
+Builds default to trial installation. After exact-SHA hardware review, add the
+firmware SHA256/version and `identityReport: 2` to `firmware/validated-builds.json`.
+Only those exact binaries get automatic browser verification/self-test/acceptance.
+Rebuild packages and recheck source/site archives and browser flow; verify the
+firmware hash is unchanged. The registry does not waive any release gates.
+Keep diagnostics and untested development candidates unlisted. New identity
+firmware requires a fresh exact-SHA hardware test before registry approval.
