@@ -3,6 +3,9 @@ import hashlib,json,re,subprocess,sys
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 CASES=['typing','usb','ble-pair-reconnect','layers-save-power-cycle','fn-media','caps-on-off','backlight','trial-acceptance','retained-image-return','switch-mode-routing','switch-cable-battery','legacy-output-immunity','power-settings-persistence','idle-dim-off','ble-suspend-wake','ble-deep-wake','off-selector-wake','usb-host-suspend','power-current-measurements','studio-security-policy','studio-unlock-binding-warnings']
+ALPHA3_CURRENT_DISCLOSURE = "Power current draw: unmeasured. This release makes no current-draw or battery-life claims."
+ALPHA3_OTA_SHA256 = "afa70869c44ad586ab02ae543652acf7d54125a8bd2c99a18e5b9688d251ef69"
+
 def validate_metadata(version,tag,release,provenance,commit):
  if provenance.get('dirty',True):raise ValueError('Uncommitted source cannot deploy')
  if release['isDraft']:raise ValueError('Draft release cannot deploy')
@@ -11,7 +14,14 @@ def validate_metadata(version,tag,release,provenance,commit):
  if provenance['commit']!=commit:raise ValueError('Provenance does not match tag commit')
  body=release['body']
  if provenance['firmware_sha256'] not in body:raise ValueError('Checklist does not identify this firmware SHA')
+ current_disclosed = (
+  tag == 'v0.1.0-alpha.3'
+  and provenance['firmware_sha256'] == ALPHA3_OTA_SHA256
+  and ALPHA3_CURRENT_DISCLOSURE in body.splitlines()
+ )
  for case in CASES:
+  if case == 'power-current-measurements' and current_disclosed:
+   continue
   if not re.search(r'^- \[[xX]\] hardware:'+re.escape(case)+r'\s*$',body,re.M):raise ValueError('Missing hardware check: '+case)
 def verify_assets(directory,provenance):
  version=provenance['version'];expected='lofree-edge-zmk-'+version+'.ota.bin'
