@@ -4,7 +4,7 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'tools'))
 from audit_publication import check
-from verify_promotion import validate_metadata,CASES
+from verify_promotion import ALPHA3_CURRENT_DISCLOSURE, ALPHA3_OTA_SHA256, CASES, validate_metadata
 from package_release import installation_policy
 class PublicationTests(unittest.TestCase):
  def test_only_exact_hardware_approved_image_auto_completes(self):
@@ -49,6 +49,21 @@ class PublicationTests(unittest.TestCase):
     args=list(self.metadata())
     args[2]['body']=args[2]['body'].replace('- [x] hardware:'+case,'')
     with self.assertRaisesRegex(ValueError,'Missing hardware check: '+case):validate_metadata(*args)
+ def test_alpha3_disclosure_only_waives_current_for_exact_image(self):
+  v,tag,release,provenance,commit=self.metadata()
+  original_sha=provenance['firmware_sha256']
+  body=release['body'].replace(original_sha,ALPHA3_OTA_SHA256)
+  body=body.replace('- [x] hardware:power-current-measurements','- [ ] hardware:power-current-measurements')
+  provenance['firmware_sha256']=ALPHA3_OTA_SHA256
+  release['body']=body+'\n'+ALPHA3_CURRENT_DISCLOSURE
+  validate_metadata(v,tag,release,provenance,commit)
+  for omitted in (ALPHA3_CURRENT_DISCLOSURE,'- [x] hardware:usb-host-suspend'):
+   with self.subTest(omitted=omitted),self.assertRaisesRegex(ValueError,'Missing hardware'):
+    validate_metadata(v,tag,dict(release,body=release['body'].replace(omitted,'')),provenance,commit)
+  other_release=dict(release,body=release['body'].replace(ALPHA3_OTA_SHA256,original_sha))
+  with self.assertRaisesRegex(ValueError,'Missing hardware check: power-current-measurements'):
+   validate_metadata(v,tag,other_release,dict(provenance,firmware_sha256=original_sha),commit)
+
  def test_draft_or_wrong_commit_cannot_deploy(self):
   args=list(self.metadata());args[2]['isDraft']=True
   with self.assertRaises(ValueError):validate_metadata(*args)

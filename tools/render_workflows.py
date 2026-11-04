@@ -99,7 +99,9 @@ jobs:
           git merge-base --is-ancestor HEAD origin/main
           mkdir -p build/download build/deploy
           gh release download "$RELEASE_TAG" --dir build/download
-          python3 tools/verify_promotion.py "$RELEASE_TAG"
+          # Policy comes from main. Version and provenance still refer to the tag.
+          git show origin/main:tools/verify_promotion.py > build/verify_promotion.py
+          python3 build/verify_promotion.py "$RELEASE_TAG"
           tar -xzf "build/download/lofree-edge-zmk-$(cat VERSION)-website.tar.gz" -C build/deploy
           python3 tools/audit_publication.py --site build/deploy
       - uses: '''+action('configure-pages')+'''

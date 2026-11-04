@@ -17,6 +17,16 @@ Before launch, enable Pages via Actions, private vulnerability reporting, and ma
 
 Power-management releases additionally require exact-image evidence for device settings persistence, dim/off timing, connected and deep Bluetooth wake, OFF selector wake, USB host suspend, and measured current. `verify_promotion.py` rejects a release missing any of these markers. No earlier image's wake results or unmeasured battery-life inference satisfies these gates.
 
+For v0.1.0-alpha.3 only, the verified OTA
+`afa70869c44ad586ab02ae543652acf7d54125a8bd2c99a18e5b9688d251ef69`
+may deploy with the current measurement item unchecked when the release notes contain
+this exact sentence on its own line:
+
+> Power current draw: unmeasured. This release makes no current-draw or battery-life claims.
+
+All functional hardware checks remain required. Pages reads promotion policy from
+`origin/main` and validates the version, source commit, and assets against the release tag.
+
 ## Studio unlock policy gate
 
 For the runtime-policy firmware, exact-image evidence must include default
